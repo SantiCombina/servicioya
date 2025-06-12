@@ -155,7 +155,7 @@ pnpm lint
 
 ## 🚀 Despliegue
 
-### Vercel (Recomendado)
+### Vercel
 
 1. Conecta tu repositorio a Vercel
 2. Configura las variables de entorno en el dashboard de Vercel
@@ -164,20 +164,6 @@ pnpm lint
 ### Otras Plataformas
 
 Asegúrate de configurar las variables de entorno correctamente en tu plataforma de despliegue.
-
-## 🤝 Contribuciones
-
-Las contribuciones son bienvenidas. Por favor:
-
-1. Fork el proyecto
-2. Crea una rama para tu feature
-3. Commit tus cambios
-4. Push a la rama
-5. Abre un Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
 
 ## 💡 Recursos Adicionales
 
