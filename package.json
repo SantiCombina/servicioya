@@ -1,9 +1,9 @@
 {
-  "name": "next-payload",
+  "name": "serviciosya",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -22,25 +22,27 @@
     "dotenv": "^16.4.7",
     "graphql": "^16.10.0",
     "lucide-react": "^0.479.0",
-    "next": "15.2.1",
+    "next": "15.2.3",
+    "next-themes": "^0.4.6",
     "payload": "^3.27.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
     "sharp": "^0.33.5",
-    "tailwind-merge": "^3.0.2",
-    "tailwindcss-animate": "^1.0.7",
+    "tailwind-merge": "^3.3.1",
     "zod": "^3.25.55"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@next/eslint-plugin-next": "^15.2.1",
-    "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/webpack": "^5.28.5",
     "@typescript-eslint/eslint-plugin": "^8.26.0",
     "@typescript-eslint/parser": "^8.26.0",
+    "autoprefixer": "10.4.21",
+    "css-loader": "^7.1.2",
     "eslint": "^9.22.0",
     "eslint-config-next": "15.2.1",
     "eslint-config-prettier": "^10.1.1",
@@ -49,8 +51,11 @@
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.2.0",
+    "postcss": "^8.5.6",
+    "postcss-loader": "^8.1.1",
     "prettier": "^3.5.3",
-    "tailwindcss": "^4",
+    "tailwindcss": "3.3.3",
+    "tailwindcss-animate": "1.0.7",
     "typescript": "^5"
   }
 }

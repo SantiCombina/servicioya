@@ -1,9 +1,9 @@
-export default async function UsersPage() {
+import { LoginCard } from "./login-card";
+
+export default async function LoginPage() {
     return (
-        <div className="flex items-center justify-center h-screen"> 
-            <div className="text-center">
-                <h1 className="text-2xl font-bold mb-4">Página de Login</h1>
-            </div>
+        <div className="flex items-center justify-center min-h-dvh"> 
+            <LoginCard/>
         </div>
     );
 }

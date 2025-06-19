@@ -16,31 +16,26 @@ import { CreateUserDialog } from "./create-user-dialog";
 import { DeleteUserButton } from "./delete-user-button";
 import { UpdateUserDialog } from "./update-user-dialog";
 
-export const metadata = {
-  title: "Usuarios | Next Payload CMS",
-  description: "Gestiona los usuarios de tu aplicación",
-};
-
 function UsersLoading() {
   return (
-    <div className="rounded-lg border animate-pulse">
+    <div className="border rounded-lg animate-pulse">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">
-              <div className="h-5 w-20 bg-muted rounded"></div>
+              <div className="w-20 h-5 rounded bg-muted"></div>
             </TableHead>
             <TableHead>
-              <div className="h-5 w-32 bg-muted rounded"></div>
+              <div className="w-32 h-5 rounded bg-muted"></div>
             </TableHead>
             <TableHead>
-              <div className="h-5 w-40 bg-muted rounded"></div>
+              <div className="w-40 h-5 rounded bg-muted"></div>
             </TableHead>
             <TableHead>
-              <div className="h-5 w-24 bg-muted rounded"></div>
+              <div className="w-24 h-5 rounded bg-muted"></div>
             </TableHead>
             <TableHead className="text-right w-[100px]">
-              <div className="h-5 w-16 bg-muted rounded ml-auto"></div>
+              <div className="w-16 h-5 ml-auto rounded bg-muted"></div>
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -48,21 +43,21 @@ function UsersLoading() {
           {[...Array(3)].map((_, i) => (
             <TableRow key={i}>
               <TableCell>
-                <div className="h-8 w-8 bg-muted rounded-full"></div>
+                <div className="w-8 h-8 rounded-full bg-muted"></div>
               </TableCell>
               <TableCell>
-                <div className="h-5 w-24 bg-muted rounded"></div>
+                <div className="w-24 h-5 rounded bg-muted"></div>
               </TableCell>
               <TableCell>
-                <div className="h-5 w-36 bg-muted rounded"></div>
+                <div className="h-5 rounded w-36 bg-muted"></div>
               </TableCell>
               <TableCell>
-                <div className="h-5 w-20 bg-muted rounded"></div>
+                <div className="w-20 h-5 rounded bg-muted"></div>
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  <div className="h-8 w-8 bg-muted rounded"></div>
-                  <div className="h-8 w-8 bg-muted rounded"></div>
+                  <div className="w-8 h-8 rounded bg-muted"></div>
+                  <div className="w-8 h-8 rounded bg-muted"></div>
                 </div>
               </TableCell>
             </TableRow>
@@ -75,8 +70,8 @@ function UsersLoading() {
 
 function UsersError({ error }: { error: Error }) {
   return (
-    <div className="rounded-lg border bg-card text-card-foreground shadow-sm border-destructive/50 p-6 text-center w-full max-w-md mx-auto">
-      <p className="text-destructive mb-4">
+    <div className="w-full max-w-md p-6 mx-auto text-center border rounded-lg shadow-sm bg-card text-card-foreground border-destructive/50">
+      <p className="mb-4 text-destructive">
         Error al cargar usuarios: {error.message}
       </p>
       <Button asChild variant="outline">
@@ -88,15 +83,15 @@ function UsersError({ error }: { error: Error }) {
 
 export default async function UsersPage() {
   const currentUser = await getCurrentUser();
-
   return (
-    <main className="min-h-screen flex flex-col items-center p-6 md:p-12">
-      <div className="w-full max-w-4xl">        <div className="flex flex-col sm:flex-row items-center justify-between mb-10 gap-4">
+    <main className="flex flex-col items-center p-6 min-h-dvh md:p-12">
+      <div className="w-full max-w-4xl">
+        <div className="flex flex-col items-center justify-between gap-4 mb-10 sm:flex-row">
           <div className="text-center sm:text-left">
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
               Usuarios
             </h1>
-            <p className="text-muted-foreground mt-1">
+            <p className="mt-1 text-muted-foreground">
               Gestiona los usuarios de tu aplicación.
             </p>
           </div>
@@ -119,20 +114,23 @@ async function UsersList() {
 
     if (!users?.length) {
       return (
-        <div className="flex flex-col items-center justify-center text-center py-12 px-4 border rounded-lg bg-card">
-          <Users2 className="h-16 w-16 text-muted-foreground mb-4" />
-          <h3 className="text-xl font-semibold mb-2">
+        <div className="flex flex-col items-center justify-center px-4 py-12 text-center border rounded-lg bg-card">
+          <Users2 className="w-16 h-16 mb-4 text-muted-foreground" />
+          <h3 className="mb-2 text-xl font-semibold">
             No hay usuarios registrados
-          </h3>
-          <p className="text-muted-foreground mb-6 max-w-xs">
+          </h3>{" "}
+          <p className="max-w-xs mb-6 text-muted-foreground">
             Comienza agregando el primer usuario para administrar tu aplicación.
-          </p>          {currentUser?.role === "admin" && (
+          </p>
+          {currentUser?.role === "admin" && (
             <CreateUserDialog currentUserRole={currentUser.role} />
           )}
         </div>
       );
-    }    return (
-      <div className="rounded-lg border">
+    }
+
+    return (
+      <div className="border rounded-lg">
         <Table>
           <TableHeader>
             <TableRow>
@@ -147,7 +145,7 @@ async function UsersList() {
             {users.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>
-                  <div className="h-10 w-10 bg-muted rounded-full flex items-center justify-center text-muted-foreground">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-muted text-muted-foreground">
                     {user.name?.charAt(0).toUpperCase() || "U"}
                   </div>
                 </TableCell>
@@ -167,13 +165,13 @@ async function UsersList() {
                   </span>
                 </TableCell>
                 <TableCell className="text-right">
-                  <div className="flex justify-end items-center gap-2">
+                  <div className="flex items-center justify-end gap-2">
                     <UpdateUserDialog
                       user={{
                         id: user.id.toString(),
-                        name: user.name || '',
+                        name: user.name || "",
                         email: user.email,
-                        role: user.role
+                        role: user.role,
                       }}
                       currentUserRole={currentUser?.role}
                     />
@@ -191,7 +189,7 @@ async function UsersList() {
     );
   } catch (error) {
     return (
-      <div className="w-full flex justify-center">
+      <div className="flex justify-center w-full">
         <UsersError error={error as Error} />
       </div>
     );
