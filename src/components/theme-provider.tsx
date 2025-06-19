@@ -10,5 +10,13 @@ export function ThemeProvider({
   children: React.ReactNode;
   [prop: string]: any;
 }) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+  return (
+    <NextThemesProvider 
+      {...props}
+      storageKey="servicioya-theme"
+      enableColorScheme={false}
+    >
+      {children}
+    </NextThemesProvider>
+  );
 }

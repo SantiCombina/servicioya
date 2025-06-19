@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "@/styles/globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -17,8 +17,16 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "ServicioYa",
-  description: "Conectamos a quienes ofrecen servicios con quienes los necesitan. Encuentra plomeros, electricistas, modistas y más en tu zona.",
-  keywords: ["servicios", "plomería", "electricista", "modista", "contratación", "marketplace"],
+  description:
+    "Conectamos a quienes ofrecen servicios con quienes los necesitan. Encuentra plomeros, electricistas, modistas y más en tu zona.",
+  keywords: [
+    "servicios",
+    "plomería",
+    "electricista",
+    "modista",
+    "contratación",
+    "marketplace",
+  ],
   icons: {
     icon: "/icon.png",
   },
@@ -26,8 +34,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_ES",
     title: "ServicioYa - Marketplace de Servicios",
-    description: "Conectamos a quienes ofrecen servicios con quienes los necesitan",
-    siteName: "ServicioYa"
+    description:
+      "Conectamos a quienes ofrecen servicios con quienes los necesitan",
+    siteName: "ServicioYa",
   },
 };
 
@@ -37,21 +46,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-dvh bg-background text-foreground antialiased`}
-      >
+    <html lang="es" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (localStorage.getItem('servicioya-theme') === 'dark' || (!localStorage.getItem('servicioya-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                  document.documentElement.classList.add('dark')
+                } else {
+                  document.documentElement.classList.remove('dark')
+                }
+              } catch (_) {}
+            `,
+          }}
+        />
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable} min-h-dvh`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange={false}
+          storageKey="servicioya-theme"
         >
-          {!String(global?.window?.location?.pathname || '').includes('/admin') && (
-            <div className="fixed z-50 top-4 right-4">
-              <ThemeToggle />
-            </div>
-          )}
+          <ThemeToggle />
           {children}
         </ThemeProvider>
       </body>

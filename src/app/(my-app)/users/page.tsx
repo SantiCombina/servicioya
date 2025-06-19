@@ -70,7 +70,7 @@ function UsersLoading() {
 
 function UsersError({ error }: { error: Error }) {
   return (
-    <div className="w-full max-w-md p-6 mx-auto text-center border rounded-lg shadow-sm bg-card text-card-foreground border-destructive/50">
+    <div className="w-full max-w-md p-6 mx-auto text-center border rounded-lg shadow-xs bg-card text-card-foreground border-destructive/50">
       <p className="mb-4 text-destructive">
         Error al cargar usuarios: {error.message}
       </p>
