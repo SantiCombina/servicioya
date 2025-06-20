@@ -148,6 +148,7 @@ pnpm build
 
 # Iniciar servidor de producción
 pnpm start
+```
 
 ## 🚀 Despliegue
 
