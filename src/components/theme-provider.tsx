@@ -1,21 +1,11 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+import * as React from 'react';
+import { ThemeProvider as NextThemesProvider } from 'next-themes';
 
-export function ThemeProvider({ 
-  children, 
-  ...props 
-}: { 
-  children: React.ReactNode;
-  [prop: string]: any;
-}) {
+export function ThemeProvider({ children, ...props }: { children: React.ReactNode; [prop: string]: any }) {
   return (
-    <NextThemesProvider 
-      {...props}
-      storageKey="servicioya-theme"
-      enableColorScheme={false}
-    >
+    <NextThemesProvider {...props} storageKey="servicioya-theme" enableColorScheme={false}>
       {children}
     </NextThemesProvider>
   );

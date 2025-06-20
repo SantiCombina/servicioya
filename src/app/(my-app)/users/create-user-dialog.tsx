@@ -1,36 +1,18 @@
-"use client";
+'use client';
 
-import { createUser } from "@/app/actions/create-user";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { createUserSchema, CreateUserValues } from "@/lib/schemas/user-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
-import { useState } from "react";
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useMounted } from "@/lib/hooks/use-mounted";
+import { createUser } from '@/app/actions/create-user';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { createUserSchema, CreateUserValues } from '@/lib/schemas/user-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useState } from 'react';
+import { Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useMounted } from '@/lib/hooks/use-mounted';
 
 interface CreateUserDialogProps {
   currentUserRole?: 'admin' | 'user';
@@ -40,14 +22,14 @@ export function CreateUserDialog({ currentUserRole }: CreateUserDialogProps) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const mounted = useMounted();
-  
+
   const methods = useForm<CreateUserValues>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
-      email: "",
-      password: "",
-      name: "",
-      role: "user",
+      email: '',
+      password: '',
+      name: '',
+      role: 'user',
     },
   });
 
@@ -58,7 +40,7 @@ export function CreateUserDialog({ currentUserRole }: CreateUserDialogProps) {
       methods.reset();
       router.refresh();
     } catch (error) {
-      console.error("Error creating user:", error);
+      console.error('Error creating user:', error);
     }
   };
 
@@ -76,7 +58,8 @@ export function CreateUserDialog({ currentUserRole }: CreateUserDialogProps) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>      <DialogTrigger asChild>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
         <Button className="gap-2 bg-blue-600 hover:bg-blue-700 text-white">
           <Plus className="h-4 w-4" />
           Nuevo usuario
@@ -147,8 +130,11 @@ export function CreateUserDialog({ currentUserRole }: CreateUserDialogProps) {
                   <FormMessage />
                 </FormItem>
               )}
-            />            <div className="flex gap-2 pt-4">
-              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">Crear usuario</Button>
+            />{' '}
+            <div className="flex gap-2 pt-4">
+              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
+                Crear usuario
+              </Button>
               <Button
                 type="button"
                 variant="outline"

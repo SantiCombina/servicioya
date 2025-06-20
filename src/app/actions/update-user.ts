@@ -1,6 +1,6 @@
-'use server'
+'use server';
 
-import { getPayloadClient } from '@/lib/payload'
+import { getPayloadClient } from '@/lib/payload';
 
 interface Props {
   id: string;
@@ -9,10 +9,10 @@ interface Props {
     name: string;
     role: 'admin' | 'user';
     password?: string;
-  }
+  };
 }
 
-export async function updateUser({id, data}: Props) {
+export async function updateUser({ id, data }: Props) {
   try {
     const payload = await getPayloadClient();
 
@@ -30,12 +30,11 @@ export async function updateUser({id, data}: Props) {
       collection: 'users',
       id,
       data: updateData,
-    })
+    });
 
-    return user
-  }
-  catch (error) {
-    console.error('Error updating user:', error)
-    throw new Error('Error al actualizar usuario')
+    return user;
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw new Error('Error al actualizar usuario');
   }
 }

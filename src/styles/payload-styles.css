@@ -1,7 +1,7 @@
 @layer theme, base, components, utilities;
-@import 'tailwindcss/theme.css' layer(theme);
+@import "tailwindcss/theme.css" layer(theme);
 /* @import 'tailwindcss/preflight.css' layer(base); */
-@import 'tailwindcss/utilities.css' layer(utilities);
+@import "tailwindcss/utilities.css" layer(utilities);
 
 /* Support Payload’s dark mode toggle by adding a custom variant */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
@@ -22,25 +22,25 @@
 
   /* Color Shades */
   --color-base-0: #ffffff;
-  --color-base-50: #f3edf8;
-  --color-base-100: #e7dcf1;
-  --color-base-150: #dbcaeb;
-  --color-base-200: #d0b9e4;
-  --color-base-250: #c4a7dd;
-  --color-base-300: #b896d6;
-  --color-base-350: #ac84cf;
-  --color-base-400: #a073c8;
-  --color-base-450: #9461c2;
-  --color-base-500: #500197;
-  --color-base-550: #4a018c;
-  --color-base-600: #450181;
-  --color-base-650: #3f0176;
-  --color-base-700: #39016c;
-  --color-base-750: #340161;
-  --color-base-800: #2e0156;
-  --color-base-850: #28004b;
-  --color-base-900: #220041;
-  --color-base-950: #1d0036;
+  --color-base-50: #f5eeef;
+  --color-base-100: #ecdedf;
+  --color-base-150: #e2cdcf;
+  --color-base-200: #d8bcbf;
+  --color-base-250: #ceacaf;
+  --color-base-300: #c59b9f;
+  --color-base-350: #bb8a8f;
+  --color-base-400: #b17980;
+  --color-base-450: #a76970;
+  --color-base-500: #6e0d17;
+  --color-base-550: #660c16;
+  --color-base-600: #5e0b14;
+  --color-base-650: #560a12;
+  --color-base-700: #4f0911;
+  --color-base-750: #47080f;
+  --color-base-800: #3f070d;
+  --color-base-850: #37060c;
+  --color-base-900: #2f050a;
+  --color-base-950: #270408;
   --color-success-0: #ffffff;
   --color-success-50: #f1faf6;
   --color-success-100: #e3f5ed;
@@ -160,10 +160,6 @@
   border: 1px solid var(--theme-elevation-200);
 }
 
-/* Nav Group Toggle (empty) */
-.nav-group__toggle {
-}
-
 /* Nav Group Icon */
 .nav-group__indicator svg .stroke {
   stroke: var(--theme-elevation-700);
@@ -181,7 +177,7 @@
 
 /* Dashboard Card Labels */
 .dashboard__label {
-  fontfamily: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
 }
 
 /* Dashboard Card */
@@ -190,59 +186,14 @@
   border: 1px solid var(--theme-elevation-200);
 }
 
-/* Dashboard Card Title */
-.card__title {
-  fontfamily: Impact;
-}
-
-/* Dashboard Card Action Button (empty) */
-.card__actions {
-}
-
-/* Background (empty) */
-.template-default__wrap {
-}
-
 /* Primary Button */
 .btn--style-primary {
   background-color: var(--theme-elevation-900);
 }
 
-/* Pill (empty) */
-.pill {
-}
-
 /* Input Field */
 .field-type.text:not(.has-many) input {
   border: 1px solid var(--theme-elevation-200);
-}
-
-/* Document Header (empty) */
-.doc-header__title {
-}
-
-/* Success Toast Close Button (empty) */
-.Toastify .Toastify__close-button--success {
-}
-
-/* Success Toast Progress Bar (empty) */
-.Toastify .Toastify__toast--success .Toastify__progress-bar {
-}
-
-/* Success Toast (empty) */
-.Toastify .Toastify__toast--success {
-}
-
-/* Success Toast Close Button (empty) */
-.Toastify .Toastify__close-button--error {
-}
-
-/* Success Toast Progress Bar (empty) */
-.Toastify .Toastify__toast--error .Toastify__progress-bar {
-}
-
-/* Success Toast (empty) */
-.Toastify .Toastify__toast--error {
 }
 
 /* Collapsible */
@@ -268,14 +219,6 @@
 /* Table Row Odd */
 .table tbody tr:nth-child(odd) {
   background-color: var(--theme-elevation-50);
-}
-
-/* Search Filter Wrapper (empty) */
-.list-controls__wrap {
-}
-
-/* Search  Input (empty) */
-.search-filter__input {
 }
 
 html[data-theme="dark"] {

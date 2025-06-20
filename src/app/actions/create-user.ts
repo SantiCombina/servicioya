@@ -1,6 +1,6 @@
-'use server'
+'use server';
 
-import { getPayloadClient } from '@/lib/payload'
+import { getPayloadClient } from '@/lib/payload';
 
 interface Props {
   data: {
@@ -8,10 +8,10 @@ interface Props {
     password: string;
     name: string;
     role: 'admin' | 'user';
-  }
+  };
 }
 
-export async function createUser({data}: Props) {
+export async function createUser({ data }: Props) {
   try {
     const payload = await getPayloadClient();
 
@@ -23,12 +23,11 @@ export async function createUser({data}: Props) {
         name: data.name,
         role: data.role,
       },
-    })
+    });
 
-    return user
-  }
-  catch (error) {
-    console.error('Error creating user:', error)
-    throw new Error('Error al crear usuario')
+    return user;
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw new Error('Error al crear usuario');
   }
 }

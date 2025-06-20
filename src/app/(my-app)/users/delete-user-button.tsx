@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,11 +9,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { deleteUser } from "@/app/actions/delete-user";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useMounted } from "@/lib/hooks/use-mounted";
+} from '@/components/ui/dialog';
+import { deleteUser } from '@/app/actions/delete-user';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { useMounted } from '@/lib/hooks/use-mounted';
 
 interface Props {
   id: string | number;
@@ -25,25 +25,20 @@ export function DeleteUserButton({ id, currentUserRole }: Props) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [open, setOpen] = useState(false);
   const mounted = useMounted();
-    // Solo mostrar el botón si el usuario actual es administrador
+  // Solo mostrar el botón si el usuario actual es administrador
   if (currentUserRole !== 'admin') {
     return null;
   }
 
   if (!mounted) {
     return (
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-8 w-8 text-destructive hover:text-destructive"
-        disabled
-      >
+      <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" disabled>
         <Trash2 className="h-4 w-4" />
         <span className="sr-only">Eliminar</span>
       </Button>
     );
   }
-  
+
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
@@ -52,7 +47,7 @@ export function DeleteUserButton({ id, currentUserRole }: Props) {
       setOpen(false);
       router.refresh();
     } catch (error) {
-      console.error("Error al eliminar usuario:", error);
+      console.error('Error al eliminar usuario:', error);
     } finally {
       setIsDeleting(false);
     }
@@ -84,14 +79,9 @@ export function DeleteUserButton({ id, currentUserRole }: Props) {
             variant="destructive"
             className="bg-red-600 hover:bg-red-700"
           >
-            {isDeleting ? "Eliminando..." : "Eliminar"}
+            {isDeleting ? 'Eliminando...' : 'Eliminar'}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setOpen(false)}
-            disabled={isDeleting}
-          >
+          <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={isDeleting}>
             Cancelar
           </Button>
         </div>

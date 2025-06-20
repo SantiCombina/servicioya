@@ -20,7 +20,7 @@ Plataforma web que conecta a proveedores de servicios profesionales (plomeros, e
 - **Framework**: Next.js 15 (App Router)
 - **CMS**: Payload CMS
 - **Database**: PostgreSQL (Neon Tech)
-- **Styling**: Tailwind CSS + shadcn/ui
+- **Styling**: Tailwind CSS v4 + shadcn/ui
 - **Forms**: React Hook Form + Zod
 - **TypeScript**: Para desarrollo type-safe
 - **Package Manager**: pnpm
@@ -148,10 +148,6 @@ pnpm build
 
 # Iniciar servidor de producción
 pnpm start
-
-# Linting
-pnpm lint
-```
 
 ## 🚀 Despliegue
 

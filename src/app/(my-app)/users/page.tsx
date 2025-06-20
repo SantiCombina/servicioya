@@ -1,20 +1,13 @@
-import { getCurrentUser } from "@/app/actions/get-current-user";
-import { getUsers } from "@/app/actions/get-users";
-import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Users2 } from "lucide-react";
-import Link from "next/link";
-import { Suspense } from "react";
-import { CreateUserDialog } from "./create-user-dialog";
-import { DeleteUserButton } from "./delete-user-button";
-import { UpdateUserDialog } from "./update-user-dialog";
+import { getCurrentUser } from '@/app/actions/get-current-user';
+import { getUsers } from '@/app/actions/get-users';
+import { Button } from '@/components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Users2 } from 'lucide-react';
+import Link from 'next/link';
+import { Suspense } from 'react';
+import { CreateUserDialog } from './create-user-dialog';
+import { DeleteUserButton } from './delete-user-button';
+import { UpdateUserDialog } from './update-user-dialog';
 
 function UsersLoading() {
   return (
@@ -71,9 +64,7 @@ function UsersLoading() {
 function UsersError({ error }: { error: Error }) {
   return (
     <div className="w-full max-w-md p-6 mx-auto text-center border rounded-lg shadow-xs bg-card text-card-foreground border-destructive/50">
-      <p className="mb-4 text-destructive">
-        Error al cargar usuarios: {error.message}
-      </p>
+      <p className="mb-4 text-destructive">Error al cargar usuarios: {error.message}</p>
       <Button asChild variant="outline">
         <Link href="/users">Reintentar</Link>
       </Button>
@@ -88,12 +79,8 @@ export default async function UsersPage() {
       <div className="w-full max-w-4xl">
         <div className="flex flex-col items-center justify-between gap-4 mb-10 sm:flex-row">
           <div className="text-center sm:text-left">
-            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-              Usuarios
-            </h1>
-            <p className="mt-1 text-muted-foreground">
-              Gestiona los usuarios de tu aplicación.
-            </p>
+            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Usuarios</h1>
+            <p className="mt-1 text-muted-foreground">Gestiona los usuarios de tu aplicación.</p>
           </div>
           <CreateUserDialog currentUserRole={currentUser?.role} />
         </div>
@@ -107,24 +94,17 @@ export default async function UsersPage() {
 
 async function UsersList() {
   try {
-    const [users, currentUser] = await Promise.all([
-      getUsers(),
-      getCurrentUser(),
-    ]);
+    const [users, currentUser] = await Promise.all([getUsers(), getCurrentUser()]);
 
     if (!users?.length) {
       return (
         <div className="flex flex-col items-center justify-center px-4 py-12 text-center border rounded-lg bg-card">
           <Users2 className="w-16 h-16 mb-4 text-muted-foreground" />
-          <h3 className="mb-2 text-xl font-semibold">
-            No hay usuarios registrados
-          </h3>{" "}
+          <h3 className="mb-2 text-xl font-semibold">No hay usuarios registrados</h3>{' '}
           <p className="max-w-xs mb-6 text-muted-foreground">
             Comienza agregando el primer usuario para administrar tu aplicación.
           </p>
-          {currentUser?.role === "admin" && (
-            <CreateUserDialog currentUserRole={currentUser.role} />
-          )}
+          {currentUser?.role === 'admin' && <CreateUserDialog currentUserRole={currentUser.role} />}
         </div>
       );
     }
@@ -146,22 +126,18 @@ async function UsersList() {
               <TableRow key={user.id}>
                 <TableCell>
                   <div className="flex items-center justify-center w-10 h-10 rounded-full bg-muted text-muted-foreground">
-                    {user.name?.charAt(0).toUpperCase() || "U"}
+                    {user.name?.charAt(0).toUpperCase() || 'U'}
                   </div>
                 </TableCell>
-                <TableCell className="font-medium">
-                  {user.name || "N/A"}
-                </TableCell>
+                <TableCell className="font-medium">{user.name || 'N/A'}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>
                   <span
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                      user.role === "admin"
-                        ? "bg-blue-100 text-blue-800"
-                        : "bg-orange-100 text-orange-700"
+                      user.role === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-700'
                     }`}
                   >
-                    {user.role === "admin" ? "Administrador" : "Usuario"}
+                    {user.role === 'admin' ? 'Administrador' : 'Usuario'}
                   </span>
                 </TableCell>
                 <TableCell className="text-right">
@@ -169,16 +145,13 @@ async function UsersList() {
                     <UpdateUserDialog
                       user={{
                         id: user.id.toString(),
-                        name: user.name || "",
+                        name: user.name || '',
                         email: user.email,
                         role: user.role,
                       }}
                       currentUserRole={currentUser?.role}
                     />
-                    <DeleteUserButton
-                      id={user.id}
-                      currentUserRole={currentUser?.role}
-                    />
+                    <DeleteUserButton id={user.id} currentUserRole={currentUser?.role} />
                   </div>
                 </TableCell>
               </TableRow>

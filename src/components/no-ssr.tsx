@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { ReactNode } from "react";
-import { useMounted } from "@/lib/hooks/use-mounted";
+import { ReactNode } from 'react';
+import { useMounted } from '@/lib/hooks/use-mounted';
 
 interface NoSSRProps {
   children: ReactNode;
