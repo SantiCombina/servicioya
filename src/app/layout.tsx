@@ -54,12 +54,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} min-h-dvh`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} min-h-dvh`} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
-          disableTransitionOnChange={false}
+          disableTransitionOnChange
           storageKey="servicioya-theme"
         >
           <ThemeToggle />
