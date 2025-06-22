@@ -75,7 +75,7 @@ function UsersError({ error }: { error: Error }) {
 export default async function UsersPage() {
   const currentUser = await getCurrentUser();
   return (
-    <main className="flex flex-col items-center p-6 min-h-dvh md:p-12">
+    <main className="flex flex-col items-center p-6 min-h-main md:p-12">
       <div className="w-full max-w-4xl">
         <div className="flex flex-col items-center justify-between gap-4 mb-10 sm:flex-row">
           <div className="text-center sm:text-left">

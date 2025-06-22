@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import '@/styles/globals.css';
 
 import { ThemeProvider } from '@/components/theme-provider';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { Navbar } from '@/components/navbar';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -54,7 +54,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} min-h-dvh`} suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -62,7 +62,7 @@ export default function RootLayout({
           disableTransitionOnChange
           storageKey="servicioya-theme"
         >
-          <ThemeToggle />
+          <Navbar />
           {children}
         </ThemeProvider>
       </body>

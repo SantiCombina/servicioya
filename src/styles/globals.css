@@ -90,6 +90,10 @@
   min-height: 100dvh;
 }
 
+@utility min-h-main {
+  min-height: calc(100dvh - 65px);
+}
+
 @layer base {
   :root {
     --radius: 0.65rem;
