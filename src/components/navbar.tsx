@@ -1,6 +1,7 @@
 import { ThemeToggle } from '@/components/theme-toggle';
 import Link from 'next/link';
 import { SearchInput } from './ui/search-input';
+import { UserAvatar } from './user-avatar';
 
 export function Navbar() {
   return (
@@ -10,12 +11,15 @@ export function Navbar() {
           <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-sm">SY</span>
           </div>
-          <span className="font-bold text-xl text-foreground">ServicioYa</span>
+          <span className="font-bold text-xl text-foreground hidden sm:flex">ServicioYa</span>
         </Link>
 
         <SearchInput />
 
-        <ThemeToggle />
+        <div className="flex items-center space-x-4">
+          <ThemeToggle />
+          <UserAvatar />
+        </div>
       </div>
     </nav>
   );
