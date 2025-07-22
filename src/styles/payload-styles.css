@@ -12,7 +12,7 @@
   --theme-input-bg: var(--theme-elevation-0);
   --theme-text: var(--theme-elevation-800);
   --theme-overlay: rgba(5, 5, 5, 0.5);
-  --font-body: "Suisse Intl", system-ui;
+  --font-body: "Lato", sans-serif;
   --font-mono: monospace;
   --font-serif: "Merriweather", serif;
   --style-radius-s: 4px;
@@ -22,25 +22,25 @@
 
   /* Color Shades */
   --color-base-0: #ffffff;
-  --color-base-50: #f5eeef;
-  --color-base-100: #ecdedf;
-  --color-base-150: #e2cdcf;
-  --color-base-200: #d8bcbf;
-  --color-base-250: #ceacaf;
-  --color-base-300: #c59b9f;
-  --color-base-350: #bb8a8f;
-  --color-base-400: #b17980;
-  --color-base-450: #a76970;
-  --color-base-500: #6e0d17;
-  --color-base-550: #660c16;
-  --color-base-600: #5e0b14;
-  --color-base-650: #560a12;
-  --color-base-700: #4f0911;
-  --color-base-750: #47080f;
-  --color-base-800: #3f070d;
-  --color-base-850: #37060c;
-  --color-base-900: #2f050a;
-  --color-base-950: #270408;
+  --color-base-50: #f5eeee;
+  --color-base-100: #ebdcdd;
+  --color-base-150: #e1cbcc;
+  --color-base-200: #d8b9bb;
+  --color-base-250: #cea8a9;
+  --color-base-300: #c49698;
+  --color-base-350: #ba8587;
+  --color-base-400: #b07376;
+  --color-base-450: #a66265;
+  --color-base-500: #6c0207;
+  --color-base-550: #640206;
+  --color-base-600: #5d0206;
+  --color-base-650: #550205;
+  --color-base-700: #4d0105;
+  --color-base-750: #460104;
+  --color-base-800: #3e0104;
+  --color-base-850: #360103;
+  --color-base-900: #2e0103;
+  --color-base-950: #270102;
   --color-success-0: #ffffff;
   --color-success-50: #f1faf6;
   --color-success-100: #e3f5ed;
@@ -177,13 +177,18 @@
 
 /* Dashboard Card Labels */
 .dashboard__label {
-  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  fontfamily: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
 }
 
 /* Dashboard Card */
 .card {
   background-color: var(--theme-elevation-100);
   border: 1px solid var(--theme-elevation-200);
+}
+
+/* Dashboard Card Title */
+.card__title {
+  fontfamily: Impact;
 }
 
 /* Primary Button */
