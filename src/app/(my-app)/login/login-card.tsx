@@ -6,7 +6,9 @@ export function LoginCard() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">SERVICIOYA</CardTitle>
+        <Link href="/" className="text-2xl font-bold">
+          <CardTitle className="text-2xl font-bold m-0 p-0">ServicioYa</CardTitle>
+        </Link>
         <CardDescription className="text-lg">Iniciar Sesión</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

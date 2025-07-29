@@ -3,12 +3,19 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import { uploadthingStorage } from '@payloadcms/storage-uploadthing';
 import { postgresAdapter } from '@payloadcms/db-postgres';
 import { buildConfig } from 'payload';
+
 import { Users } from './collections/Users';
 import { Media } from './collections/Media';
+import Categories from './collections/Categories';
+import Locations from './collections/Locations';
+import Services from './collections/Services';
+import Bookings from './collections/Bookings';
+import Reviews from './collections/Reviews';
+import ReviewReplies from './collections/ReviewReplies';
 
 export default buildConfig({
   editor: lexicalEditor(),
-  collections: [Users, Media],
+  collections: [Users, Media, Categories, Locations, Services, Bookings, Reviews, ReviewReplies],
   secret: process.env.PAYLOAD_SECRET || '',
   db: postgresAdapter({
     pool: {

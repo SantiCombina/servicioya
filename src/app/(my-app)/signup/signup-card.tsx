@@ -6,7 +6,9 @@ export function SignupCard() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold">SERVICIOYA</CardTitle>
+        <Link href="/" className="text-2xl font-bold">
+          <CardTitle className="text-2xl font-bold">ServicioYa</CardTitle>
+        </Link>
         <CardDescription className="text-lg">Crear Cuenta</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
