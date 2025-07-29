@@ -183,98 +183,100 @@ export default function ServicesPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Filters Sidebar */}
           <div className="lg:col-span-1">
-            <Card className="sticky top-24">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Filter className="w-5 h-5 mr-2" />
-                  Filtros
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Search */}
-                <div>
-                  <Label className="text-sm font-medium mb-2 block">Buscar</Label>
-                  <Input
-                    placeholder="Buscar servicios..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
+            <div className="sticky top-6 h-fit">
+              <Card className="max-h-[calc(100vh-8rem)] overflow-y-auto">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Filter className="w-5 h-5 mr-2" />
+                    Filtros
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Search */}
+                  <div>
+                    <Label className="text-sm font-medium mb-2 block">Buscar</Label>
+                    <Input
+                      placeholder="Buscar servicios..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
 
-                {/* Categories */}
-                <Accordion type="single" collapsible defaultValue="categories">
-                  <AccordionItem value="categories">
-                    <AccordionTrigger className="text-sm font-medium">Categorías</AccordionTrigger>
-                    <AccordionContent>
-                      <div className="space-y-2">
-                        {categories.map((category) => (
-                          <div key={category} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={category}
-                              checked={selectedCategory.includes(category)}
-                              onCheckedChange={(checked) => handleCategoryChange(category, checked as boolean)}
-                            />
-                            <Label htmlFor={category} className="text-sm">
-                              {category}
-                            </Label>
-                          </div>
-                        ))}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
+                  {/* Categories */}
+                  <Accordion type="single" collapsible defaultValue="categories">
+                    <AccordionItem value="categories">
+                      <AccordionTrigger className="text-sm font-medium">Categorías</AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-2">
+                          {categories.map((category) => (
+                            <div key={category} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={category}
+                                checked={selectedCategory.includes(category)}
+                                onCheckedChange={(checked) => handleCategoryChange(category, checked as boolean)}
+                              />
+                              <Label htmlFor={category} className="text-sm">
+                                {category}
+                              </Label>
+                            </div>
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
 
-                {/* Locations */}
-                <Accordion type="single" collapsible defaultValue="locations">
-                  <AccordionItem value="locations">
-                    <AccordionTrigger className="text-sm font-medium">Ubicación</AccordionTrigger>
-                    <AccordionContent>
-                      <div className="space-y-2">
-                        {locations.map((location) => (
-                          <div key={location} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={location}
-                              checked={selectedLocation.includes(location)}
-                              onCheckedChange={(checked) => handleLocationChange(location, checked as boolean)}
-                            />
-                            <Label htmlFor={location} className="text-sm">
-                              {location}
-                            </Label>
-                          </div>
-                        ))}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
+                  {/* Locations */}
+                  <Accordion type="single" collapsible defaultValue="locations">
+                    <AccordionItem value="locations">
+                      <AccordionTrigger className="text-sm font-medium">Ubicación</AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-2">
+                          {locations.map((location) => (
+                            <div key={location} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={location}
+                                checked={selectedLocation.includes(location)}
+                                onCheckedChange={(checked) => handleLocationChange(location, checked as boolean)}
+                              />
+                              <Label htmlFor={location} className="text-sm">
+                                {location}
+                              </Label>
+                            </div>
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
 
-                {/* Price Range */}
-                <div>
-                  <Label className="text-sm font-medium mb-2 block">
-                    Precio (desde): ${priceRange[0]} - ${priceRange[1]}
-                  </Label>
-                  <Slider
-                    value={priceRange}
-                    onValueChange={setPriceRange}
-                    max={10000}
-                    min={0}
-                    step={500}
-                    className="w-full"
-                  />
-                </div>
+                  {/* Price Range */}
+                  <div>
+                    <Label className="text-sm font-medium mb-2 block">
+                      Precio (desde): ${priceRange[0]} - ${priceRange[1]}
+                    </Label>
+                    <Slider
+                      value={priceRange}
+                      onValueChange={setPriceRange}
+                      max={10000}
+                      min={0}
+                      step={500}
+                      className="w-full"
+                    />
+                  </div>
 
-                {/* Verified Only */}
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="verified"
-                    checked={showVerifiedOnly}
-                    onCheckedChange={(checked) => setShowVerifiedOnly(Boolean(checked))}
-                  />
-                  <Label htmlFor="verified" className="text-sm">
-                    Solo verificados
-                  </Label>
-                </div>
-              </CardContent>
-            </Card>
+                  {/* Verified Only */}
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="verified"
+                      checked={showVerifiedOnly}
+                      onCheckedChange={(checked) => setShowVerifiedOnly(Boolean(checked))}
+                    />
+                    <Label htmlFor="verified" className="text-sm">
+                      Solo verificados
+                    </Label>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
 
           {/* Services List */}
@@ -300,76 +302,78 @@ export default function ServicesPage() {
             </div>
 
             {/* Services Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {filteredServices.map((service) => (
-                <Card key={service.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="relative">
-                    <Image
-                      src={service.image || '/placeholder.svg'}
-                      alt={service.title}
-                      width={300}
-                      height={200}
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="absolute top-2 left-2 flex gap-2">
-                      <Badge className="bg-blue-600">{service.category}</Badge>
-                      {service.verified && (
-                        <Badge variant="secondary" className="bg-green-100 text-green-800">
-                          Verificado
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                  <CardHeader>
-                    <CardTitle className="text-lg">{service.title}</CardTitle>
-                    <CardDescription>por {service.provider}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-gray-600 mb-4">{service.description}</p>
-
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-1">
-                          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                          <span className="font-semibold">{service.rating}</span>
-                          <span className="text-gray-500">({service.reviews})</span>
+            <div className="min-h-[800px]">
+              {filteredServices.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {filteredServices.map((service) => (
+                    <Card key={service.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                      <div className="relative">
+                        <Image
+                          src={service.image || '/placeholder.svg'}
+                          alt={service.title}
+                          width={300}
+                          height={200}
+                          className="w-full h-48 object-cover"
+                        />
+                        <div className="absolute top-2 left-2 flex gap-2">
+                          <Badge className="bg-blue-600">{service.category}</Badge>
+                          {service.verified && (
+                            <Badge variant="secondary" className="bg-green-100 text-green-800">
+                              Verificado
+                            </Badge>
+                          )}
                         </div>
-                        <span className="text-sm text-gray-500">{service.completedJobs} trabajos</span>
                       </div>
+                      <CardHeader>
+                        <CardTitle className="text-lg">{service.title}</CardTitle>
+                        <CardDescription>por {service.provider}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-gray-600 mb-4">{service.description}</p>
 
-                      <div className="flex items-center text-gray-500">
-                        <MapPin className="w-4 h-4 mr-1" />
-                        <span className="text-sm">{service.location}</span>
-                      </div>
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-1">
+                              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                              <span className="font-semibold">{service.rating}</span>
+                              <span className="text-gray-500">({service.reviews})</span>
+                            </div>
+                            <span className="text-sm text-gray-500">{service.completedJobs} trabajos</span>
+                          </div>
 
-                      <div className="flex items-center text-gray-500">
-                        <Clock className="w-4 h-4 mr-1" />
-                        <span className="text-sm">{service.availability}</span>
-                      </div>
+                          <div className="flex items-center text-gray-500">
+                            <MapPin className="w-4 h-4 mr-1" />
+                            <span className="text-sm">{service.location}</span>
+                          </div>
 
-                      <div className="flex justify-between items-center pt-2">
-                        <span className="text-lg font-bold text-green-600">
-                          Desde ${service.priceFrom.toLocaleString()}
-                        </span>
-                        <Button size="sm" asChild>
-                          <Link href={`/servicio/${service.id}`}>Ver Detalles</Link>
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                          <div className="flex items-center text-gray-500">
+                            <Clock className="w-4 h-4 mr-1" />
+                            <span className="text-sm">{service.availability}</span>
+                          </div>
 
-            {filteredServices.length === 0 && (
-              <div className="text-center py-12">
-                <div className="text-gray-400 mb-4">
-                  <Search className="w-16 h-16 mx-auto" />
+                          <div className="flex justify-between items-center pt-2">
+                            <span className="text-lg font-bold text-green-600">
+                              Desde ${service.priceFrom.toLocaleString()}
+                            </span>
+                            <Button size="sm" asChild>
+                              <Link href={`/servicio/${service.id}`}>Ver Detalles</Link>
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
-                <h3 className="text-xl font-semibold mb-2">No se encontraron servicios</h3>
-                <p className="text-gray-600">Intenta ajustar los filtros o buscar con otros términos</p>
-              </div>
-            )}
+              ) : (
+                <div className="text-center py-12">
+                  <div className="text-gray-400 mb-4">
+                    <Search className="w-16 h-16 mx-auto" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">No se encontraron servicios</h3>
+                  <p className="text-gray-600">Intenta ajustar los filtros o buscar con otros términos</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
