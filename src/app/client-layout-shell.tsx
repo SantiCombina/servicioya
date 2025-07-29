@@ -1,7 +1,7 @@
 'use client';
 
-import { ThemeProvider } from '@/components/theme-provider';
-import { Navbar } from '@/components/navbar';
+import { ThemeProvider } from '@/components/navbar/theme-provider';
+import { Navbar } from '@/components/navbar/navbar';
 import { usePathname } from 'next/navigation';
 
 export default function ClientLayoutShell({ children }: { children: React.ReactNode }) {

@@ -3,6 +3,7 @@
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { usePathname } from 'next/navigation';
 import { useMounted } from '@/lib/hooks/use-mounted';
 
@@ -14,17 +15,19 @@ export function ThemeToggle() {
   if (pathname?.startsWith('/admin')) {
     return null;
   }
+
   const getIcon = () => {
     if (!mounted) {
-      return <div className="w-5 h-5 rounded-full bg-current opacity-30 animate-pulse" />;
+      return <Skeleton className="w-5 h-5 rounded-full" />;
     }
-
     const currentTheme = resolvedTheme || theme;
     return currentTheme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />;
   };
+
   const handleToggle = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
+
   return (
     <Button
       variant="ghost"

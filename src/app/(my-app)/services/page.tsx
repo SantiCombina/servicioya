@@ -183,7 +183,7 @@ export default function ServicesPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Filters Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-6 h-fit">
+            <div className="sticky top-[90px] h-fit">
               <Card className="max-h-[calc(100vh-8rem)] overflow-y-auto">
                 <CardHeader>
                   <CardTitle className="flex items-center">

@@ -2,17 +2,18 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Button } from './ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Button } from '../ui/button';
+import { Skeleton } from '../ui/skeleton';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
-import { logoutAction } from '@/app/actions/logout';
-import { getCurrentUser } from '@/app/actions/get-current-user';
+} from '../ui/dropdown-menu';
+import { logoutUser } from '@/app/actions/user/logout-user';
+import { getCurrentUser } from '@/app/actions/user/get-current-user';
 
 export function UserAvatar() {
   const [user, setUser] = useState<any>(null);
@@ -20,7 +21,8 @@ export function UserAvatar() {
 
   const handleLogout = async () => {
     try {
-      await logoutAction();
+      await logoutUser();
+      setUser(null);
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
@@ -37,23 +39,18 @@ export function UserAvatar() {
       });
   }, []);
 
-  // Mostrar skeleton mientras carga
   if (isLoading) {
-    return (
-      <Button
-        variant="ghost"
-        size="icon"
-        disabled
-        className="transition-all duration-300 ease-in-out opacity-50 scale-95"
-      >
-        <div className="w-8 h-8 rounded-full bg-current opacity-30 animate-pulse" />
-      </Button>
-    );
+    return <Skeleton className="w-8 h-8 rounded-full" />;
   }
 
-  if (!user) return null;
+  if (!user)
+    return (
+      <Button asChild variant="default" size="sm">
+        <Link href="/login">Iniciar Sesión</Link>
+      </Button>
+    );
 
-  const name = user.name || user.fullName || user.email?.split('@')[0] || 'Usuario';
+  const name = user.name || user.email?.split('@')[0] || 'Usuario';
   const email = user.email || '';
   const avatarUrl = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}`;
 
