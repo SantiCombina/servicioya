@@ -178,7 +178,7 @@ export default function ServicesPage() {
   }, [searchTerm, selectedCategory, selectedLocation, priceRange, sortBy, showVerifiedOnly]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-main">
       <div className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Filters Sidebar */}
@@ -356,7 +356,7 @@ export default function ServicesPage() {
                               Desde ${service.priceFrom.toLocaleString()}
                             </span>
                             <Button size="sm" asChild>
-                              <Link href={`/servicio/${service.id}`}>Ver Detalles</Link>
+                              <Link href={`/service/${service.id}`}>Ver Detalles</Link>
                             </Button>
                           </div>
                         </div>

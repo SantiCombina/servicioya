@@ -69,8 +69,8 @@ export function UserAvatar() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuItem asChild className="flex items-center gap-3 p-2 cursor-pointer">
+      <DropdownMenuContent align="end" className="w-60">
+        <DropdownMenuItem asChild className="flex items-center py-4 cursor-pointer">
           <Link href={`/profile/${user.id}`} className="flex items-center gap-3 w-full">
             <Avatar>
               <AvatarImage src={avatarUrl} alt="Avatar" />

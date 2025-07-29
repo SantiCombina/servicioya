@@ -1,29 +1,16 @@
 'use client';
 
-import { useState } from 'react';
-import {
-  ArrowLeft,
-  Star,
-  MapPin,
-  Clock,
-  Phone,
-  Mail,
-  Calendar,
-  MessageCircle,
-  Shield,
-  Award,
-  CheckCircle,
-} from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import Link from 'next/link';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
+import { Award, Calendar, CheckCircle, Clock, Mail, MapPin, MessageCircle, Phone, Shield, Star } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
 
 // Mock data - en una app real vendría de una API
 const serviceData = {
@@ -107,30 +94,7 @@ export default function ServiceDetailPage() {
   const [selectedImage, setSelectedImage] = useState(0);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-background/95 backdrop-blur sticky top-0 z-50">
-        <div className="container py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/servicios">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Volver
-                </Link>
-              </Button>
-              <Link href="/" className="text-2xl font-bold text-primary">
-                ServiciosYa
-              </Link>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" asChild>
-                <Link href="/login">Iniciar Sesión</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-main">
       <div className="container py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}

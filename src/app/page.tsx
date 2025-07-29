@@ -113,7 +113,7 @@ export default function HomePage() {
       {/* How it Works */}
       <section className="py-16 bg-muted">
         <div className="container px-4">
-          <h3 className="text-3xl font-bold text-center mb-12 text-primary">¿Cómo Funciona?</h3>
+          <h3 className="text-3xl font-bold text-center mb-12 text-foreground">¿Cómo Funciona?</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="text-center p-8 bg-background border-none shadow-none">
               <div className="mx-auto w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">

@@ -184,7 +184,7 @@ export default function NewServicePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-main">
       <main className="container py-8">
         {/* Botón de Navegación */}
         <div className="mb-6">

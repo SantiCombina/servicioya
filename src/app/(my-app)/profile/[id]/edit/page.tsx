@@ -163,7 +163,7 @@ export default function EditProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-main">
       <main className="container py-8">
         <form onSubmit={handleSubmit}>
           <Card>

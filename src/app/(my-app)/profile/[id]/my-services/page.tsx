@@ -155,7 +155,7 @@ export default function MyServicesPage() {
   const pausedServices = services.filter((service) => service.status === 'paused');
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-main">
       <main className="container py-8">
         {/* Botones de Navegación */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
