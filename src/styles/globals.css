@@ -78,14 +78,6 @@
   }
 }
 
-@utility step {
-  counter-increment: step;
-
-  &:before {
-    content: counter(step);
-  }
-}
-
 @utility min-h-dvh {
   min-height: 100dvh;
 }
