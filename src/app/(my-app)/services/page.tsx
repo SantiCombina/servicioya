@@ -117,6 +117,7 @@ const categories = [
   'Limpieza',
   'Tecnología',
 ];
+
 const locations = ['CABA', 'Córdoba', 'Rosario', 'Mendoza', 'La Plata', 'Mar del Plata'];
 
 export default function ServicesPage() {
