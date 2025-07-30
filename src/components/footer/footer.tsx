@@ -1,7 +1,7 @@
 export function Footer() {
   return (
-    <footer className="py-4">
-      <div className="container mx-auto text-center">
+    <footer className="py-3">
+      <div className="container text-center text-muted-foreground">
         <p>&copy; {new Date().getFullYear()} ServicioYa. Todos los derechos reservados.</p>
       </div>
     </footer>

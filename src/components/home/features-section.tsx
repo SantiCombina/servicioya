@@ -2,7 +2,7 @@ import { Shield, Star, Search } from 'lucide-react';
 
 export function FeaturesSection() {
   return (
-    <section className="px-6 py-16 md:px-24 bg-background">
+    <section className="py-16">
       <div className="container">
         <div className="text-center space-y-4 mb-12">
           <h2 className="text-3xl font-bold tracking-tight">¿Por qué elegir ServicioYa?</h2>

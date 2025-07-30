@@ -3,7 +3,7 @@ import { Card } from '../ui/card';
 
 export function PopularServicesSection() {
   return (
-    <section id="servicios" className="px-6 py-16 md:px-24 bg-muted">
+    <section className="py-16 bg-muted">
       <div className="container">
         <div className="text-center space-y-4 mb-12">
           <h2 className="text-3xl font-bold tracking-tight">Servicios populares</h2>

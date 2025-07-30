@@ -3,8 +3,8 @@ import { Card } from '../ui/card';
 
 export function HowItWorksSection() {
   return (
-    <section className="py-16 bg-muted">
-      <div className="container px-4">
+    <section className="py-16">
+      <div className="container">
         <h3 className="text-3xl font-bold text-center mb-12 text-foreground">¿Cómo Funciona?</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <Card className="text-center p-8 bg-background border-none shadow-none">

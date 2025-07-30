@@ -361,7 +361,7 @@ export default function ServiceDetailPage() {
                 <CardContent className="space-y-3">
                   <Button className="w-full" size="lg">
                     <Calendar className="w-4 h-4 mr-2" />
-                    Solicitar Presupuesto
+                    Contratar servicio
                   </Button>
                   <Button variant="outline" className="w-full bg-transparent">
                     <MessageCircle className="w-4 h-4 mr-2" />
@@ -377,32 +377,6 @@ export default function ServiceDetailPage() {
                       Email
                     </Button>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Quick Contact Form */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Consulta Rápida</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Tipo de servicio" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {serviceData.services.map((service, index) => (
-                        <SelectItem key={index} value={service.toLowerCase()}>
-                          {service}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Textarea placeholder="Describe tu necesidad..." className="min-h-[100px]" />
-                  <Button className="w-full">Enviar Consulta</Button>
-                  <p className="text-xs text-muted-foreground text-center">
-                    Sin compromiso • Respuesta en {serviceData.provider.responseTime}
-                  </p>
                 </CardContent>
               </Card>
             </div>
