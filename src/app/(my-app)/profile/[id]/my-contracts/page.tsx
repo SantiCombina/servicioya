@@ -42,38 +42,14 @@ interface Contract {
   providerEmail?: string;
 }
 
-interface UserProfile {
-  nombre: string;
-  apellido: string;
-  email: string;
-  avatar?: string;
-}
-
 export default function MyContractsPage() {
-  const params = useParams();
-  const profileId = params.id;
-
-  const [userProfile, setUserProfile] = useState<UserProfile>({
-    nombre: 'Usuario',
-    apellido: 'Demo',
-    email: 'usuario@demo.com',
-    avatar: '',
-  });
-
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [activeFilter, setActiveFilter] = useState<string>('all');
 
-  useEffect(() => {
-    // Cargar datos del perfil desde localStorage
-    const savedProfile = localStorage.getItem('userProfile');
-    if (savedProfile) {
-      const profileData = JSON.parse(savedProfile);
-      setUserProfile((prev) => ({
-        ...prev,
-        ...profileData,
-      }));
-    }
+  const params = useParams();
+  const profileId = params.id;
 
+  useEffect(() => {
     // Cargar contratos desde localStorage o datos demo
     const savedContracts = localStorage.getItem(`userContracts_${profileId}`);
     if (savedContracts) {
@@ -250,26 +226,6 @@ export default function MyContractsPage() {
             </Card>
           </Link>
         </div>
-
-        {/* Perfil del Usuario */}
-        <Card className="mb-8 bg-card border-border shadow-sm">
-          <CardContent className="pt-8 pb-8">
-            <div className="flex items-center space-x-6">
-              <Avatar className="w-24 h-24 border-4 border-background shadow-lg">
-                <AvatarImage src={userProfile.avatar || '/placeholder.svg'} />
-                <AvatarFallback className="bg-primary text-primary-foreground text-3xl">
-                  <User className="w-12 h-12" />
-                </AvatarFallback>
-              </Avatar>
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold text-foreground">
-                  {userProfile.nombre} {userProfile.apellido}
-                </h2>
-                <p className="text-lg text-muted-foreground">{userProfile.email}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Estadísticas de Contratos */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">

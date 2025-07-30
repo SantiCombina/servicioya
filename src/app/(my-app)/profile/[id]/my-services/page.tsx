@@ -4,9 +4,8 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { User, Star, ArrowLeft, Plus, Edit, Trash2, MapPin, Clock, DollarSign, Eye, MoreVertical } from 'lucide-react';
+import { Star, ArrowLeft, Plus, Edit, Trash2, MapPin, Clock, DollarSign, Eye, MoreVertical } from 'lucide-react';
 import Link from 'next/link';
 import {
   DropdownMenu,
@@ -30,23 +29,9 @@ interface Service {
   createdAt: string;
 }
 
-interface UserProfile {
-  nombre: string;
-  apellido: string;
-  email: string;
-  avatar?: string;
-}
-
 export default function MyServicesPage() {
   const params = useParams();
   const profileId = params.id;
-
-  const [userProfile, setUserProfile] = useState<UserProfile>({
-    nombre: 'Usuario',
-    apellido: 'Demo',
-    email: 'usuario@demo.com',
-    avatar: '',
-  });
 
   const [services, setServices] = useState<Service[]>([
     {
@@ -91,16 +76,6 @@ export default function MyServicesPage() {
   ]);
 
   useEffect(() => {
-    // Cargar datos del perfil desde localStorage
-    const savedProfile = localStorage.getItem('userProfile');
-    if (savedProfile) {
-      const profileData = JSON.parse(savedProfile);
-      setUserProfile((prev) => ({
-        ...prev,
-        ...profileData,
-      }));
-    }
-
     // Cargar servicios del usuario (simulado)
     const savedServices = localStorage.getItem(`userServices_${profileId}`);
     if (savedServices) {
@@ -150,9 +125,13 @@ export default function MyServicesPage() {
     }
   };
 
+  const [serviceFilter, setServiceFilter] = useState<'all' | 'active' | 'paused' | 'draft'>('all');
   const activeServices = services.filter((service) => service.status === 'active');
   const draftServices = services.filter((service) => service.status === 'draft');
   const pausedServices = services.filter((service) => service.status === 'paused');
+
+  const filteredServices =
+    serviceFilter === 'all' ? services : services.filter((service) => service.status === serviceFilter);
 
   return (
     <div className="min-h-main">
@@ -186,30 +165,12 @@ export default function MyServicesPage() {
           </Link>
         </div>
 
-        {/* Perfil del Usuario */}
-        <Card className="mb-8 bg-card border-border shadow-sm">
-          <CardContent className="pt-8 pb-8">
-            <div className="flex items-center space-x-6">
-              <Avatar className="w-24 h-24 border-4 border-background shadow-lg">
-                <AvatarImage src={userProfile.avatar || '/placeholder.svg'} />
-                <AvatarFallback className="bg-primary text-primary-foreground text-3xl">
-                  <User className="w-12 h-12" />
-                </AvatarFallback>
-              </Avatar>
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold text-foreground">
-                  {userProfile.nombre} {userProfile.apellido}
-                </h2>
-                <p className="text-lg text-muted-foreground">{userProfile.email}</p>
-                <p className="text-sm text-primary font-medium">Gestor de Servicios</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Estadísticas Rápidas */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <Card className="border-border">
+          <Card
+            className={`border-border cursor-pointer transition-shadow ${serviceFilter === 'active' ? 'ring-2 ring-green-400' : ''}`}
+            onClick={() => setServiceFilter('active')}
+          >
             <CardContent className="pt-6">
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600">{activeServices.length}</div>
@@ -217,7 +178,10 @@ export default function MyServicesPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-border">
+          <Card
+            className={`border-border cursor-pointer transition-shadow ${serviceFilter === 'paused' ? 'ring-2 ring-yellow-400' : ''}`}
+            onClick={() => setServiceFilter('paused')}
+          >
             <CardContent className="pt-6">
               <div className="text-center">
                 <div className="text-2xl font-bold text-yellow-600">{pausedServices.length}</div>
@@ -225,7 +189,10 @@ export default function MyServicesPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-border">
+          <Card
+            className={`border-border cursor-pointer transition-shadow ${serviceFilter === 'draft' ? 'ring-2 ring-gray-400' : ''}`}
+            onClick={() => setServiceFilter('draft')}
+          >
             <CardContent className="pt-6">
               <div className="text-center">
                 <div className="text-2xl font-bold text-gray-600">{draftServices.length}</div>
@@ -233,7 +200,10 @@ export default function MyServicesPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-border">
+          <Card
+            className={`border-border cursor-pointer transition-shadow ${serviceFilter === 'all' ? 'ring-2 ring-blue-400' : ''}`}
+            onClick={() => setServiceFilter('all')}
+          >
             <CardContent className="pt-6">
               <div className="text-center">
                 <div className="text-2xl font-bold text-blue-600">{services.length}</div>
@@ -250,7 +220,7 @@ export default function MyServicesPage() {
             <div className="text-sm text-muted-foreground">{services.length} servicios</div>
           </div>
 
-          {services.length === 0 ? (
+          {filteredServices.length === 0 ? (
             <Card className="border-border">
               <CardContent className="pt-6">
                 <div className="text-center py-12">
@@ -272,7 +242,7 @@ export default function MyServicesPage() {
             </Card>
           ) : (
             <div className="grid gap-6">
-              {services.map((service) => (
+              {filteredServices.map((service) => (
                 <Card key={service.id} className="hover:shadow-lg transition-shadow border-border">
                   <CardContent className="pt-6">
                     <div className="flex flex-col md:flex-row md:items-start space-y-4 md:space-y-0 md:space-x-6">

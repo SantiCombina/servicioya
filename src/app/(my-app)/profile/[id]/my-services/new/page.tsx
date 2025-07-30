@@ -51,6 +51,20 @@ const durations = [
   'Varios días',
 ];
 
+const locations = [
+  'Buenos Aires',
+  'CABA',
+  'GBA Norte',
+  'GBA Sur',
+  'Córdoba',
+  'Rosario',
+  'Mendoza',
+  'La Plata',
+  'Tucumán',
+  'Salta',
+  'Otros',
+];
+
 export default function NewServicePage() {
   const router = useRouter();
   const params = useParams();
@@ -337,20 +351,40 @@ export default function NewServicePage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="location">Ubicación *</Label>
-                  <Input
-                    id="location"
-                    type="text"
-                    value={serviceData.location}
-                    onChange={(e) => handleInputChange('location', e.target.value)}
-                    className={errors.location ? 'border-destructive' : ''}
-                    placeholder="Buenos Aires"
-                  />
+                  <Select value={serviceData.location} onValueChange={(value) => handleInputChange('location', value)}>
+                    <SelectTrigger className={errors.location ? 'border-destructive' : ''}>
+                      <SelectValue placeholder="Selecciona una ubicación" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {locations.map((location) => (
+                        <SelectItem key={location} value={location}>
+                          {location}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   {errors.location && <p className="text-sm text-destructive">{errors.location}</p>}
                 </div>
               </div>
 
               {/* Botones */}
               <div className="flex flex-col sm:flex-row gap-4 pt-6">
+                <Link href={`/profile/${profileId}/my-services`} className="flex-1">
+                  <Button type="button" variant="secondary" className="w-full">
+                    Cancelar
+                  </Button>
+                </Link>
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  disabled={isLoading}
+                  onClick={(e) => handleSubmit(e, 'draft')}
+                >
+                  Guardar como Borrador
+                </Button>
+
                 <Button
                   type="submit"
                   className="flex-1"
@@ -369,22 +403,6 @@ export default function NewServicePage() {
                     </>
                   )}
                 </Button>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="flex-1"
-                  disabled={isLoading}
-                  onClick={(e) => handleSubmit(e, 'draft')}
-                >
-                  Guardar como Borrador
-                </Button>
-
-                <Link href={`/profile/${profileId}/my-services`} className="flex-1">
-                  <Button type="button" variant="secondary" className="w-full">
-                    Cancelar
-                  </Button>
-                </Link>
               </div>
             </CardContent>
           </Card>

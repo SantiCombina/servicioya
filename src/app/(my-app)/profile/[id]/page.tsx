@@ -62,18 +62,18 @@ export default function ProfilePage() {
 
     // Estrellas llenas
     for (let i = 0; i < fullStars; i++) {
-      stars.push(<Star key={`full-${i}`} className="w-6 h-6 fill-yellow-400 text-yellow-400" />);
+      stars.push(<Star key={`full-${i}`} className="w-4 h-4 fill-yellow-400 text-yellow-400" />);
     }
 
     // Media estrella
     if (hasHalfStar) {
-      stars.push(<StarHalf key="half" className="w-6 h-6 fill-yellow-400 text-yellow-400" />);
+      stars.push(<StarHalf key="half" className="w-4 h-4 fill-yellow-400 text-yellow-400" />);
     }
 
     // Estrellas vacías
     const emptyStars = 5 - Math.ceil(rating);
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<Star key={`empty-${i}`} className="w-6 h-6 text-gray-300" />);
+      stars.push(<Star key={`empty-${i}`} className="w-4 h-4 text-gray-300" />);
     }
 
     return stars;
@@ -108,36 +108,36 @@ export default function ProfilePage() {
                 <h2 className="text-2xl font-bold text-foreground">
                   {userProfile.nombre} {userProfile.apellido}
                 </h2>
-                <div className="flex items-center justify-center text-muted-foreground">
-                  <Mail className="w-4 h-4 mr-2" />
+                <div className="flex items-center justify-center text-muted-foreground text-sm">
+                  <Mail className="w-3.5 h-3.5 mr-1.5" />
                   <span>{userProfile.email}</span>
                 </div>
               </div>
 
               {/* Rating */}
-              <div className="flex flex-col items-center space-y-2">
-                <div className="flex items-center space-x-1">{renderStars(userProfile.rating)}</div>
-                <p className="text-sm text-muted-foreground">
+              <div className="flex flex-col items-center space-y-1">
+                <div className="flex items-center space-x-0.5">{renderStars(userProfile.rating)}</div>
+                <p className="text-xs text-muted-foreground">
                   {userProfile.rating.toFixed(1)} de 5 ({userProfile.totalReviews} reseñas)
                 </p>
               </div>
 
               {/* Información adicional */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-md text-sm text-muted-foreground">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full max-w-md text-xs text-muted-foreground md:ml-4">
                 <div className="flex items-center">
-                  <MapPin className="w-4 h-4 mr-2" />
+                  <MapPin className="w-3 h-3 mr-1.5" />
                   <span>{userProfile.localidad}</span>
                 </div>
                 <div className="flex items-center">
-                  <Phone className="w-4 h-4 mr-2" />
+                  <Phone className="w-3 h-3 mr-1.5" />
                   <span>{userProfile.telefono}</span>
                 </div>
                 <div className="flex items-center">
-                  <Calendar className="w-4 h-4 mr-2" />
+                  <Calendar className="w-3 h-3 mr-1.5" />
                   <span>Desde {new Date(userProfile.fechaRegistro).getFullYear()}</span>
                 </div>
                 <div className="flex items-center">
-                  <User className="w-4 h-4 mr-2" />
+                  <User className="w-3 h-3 mr-1.5" />
                   <span>DNI: {userProfile.dni}</span>
                 </div>
               </div>

@@ -218,7 +218,6 @@ export default function EditProfilePage() {
                   />
                   {errors.nombre && <p className="text-sm text-destructive">{errors.nombre}</p>}
                 </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="apellido">Apellido *</Label>
                   <Input
@@ -247,64 +246,69 @@ export default function EditProfilePage() {
                 {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
               </div>
 
-              {/* Teléfono */}
-              <div className="space-y-2">
-                <Label htmlFor="telefono">Teléfono *</Label>
-                <Input
-                  id="telefono"
-                  type="tel"
-                  value={userProfile.telefono}
-                  onChange={(e) => handleInputChange('telefono', e.target.value)}
-                  className={errors.telefono ? 'border-destructive' : ''}
-                  placeholder="+54 9 11 1234-5678"
-                />
-                {errors.telefono && <p className="text-sm text-destructive">{errors.telefono}</p>}
+              {/* DNI y Teléfono */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="dni">DNI *</Label>
+                  <Input
+                    id="dni"
+                    type="text"
+                    value={userProfile.dni}
+                    onChange={(e) => handleInputChange('dni', e.target.value)}
+                    className={errors.dni ? 'border-destructive' : ''}
+                    placeholder="12.345.678"
+                  />
+                  {errors.dni && <p className="text-sm text-destructive">{errors.dni}</p>}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="telefono">Teléfono *</Label>
+                  <Input
+                    id="telefono"
+                    type="tel"
+                    value={userProfile.telefono}
+                    onChange={(e) => handleInputChange('telefono', e.target.value)}
+                    className={errors.telefono ? 'border-destructive' : ''}
+                    placeholder="+54 9 11 1234-5678"
+                  />
+                  {errors.telefono && <p className="text-sm text-destructive">{errors.telefono}</p>}
+                </div>
               </div>
 
-              {/* DNI */}
-              <div className="space-y-2">
-                <Label htmlFor="dni">DNI *</Label>
-                <Input
-                  id="dni"
-                  type="text"
-                  value={userProfile.dni}
-                  onChange={(e) => handleInputChange('dni', e.target.value)}
-                  className={errors.dni ? 'border-destructive' : ''}
-                  placeholder="12.345.678"
-                />
-                {errors.dni && <p className="text-sm text-destructive">{errors.dni}</p>}
-              </div>
-
-              {/* Localidad */}
-              <div className="space-y-2">
-                <Label htmlFor="localidad">Localidad *</Label>
-                <Input
-                  id="localidad"
-                  type="text"
-                  value={userProfile.localidad}
-                  onChange={(e) => handleInputChange('localidad', e.target.value)}
-                  className={errors.localidad ? 'border-destructive' : ''}
-                  placeholder="Buenos Aires"
-                />
-                {errors.localidad && <p className="text-sm text-destructive">{errors.localidad}</p>}
-              </div>
-
-              {/* Domicilio */}
-              <div className="space-y-2">
-                <Label htmlFor="domicilio">Domicilio *</Label>
-                <Input
-                  id="domicilio"
-                  type="text"
-                  value={userProfile.domicilio}
-                  onChange={(e) => handleInputChange('domicilio', e.target.value)}
-                  className={errors.domicilio ? 'border-destructive' : ''}
-                  placeholder="Av. Corrientes 1234"
-                />
-                {errors.domicilio && <p className="text-sm text-destructive">{errors.domicilio}</p>}
+              {/* Domicilio y Localidad */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="domicilio">Domicilio *</Label>
+                  <Input
+                    id="domicilio"
+                    type="text"
+                    value={userProfile.domicilio}
+                    onChange={(e) => handleInputChange('domicilio', e.target.value)}
+                    className={errors.domicilio ? 'border-destructive' : ''}
+                    placeholder="Av. Corrientes 1234"
+                  />
+                  {errors.domicilio && <p className="text-sm text-destructive">{errors.domicilio}</p>}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="localidad">Localidad *</Label>
+                  <Input
+                    id="localidad"
+                    type="text"
+                    value={userProfile.localidad}
+                    onChange={(e) => handleInputChange('localidad', e.target.value)}
+                    className={errors.localidad ? 'border-destructive' : ''}
+                    placeholder="Buenos Aires"
+                  />
+                  {errors.localidad && <p className="text-sm text-destructive">{errors.localidad}</p>}
+                </div>
               </div>
 
               {/* Botones */}
               <div className="flex flex-col sm:flex-row gap-4 pt-6">
+                <Link href={`/profile/${profileId}`} className="flex-1">
+                  <Button type="button" variant="outline" className="w-full">
+                    Cancelar
+                  </Button>
+                </Link>
                 <Button type="submit" className="flex-1" disabled={isLoading}>
                   {isLoading ? (
                     <>
@@ -318,12 +322,6 @@ export default function EditProfilePage() {
                     </>
                   )}
                 </Button>
-
-                <Link href={`/profile/${profileId}`} className="flex-1">
-                  <Button type="button" variant="outline" className="w-full">
-                    Cancelar
-                  </Button>
-                </Link>
               </div>
             </CardContent>
           </Card>
