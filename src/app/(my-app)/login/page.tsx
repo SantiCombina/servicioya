@@ -1,4 +1,4 @@
-import { LoginCard } from './login-card';
+import { LoginCard } from '@/components/login/login-card';
 
 export default async function LoginPage() {
   return (

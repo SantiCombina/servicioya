@@ -197,100 +197,98 @@ export default function ServicesPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Filters Sidebar */}
           <div className="lg:col-span-1">
-            <div className="sticky top-[90px] h-fit">
-              <Card className="max-h-[calc(100vh-8rem)] overflow-y-auto">
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Filter className="w-5 h-5 mr-2" />
-                    Filtros
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {/* Search */}
-                  <div>
-                    <Label className="text-sm font-medium mb-2 block">Buscar</Label>
-                    <Input
-                      placeholder="Buscar servicios..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
+            <Card className="overflow-y-auto">
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Filter className="w-5 h-5 mr-2" />
+                  Filtros
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Search */}
+                <div>
+                  <Label className="text-sm font-medium mb-2 block">Buscar</Label>
+                  <Input
+                    placeholder="Buscar servicios..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
 
-                  {/* Categories */}
-                  <Accordion type="single" collapsible defaultValue="categories">
-                    <AccordionItem value="categories">
-                      <AccordionTrigger className="text-sm font-medium">Categorías</AccordionTrigger>
-                      <AccordionContent>
-                        <div className="space-y-2">
-                          {categories.map((category) => (
-                            <div key={category} className="flex items-center space-x-2">
-                              <Checkbox
-                                id={category}
-                                checked={selectedCategory.includes(category)}
-                                onCheckedChange={(checked) => handleCategoryChange(category, checked as boolean)}
-                              />
-                              <Label htmlFor={category} className="text-sm">
-                                {category}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
+                {/* Categories */}
+                <Accordion type="single" collapsible defaultValue="categories">
+                  <AccordionItem value="categories">
+                    <AccordionTrigger className="text-sm font-medium">Categorías</AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2">
+                        {categories.map((category) => (
+                          <div key={category} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={category}
+                              checked={selectedCategory.includes(category)}
+                              onCheckedChange={(checked) => handleCategoryChange(category, checked as boolean)}
+                            />
+                            <Label htmlFor={category} className="text-sm">
+                              {category}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
 
-                  {/* Locations */}
-                  <Accordion type="single" collapsible defaultValue="locations">
-                    <AccordionItem value="locations">
-                      <AccordionTrigger className="text-sm font-medium">Ubicación</AccordionTrigger>
-                      <AccordionContent>
-                        <div className="space-y-2">
-                          {locations.map((location) => (
-                            <div key={location} className="flex items-center space-x-2">
-                              <Checkbox
-                                id={location}
-                                checked={selectedLocation.includes(location)}
-                                onCheckedChange={(checked) => handleLocationChange(location, checked as boolean)}
-                              />
-                              <Label htmlFor={location} className="text-sm">
-                                {location}
-                              </Label>
-                            </div>
-                          ))}
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
+                {/* Locations */}
+                <Accordion type="single" collapsible defaultValue="locations">
+                  <AccordionItem value="locations">
+                    <AccordionTrigger className="text-sm font-medium">Ubicación</AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2">
+                        {locations.map((location) => (
+                          <div key={location} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={location}
+                              checked={selectedLocation.includes(location)}
+                              onCheckedChange={(checked) => handleLocationChange(location, checked as boolean)}
+                            />
+                            <Label htmlFor={location} className="text-sm">
+                              {location}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
 
-                  {/* Price Range */}
-                  <div>
-                    <Label className="text-sm font-medium mb-2 block">
-                      Precio (desde): ${priceRange[0]} - ${priceRange[1]}
-                    </Label>
-                    <Slider
-                      value={priceRange}
-                      onValueChange={setPriceRange}
-                      max={10000}
-                      min={0}
-                      step={500}
-                      className="w-full"
-                    />
-                  </div>
+                {/* Price Range */}
+                <div>
+                  <Label className="text-sm font-medium mb-2 block">
+                    Precio (desde): ${priceRange[0]} - ${priceRange[1]}
+                  </Label>
+                  <Slider
+                    value={priceRange}
+                    onValueChange={setPriceRange}
+                    max={10000}
+                    min={0}
+                    step={500}
+                    className="w-full"
+                  />
+                </div>
 
-                  {/* Verified Only */}
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="verified"
-                      checked={showVerifiedOnly}
-                      onCheckedChange={(checked) => setShowVerifiedOnly(Boolean(checked))}
-                    />
-                    <Label htmlFor="verified" className="text-sm">
-                      Solo verificados
-                    </Label>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                {/* Verified Only */}
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="verified"
+                    checked={showVerifiedOnly}
+                    onCheckedChange={(checked) => setShowVerifiedOnly(Boolean(checked))}
+                  />
+                  <Label htmlFor="verified" className="text-sm">
+                    Solo verificados
+                  </Label>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Services List */}

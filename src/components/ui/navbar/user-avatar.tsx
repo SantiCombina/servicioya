@@ -13,7 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../ui';
+} from '@/components/ui';
 import { logoutUser } from '@/app/actions/user/logout-user';
 import { getCurrentUser } from '@/app/actions/user/get-current-user';
 

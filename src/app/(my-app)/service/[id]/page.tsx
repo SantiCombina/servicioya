@@ -1,12 +1,25 @@
 'use client';
 
-import { Avatar, AvatarFallback, AvatarImage, Badge, Button } from '@/components/ui';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useState } from 'react';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Progress,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui';
 import { Award, Calendar, CheckCircle, Clock, Mail, MapPin, MessageCircle, Phone, Shield, Star } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
 
 // Mock data - en una app real vendría de una API
 const serviceData = {

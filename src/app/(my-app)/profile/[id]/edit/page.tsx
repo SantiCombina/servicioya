@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import {
   Button,
   Card,
@@ -16,7 +16,6 @@ import {
 } from '@/components/ui';
 import { User, Save, Camera, X } from 'lucide-react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 
 interface UserProfile {
   nombre: string;

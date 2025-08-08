@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { Button } from '../ui';
+import { Button } from '@/components/ui';
 
 export function HeroSection() {
   return (
-    <section className="flex flex-col items-center justify-center py-32">
+    <section className="flex flex-col items-center justify-center min-h-main">
       <div className="container space-y-8 text-center">
         <div className="space-y-4">
           <h1 className="text-6xl font-bold tracking-tight md:text-7xl">

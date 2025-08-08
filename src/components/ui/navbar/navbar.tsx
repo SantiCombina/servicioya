@@ -1,6 +1,6 @@
-import { ThemeToggle } from '@/components/navbar/theme-toggle';
-import { SearchInput } from './search-input';
 import { Logo } from './logo';
+import { SearchInput } from './search-input';
+import { ThemeToggle } from './theme-toggle';
 import { UserAvatar } from './user-avatar';
 
 export function Navbar() {

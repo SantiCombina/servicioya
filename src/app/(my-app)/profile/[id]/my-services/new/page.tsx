@@ -2,8 +2,21 @@
 
 import { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
-import { Input, Label, Textarea, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  Textarea,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui';
 import { ArrowLeft, Save, Plus, Upload, X } from 'lucide-react';
 import Link from 'next/link';
 

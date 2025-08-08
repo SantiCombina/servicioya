@@ -1,4 +1,4 @@
-import { SignupCard } from './signup-card';
+import { SignupCard } from '@/components/signup/signup-card';
 
 export default async function SignUpPage() {
   return (
