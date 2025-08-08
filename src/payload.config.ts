@@ -4,14 +4,7 @@ import { uploadthingStorage } from '@payloadcms/storage-uploadthing';
 import { postgresAdapter } from '@payloadcms/db-postgres';
 import { buildConfig } from 'payload';
 
-import { Users } from './collections/Users';
-import { Media } from './collections/Media';
-import Categories from './collections/Categories';
-import Locations from './collections/Locations';
-import Services from './collections/Services';
-import Bookings from './collections/Bookings';
-import Reviews from './collections/Reviews';
-import ReviewReplies from './collections/ReviewReplies';
+import { Users, Media, Categories, Locations, Services, Bookings, Reviews, ReviewReplies } from './collections';
 
 export default buildConfig({
   editor: lexicalEditor(),
@@ -33,5 +26,8 @@ export default buildConfig({
       },
     }),
   ],
+  admin: {
+    user: 'users',
+  },
   sharp,
 });

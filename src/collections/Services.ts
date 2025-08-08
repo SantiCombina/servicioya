@@ -58,5 +58,3 @@ export const Services: CollectionConfig = {
     },
   ],
 };
-
-export default Services;

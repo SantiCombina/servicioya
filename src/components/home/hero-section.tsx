@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../ui';
 
 export function HeroSection() {
   return (

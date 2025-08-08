@@ -77,5 +77,3 @@ export const Reviews: CollectionConfig = {
     },
   ],
 };
-
-export default Reviews;

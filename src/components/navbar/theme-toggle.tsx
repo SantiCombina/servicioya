@@ -2,8 +2,7 @@
 
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Button, Skeleton } from '@/components/ui';
 import { usePathname } from 'next/navigation';
 import { useMounted } from '@/lib/hooks/use-mounted';
 

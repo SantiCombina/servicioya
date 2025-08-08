@@ -2,17 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Star, ArrowLeft, Plus, Edit, Trash2, MapPin, Clock, DollarSign, Eye, MoreVertical } from 'lucide-react';
-import Link from 'next/link';
 import {
+  Button,
+  Card,
+  CardContent,
+  Badge,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui';
+import { Star, ArrowLeft, Plus, Edit, Trash2, MapPin, Clock, DollarSign, Eye, MoreVertical } from 'lucide-react';
+import Link from 'next/link';
 
 interface Service {
   id: string;

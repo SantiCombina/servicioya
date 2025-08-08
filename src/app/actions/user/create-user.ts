@@ -1,6 +1,7 @@
 'use server';
 
 import { getPayloadClient } from '@/lib/payload';
+import { cookies } from 'next/headers';
 
 interface Props {
   data: {
@@ -15,7 +16,7 @@ export async function createUser({ data }: Props) {
   try {
     const payload = await getPayloadClient();
 
-    const user = await payload.create({
+    await payload.create({
       collection: 'users',
       data: {
         email: data.email,
@@ -25,9 +26,30 @@ export async function createUser({ data }: Props) {
       },
     });
 
-    return user;
-  } catch (error) {
+    const loginResult = await payload.login({
+      collection: 'users',
+      data: {
+        email: data.email,
+        password: data.password,
+      },
+    });
+
+    if (loginResult.token) {
+      const cookieStore = await cookies();
+      cookieStore.set('payload-token', loginResult.token, {
+        httpOnly: true,
+        path: '/',
+        sameSite: 'lax',
+      });
+    }
+
+    return { success: true, user: loginResult.user };
+  } catch (error: any) {
     console.error('Error creating user:', error);
-    throw new Error('Error al crear usuario');
+    let message = error.message || 'Error al crear usuario';
+    if (message.toLowerCase().includes('email') && message.toLowerCase().includes('exists')) {
+      message = 'El email ya está registrado.';
+    }
+    return { success: false, error: message };
   }
 }

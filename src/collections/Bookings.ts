@@ -53,5 +53,3 @@ export const Bookings: CollectionConfig = {
     },
   ],
 };
-
-export default Bookings;

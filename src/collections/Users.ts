@@ -6,6 +6,11 @@ export const Users: CollectionConfig = {
     useAsTitle: 'email',
   },
   auth: true,
+  access: {
+    admin: ({ req }) => {
+      return req.user?.role === 'admin';
+    },
+  },
   fields: [
     {
       name: 'name',

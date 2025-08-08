@@ -3,12 +3,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@/components/ui';
 import { userLoginSchema, type UserLoginValues } from '@/lib/schemas/user-login-schema';
 
+import { loginUser } from '@/app/actions/user/login-user';
+import { useRouter } from 'next/navigation';
+
 export function LoginForm() {
+  const router = useRouter();
   const methods = useForm<UserLoginValues>({
     resolver: zodResolver(userLoginSchema),
     defaultValues: {
@@ -19,17 +21,24 @@ export function LoginForm() {
 
   const onSubmit = async (data: UserLoginValues) => {
     try {
-      // Aquí puedes manejar el inicio de sesión, por ejemplo, enviando los datos a una API
-      console.log('Datos de inicio de sesión:', data);
-      // Redirigir o mostrar un mensaje de éxito
+      const result = await loginUser({ data });
+      if (result.success) {
+        router.push('/');
+      } else {
+        methods.setError('root', { type: 'manual', message: result.message });
+      }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      // Manejar el error, por ejemplo, mostrando un mensaje al usuario
+      methods.setError('root', { type: 'manual', message: 'Error inesperado al iniciar sesión' });
     }
   };
+
   return (
     <Form {...methods}>
       <form className="space-y-1" onSubmit={methods.handleSubmit(onSubmit)}>
+        {methods.formState.errors.root && (
+          <div className="text-red-500 text-sm mb-2">{methods.formState.errors.root.message}</div>
+        )}
         <FormField
           control={methods.control}
           name="email"
@@ -60,8 +69,8 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
-          Iniciar Sesión
+        <Button type="submit" className="w-full" disabled={methods.formState.isSubmitting}>
+          {methods.formState.isSubmitting ? 'Iniciando...' : 'Iniciar Sesión'}
         </Button>
       </form>
     </Form>

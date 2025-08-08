@@ -22,5 +22,3 @@ export const Locations: CollectionConfig = {
     },
   ],
 };
-
-export default Locations;

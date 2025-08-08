@@ -30,5 +30,3 @@ export const ReviewReplies: CollectionConfig = {
     },
   ],
 };
-
-export default ReviewReplies;
