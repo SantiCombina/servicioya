@@ -152,13 +152,6 @@ const eslintConfig = [
       },
     },
   },
-  // Configuración específica para archivos CSS
-  {
-    files: ["**/*.css"],
-    languageOptions: {
-      parser: null,
-    },
-  },
 ];
 
 export default eslintConfig;
