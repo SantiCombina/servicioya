@@ -3,7 +3,6 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
-  Input,
   Accordion,
   AccordionItem,
   AccordionTrigger,
@@ -13,10 +12,9 @@ import {
   Slider,
 } from '@/components/ui';
 import { Filter } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface Props {
-  searchTerm: string;
-  setSearchTerm: (value: string) => void;
   selectedCategory: string[];
   setSelectedCategory: (value: string[]) => void;
   selectedLocation: string[];
@@ -28,39 +26,79 @@ interface Props {
   categories: string[];
   locations: string[];
 }
+export function FiltersSidebar(props: Props) {
+  const {
+    selectedCategory,
+    setSelectedCategory,
+    selectedLocation,
+    setSelectedLocation,
+    priceRange,
+    setPriceRange,
+    showVerifiedOnly,
+    setShowVerifiedOnly,
+    categories,
+    locations,
+  } = props;
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-export function FiltersSidebar({
-  searchTerm,
-  setSearchTerm,
-  selectedCategory,
-  setSelectedCategory,
-  selectedLocation,
-  setSelectedLocation,
-  priceRange,
-  setPriceRange,
-  showVerifiedOnly,
-  setShowVerifiedOnly,
-  categories,
-  locations,
-}: Props) {
+  // Helper para actualizar los query params
+  const updateQueryParams = (params: Record<string, any>) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    Object.entries(params).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        if (value.length > 0) {
+          current.set(key, value.join(','));
+        } else {
+          current.delete(key);
+        }
+      } else if (typeof value === 'boolean') {
+        if (value) {
+          current.set(key, '1');
+        } else {
+          current.delete(key);
+        }
+      } else if (typeof value === 'number' || typeof value === 'string') {
+        current.set(key, String(value));
+      }
+    });
+    router.replace(`?${current.toString()}`);
+  };
+
   const handleCategoryChange = (category: string, checked: boolean) => {
+    let newCategories;
     if (checked) {
-      setSelectedCategory([...selectedCategory, category]);
+      newCategories = [...selectedCategory, category];
     } else {
-      setSelectedCategory(selectedCategory.filter((c) => c !== category));
+      newCategories = selectedCategory.filter((c: string) => c !== category);
     }
+    setSelectedCategory(newCategories);
+    updateQueryParams({ category: newCategories });
   };
 
   const handleLocationChange = (location: string, checked: boolean) => {
+    let newLocations;
     if (checked) {
-      setSelectedLocation([...selectedLocation, location]);
+      newLocations = [...selectedLocation, location];
     } else {
-      setSelectedLocation(selectedLocation.filter((l) => l !== location));
+      newLocations = selectedLocation.filter((l: string) => l !== location);
     }
+    setSelectedLocation(newLocations);
+    updateQueryParams({ location: newLocations });
+  };
+
+  const handlePriceChange = (value: number[]) => {
+    setPriceRange(value);
+    updateQueryParams({ priceFrom: value[0], priceTo: value[1] });
+  };
+
+  const handleVerifiedChange = (checked: boolean) => {
+    setShowVerifiedOnly(checked);
+    updateQueryParams({ verified: checked });
   };
 
   return (
-    <Card className="overflow-y-auto">
+    <Card>
       <CardHeader>
         <CardTitle className="flex items-center">
           <Filter className="w-5 h-5 mr-2" />
@@ -68,16 +106,10 @@ export function FiltersSidebar({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Search */}
-        <div>
-          <Label className="text-sm font-medium mb-2 block">Buscar</Label>
-          <Input placeholder="Buscar servicios..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-        </div>
-
         {/* Categories */}
         <Accordion type="single" collapsible defaultValue="categories">
           <AccordionItem value="categories">
-            <AccordionTrigger className="text-sm font-medium">Categorías</AccordionTrigger>
+            <AccordionTrigger className="text-sm font-medium">Categoría</AccordionTrigger>
             <AccordionContent>
               <div className="space-y-2">
                 {categories.map((category) => (
@@ -123,9 +155,16 @@ export function FiltersSidebar({
         {/* Price Range */}
         <div>
           <Label className="text-sm font-medium mb-2 block">
-            Precio (desde): ${priceRange[0]} - ${priceRange[1]}
+            Precio: ${priceRange[0]} - ${priceRange[1]}
           </Label>
-          <Slider value={priceRange} onValueChange={setPriceRange} max={10000} min={0} step={500} className="w-full" />
+          <Slider
+            value={priceRange}
+            onValueChange={handlePriceChange}
+            max={10000}
+            min={0}
+            step={500}
+            className="w-full"
+          />
         </div>
 
         {/* Verified Only */}
@@ -133,7 +172,7 @@ export function FiltersSidebar({
           <Checkbox
             id="verified"
             checked={showVerifiedOnly}
-            onCheckedChange={(checked) => setShowVerifiedOnly(Boolean(checked))}
+            onCheckedChange={(checked) => handleVerifiedChange(Boolean(checked))}
           />
           <Label htmlFor="verified" className="text-sm">
             Solo verificados

@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import {
   Avatar,
   AvatarFallback,
@@ -18,8 +17,9 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui';
-import { Award, Calendar, CheckCircle, Clock, Mail, MapPin, MessageCircle, Phone, Shield, Star } from 'lucide-react';
+import { Award, Calendar, CheckCircle, Clock, MapPin, MessageCircle, Shield, Star } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
 
 // Mock data - en una app real vendría de una API
 const serviceData = {
@@ -376,16 +376,6 @@ export default function ServiceDetailPage() {
                     <MessageCircle className="w-4 h-4 mr-2" />
                     Enviar Mensaje
                   </Button>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Button variant="outline" size="sm">
-                      <Phone className="w-4 h-4 mr-1" />
-                      Llamar
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Mail className="w-4 h-4 mr-1" />
-                      Email
-                    </Button>
-                  </div>
                 </CardContent>
               </Card>
             </div>

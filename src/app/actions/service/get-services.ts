@@ -1,3 +1,5 @@
+'use server';
+
 import { getPayloadClient } from '@/lib/payload';
 
 export async function getServices() {

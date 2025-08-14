@@ -80,12 +80,10 @@ export const Services: CollectionConfig = {
     {
       name: 'reviews',
       label: 'Reseñas',
-      type: 'number',
+      type: 'relationship',
+      relationTo: 'reviews',
+      hasMany: true,
       required: false,
-      min: 0,
-      admin: {
-        step: 1,
-      },
     },
     {
       name: 'completedJobs',
