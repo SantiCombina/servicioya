@@ -14,12 +14,12 @@ export const Users: CollectionConfig = {
   fields: [
     {
       name: 'name',
-      label: 'Name',
+      label: 'Nombre',
       type: 'text',
     },
     {
       name: 'role',
-      label: 'Role',
+      label: 'Rol',
       type: 'select',
       options: [
         {

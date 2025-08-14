@@ -8,15 +8,18 @@ export const Locations: CollectionConfig = {
   fields: [
     {
       name: 'name',
+      label: 'Nombre',
       type: 'text',
       required: true,
     },
     {
       name: 'province',
+      label: 'Provincia',
       type: 'text',
     },
     {
       name: 'country',
+      label: 'País',
       type: 'text',
       defaultValue: 'Argentina',
     },

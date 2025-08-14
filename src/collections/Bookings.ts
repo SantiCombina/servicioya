@@ -8,29 +8,34 @@ export const Bookings: CollectionConfig = {
   fields: [
     {
       name: 'service',
+      label: 'Servicio',
       type: 'relationship',
       relationTo: 'services',
       required: true,
     },
     {
       name: 'provider',
+      label: 'Proveedor',
       type: 'relationship',
       relationTo: 'users',
       required: true,
     },
     {
       name: 'client',
+      label: 'Cliente',
       type: 'relationship',
       relationTo: 'users',
       required: true,
     },
     {
       name: 'date',
+      label: 'Fecha',
       type: 'date',
       required: true,
     },
     {
       name: 'status',
+      label: 'Estado',
       type: 'select',
       options: [
         { label: 'Pendiente', value: 'pending' },
@@ -43,11 +48,13 @@ export const Bookings: CollectionConfig = {
     },
     {
       name: 'finalPrice',
+      label: 'Precio final',
       type: 'number',
       required: false,
     },
     {
       name: 'reviewed',
+      label: 'Reseñado',
       type: 'checkbox',
       defaultValue: false,
     },

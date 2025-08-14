@@ -8,11 +8,13 @@ export const Media: CollectionConfig = {
   fields: [
     {
       name: 'alt',
+      label: 'Texto alternativo',
       type: 'text',
       required: true,
     },
     {
       name: 'publicUrl',
+      label: 'URL pública',
       type: 'text',
       admin: { readOnly: true },
       hooks: {

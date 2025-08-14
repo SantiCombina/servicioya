@@ -8,30 +8,35 @@ export const Reviews: CollectionConfig = {
   fields: [
     {
       name: 'booking',
+      label: 'Reserva',
       type: 'relationship',
       relationTo: 'bookings',
       required: true,
     },
     {
       name: 'author',
+      label: 'Autor',
       type: 'relationship',
       relationTo: 'users',
       required: true,
     },
     {
       name: 'targetUser',
+      label: 'Usuario reseñado',
       type: 'relationship',
       relationTo: 'users',
       required: true,
     },
     {
       name: 'service',
+      label: 'Servicio',
       type: 'relationship',
       relationTo: 'services',
       required: true,
     },
     {
       name: 'scoreService',
+      label: 'Puntaje servicio',
       type: 'number',
       min: 1,
       max: 5,
@@ -39,6 +44,7 @@ export const Reviews: CollectionConfig = {
     },
     {
       name: 'scoreTrato',
+      label: 'Puntaje trato',
       type: 'number',
       min: 1,
       max: 5,
@@ -46,6 +52,7 @@ export const Reviews: CollectionConfig = {
     },
     {
       name: 'scoreCosto',
+      label: 'Puntaje costo',
       type: 'number',
       min: 1,
       max: 5,
@@ -53,24 +60,29 @@ export const Reviews: CollectionConfig = {
     },
     {
       name: 'comment',
+      label: 'Comentario',
       type: 'textarea',
       required: false,
     },
     {
       name: 'responses',
+      label: 'Respuestas',
       type: 'array',
       fields: [
         {
           name: 'author',
+          label: 'Autor',
           type: 'relationship',
           relationTo: 'users',
         },
         {
           name: 'comment',
+          label: 'Comentario',
           type: 'textarea',
         },
         {
           name: 'createdAt',
+          label: 'Fecha de creación',
           type: 'date',
         },
       ],
