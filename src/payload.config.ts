@@ -5,8 +5,7 @@ import { postgresAdapter } from '@payloadcms/db-postgres';
 import { en } from '@payloadcms/translations/languages/en';
 import { es } from '@payloadcms/translations/languages/es';
 import { buildConfig } from 'payload';
-
-import { Users, Media, Categories, Locations, Services, Bookings, Reviews, ReviewReplies } from './collections';
+import { Bookings, Categories, Locations, Media, ReviewReplies, Reviews, Services, Users } from './collections';
 
 export default buildConfig({
   editor: lexicalEditor(),
@@ -36,4 +35,7 @@ export default buildConfig({
     user: 'users',
   },
   sharp,
+  typescript: {
+    outputFile: 'src/payload-types.ts',
+  },
 });

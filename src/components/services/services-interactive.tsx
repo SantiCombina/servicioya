@@ -1,80 +1,141 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { FiltersSidebar } from '@/components/services/filters-sidebar';
 import { ServiceCard } from '@/components/services/service-card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
 import { normalize } from '@/lib/helpers/normalize';
 import { Search } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
+import { Service, Category, Location, User } from '@/payload-types';
 
-export function ServicesInteractive({ initialServices }: { initialServices: any[] }) {
+// Tipos para el componente
+interface ExtendedService extends Service {
+  category: Category;
+  location: Location;
+  provider: User;
+}
+
+type SortOption = 'rating' | 'price-low' | 'price-high' | 'jobs' | 'reviews';
+
+export function ServicesInteractive({ initialServices }: { initialServices: ExtendedService[] }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState([0, 10000]);
-  const [sortBy, setSortBy] = useState('rating');
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
+  const [sortBy, setSortBy] = useState<SortOption>('rating');
   const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
-  const [services] = useState<any[]>(initialServices);
+  const [services] = useState<ExtendedService[]>(initialServices);
 
   const searchParams = useSearchParams();
 
-  // Extraer categorías y ubicaciones únicas de los servicios
-  const categories = Array.from(new Set(services.map((s) => s.category?.name).filter(Boolean)));
-  const locations = Array.from(new Set(services.map((s) => s.location?.name).filter(Boolean)));
+  // Extraer categorías y ubicaciones únicas de los servicios usando los tipos correctos
+  const categories = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          services
+            .filter((s) => typeof s.category === 'object' && s.category.name)
+            .map((s) => (s.category as Category).name),
+        ),
+      ),
+    [services],
+  );
+
+  const locations = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          services
+            .filter((s) => typeof s.location === 'object' && s.location.name)
+            .map((s) => (s.location as Location).name),
+        ),
+      ),
+    [services],
+  );
 
   useEffect(() => {
     const search = searchParams.get('search') || '';
     setSearchTerm(search);
   }, [searchParams]);
 
-  const filteredServices = services
-    .filter((service) => {
-      // Búsqueda
-      let matchesSearch = true;
-      if (searchTerm.trim() !== '') {
-        const term = normalize(searchTerm);
-        const keywords = term.split(/\s+/).filter(Boolean);
-        const fields = [
-          normalize(service.title),
-          normalize(service.provider?.name),
-          normalize(service.category?.name),
-          normalize(service.description),
-        ];
-        matchesSearch = keywords.some((kw) => fields.some((field) => field && field.includes(kw)));
-      }
-      // Categoría
-      let matchesCategory = true;
-      if (selectedCategory.length > 0) {
-        matchesCategory = selectedCategory.some((cat) => normalize(service.category?.name) === normalize(cat));
-      }
-      // Ubicación
-      let matchesLocation = true;
-      if (selectedLocation.length > 0) {
-        matchesLocation = selectedLocation.some((loc) => normalize(service.location?.name) === normalize(loc));
-      }
-      // Precio
-      const matchesPrice = service.priceFrom >= priceRange[0] && service.priceFrom <= priceRange[1];
-      // Verificado
-      const matchesVerified = !showVerifiedOnly || service.verified;
-      return matchesSearch && matchesCategory && matchesLocation && matchesPrice && matchesVerified;
-    })
-    .sort((a, b) => {
+  // Función helper para verificar si un service tiene las relaciones pobladas
+  const isServicePopulated = (service: Service): service is ExtendedService => {
+    return (
+      typeof service.category === 'object' &&
+      typeof service.location === 'object' &&
+      typeof service.provider === 'object'
+    );
+  };
+
+  // Función de filtrado mejorada con tipos seguros
+  const filterServices = useCallback(
+    (services: ExtendedService[]): ExtendedService[] => {
+      return services.filter((service) => {
+        if (!isServicePopulated(service)) return false;
+
+        // Búsqueda por texto
+        let matchesSearch = true;
+        if (searchTerm.trim() !== '') {
+          const term = normalize(searchTerm);
+          const keywords = term.split(/\s+/).filter(Boolean);
+          const searchableFields = [
+            normalize(service.title || ''),
+            normalize(service.provider.name || ''),
+            normalize(service.category.name || ''),
+            normalize(service.description || ''),
+          ];
+
+          matchesSearch = keywords.some((keyword) => searchableFields.some((field) => field.includes(keyword)));
+        }
+
+        // Filtro por categoría
+        const matchesCategory =
+          selectedCategory.length === 0 ||
+          selectedCategory.some((cat) => normalize(service.category.name) === normalize(cat));
+
+        // Filtro por ubicación
+        const matchesLocation =
+          selectedLocation.length === 0 ||
+          selectedLocation.some((loc) => normalize(service.location.name) === normalize(loc));
+
+        // Filtro por precio
+        const matchesPrice = service.priceFrom >= priceRange[0] && service.priceFrom <= priceRange[1];
+
+        // Filtro por verificación
+        const matchesVerified = !showVerifiedOnly || Boolean(service.verified);
+
+        return matchesSearch && matchesCategory && matchesLocation && matchesPrice && matchesVerified;
+      });
+    },
+    [searchTerm, selectedCategory, selectedLocation, priceRange, showVerifiedOnly],
+  );
+
+  // Función de ordenamiento mejorada
+  const sortServices = useCallback((services: ExtendedService[], sortBy: SortOption): ExtendedService[] => {
+    return [...services].sort((a, b) => {
       switch (sortBy) {
         case 'rating':
           return (b.rating || 0) - (a.rating || 0);
         case 'price-low':
-          return (a.priceFrom || 0) - (b.priceFrom || 0);
+          return a.priceFrom - b.priceFrom;
         case 'price-high':
-          return (b.priceFrom || 0) - (a.priceFrom || 0);
+          return b.priceFrom - a.priceFrom;
         case 'jobs':
           return (b.completedJobs || 0) - (a.completedJobs || 0);
         case 'reviews':
-          return (b.reviews?.length || 0) - (a.reviews?.length || 0);
+          return (Array.isArray(b.reviews) ? b.reviews.length : 0) - (Array.isArray(a.reviews) ? a.reviews.length : 0);
         default:
           return 0;
       }
     });
+  }, []);
+
+  // Servicios filtrados y ordenados
+  const processedServices = useMemo(() => {
+    const filtered = filterServices(services);
+    return sortServices(filtered, sortBy);
+  }, [services, filterServices, sortServices, sortBy]);
 
   return (
     <div className="min-h-main">
@@ -88,7 +149,7 @@ export function ServicesInteractive({ initialServices }: { initialServices: any[
               selectedLocation={selectedLocation}
               setSelectedLocation={setSelectedLocation}
               priceRange={priceRange}
-              setPriceRange={setPriceRange}
+              setPriceRange={(value: number[]) => setPriceRange([value[0], value[1]])}
               showVerifiedOnly={showVerifiedOnly}
               setShowVerifiedOnly={setShowVerifiedOnly}
               categories={categories}
@@ -101,9 +162,9 @@ export function ServicesInteractive({ initialServices }: { initialServices: any[
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
               <div>
                 <h1 className="text-2xl font-bold">Servicios Disponibles</h1>
-                <p className="text-gray-600">{filteredServices.length} servicios encontrados</p>
+                <p className="text-gray-600">{processedServices.length} servicios encontrados</p>
               </div>
-              <Select value={sortBy} onValueChange={setSortBy}>
+              <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
                 <SelectTrigger className="w-[200px]">
                   <SelectValue placeholder="Ordenar por" />
                 </SelectTrigger>
@@ -118,9 +179,9 @@ export function ServicesInteractive({ initialServices }: { initialServices: any[
             </div>
 
             {/* Services Grid */}
-            {filteredServices.length > 0 ? (
+            {processedServices.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredServices.map((service) => (
+                {processedServices.map((service: ExtendedService) => (
                   <ServiceCard key={service.id} service={service} />
                 ))}
               </div>

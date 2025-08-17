@@ -14,7 +14,6 @@ export * from './label';
 export * from './navbar/logo';
 export * from './navbar/navbar';
 export * from './navbar/search-input';
-export * from '../../app/theme-provider';
 export * from './navbar/theme-toggle';
 export * from './navbar/user-trigger';
 export * from './progress';

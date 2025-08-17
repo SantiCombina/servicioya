@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { getCurrentUser } from '@/app/actions/user/get-current-user';
 import { logoutUser } from '@/app/actions/user/logout-user';
 import {
@@ -12,12 +13,11 @@ import {
   Skeleton,
   UserAvatar,
 } from '@/components/ui';
-import { getUserDisplayInfo } from '@/lib/helpers/user-display-info';
+import { TypedUser } from 'payload';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
 export function UserTrigger() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<TypedUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const handleLogout = async () => {
@@ -51,22 +51,20 @@ export function UserTrigger() {
       </Button>
     );
 
-  const { name, email, avatarUrl } = getUserDisplayInfo(user);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" aria-label="Abrir menú de usuario">
-          <UserAvatar name="name" avatarUrl={avatarUrl} />
+          <UserAvatar name={user.username} avatarUrl={''} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-60">
         <DropdownMenuItem asChild className="flex items-center py-4 cursor-pointer">
           <Link href={`/profile/${user.id}`} className="flex items-center gap-3 w-full">
-            <UserAvatar avatarUrl={avatarUrl} name="name" />
+            <UserAvatar avatarUrl={''} name={user.username} />
             <div className="flex flex-col">
-              <span className="font-medium text-sm">{name}</span>
-              {email ? <span className="text-xs text-muted-foreground">{email}</span> : null}
+              <span className="font-medium text-sm">{user.username}</span>
+              {user.email ? <span className="text-xs text-muted-foreground">{user.email}</span> : null}
             </div>
           </Link>
         </DropdownMenuItem>

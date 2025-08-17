@@ -2,7 +2,6 @@ import { getUserById } from '@/app/actions/user/get-user-by-id';
 import { ProfileHeader } from '@/components/profile/[id]/profile-header';
 import { ProfileSectionCard } from '@/components/profile/[id]/profile-section-card';
 import { Briefcase, FileText } from 'lucide-react';
-import { getUserDisplayInfo } from '@/lib/helpers/user-display-info';
 
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -16,12 +15,10 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
     );
   }
 
-  const { name, email, avatarUrl } = getUserDisplayInfo(user);
-
   return (
     <div className="min-h-main">
       <main className="container py-6">
-        <ProfileHeader name={name} avatarUrl={avatarUrl} email={email} userId={String(user.id)} />
+        <ProfileHeader user={user} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <ProfileSectionCard
