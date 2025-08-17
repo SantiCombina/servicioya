@@ -79,7 +79,7 @@ export function ServiceCard({ service }: Props) {
               Desde ${service.priceFrom?.toLocaleString() ?? '-'}
             </span>
             <Button size="sm" asChild>
-              <Link href={`/service/${service.id}`}>Ver Detalles</Link>
+              <Link href={`/services/${service.id}`}>Ver Detalles</Link>
             </Button>
           </div>
         </div>

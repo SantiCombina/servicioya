@@ -8,14 +8,13 @@ interface Props {
   name?: string;
   email?: string;
   avatarUrl?: string;
-  params: { id: string };
 }
 
-export function ProfileHeader({ userId, name, email, avatarUrl, params }: Props) {
+export function ProfileHeader({ userId, name, email, avatarUrl }: Props) {
   return (
     <Card className="mb-8 relative bg-card border-border">
       <div className="absolute top-4 right-4">
-        <Link href={`/profile/${params.id}/edit`}>
+        <Link href={`/profile/${userId}/edit`}>
           <Button variant="outline" size="sm" className="text-xs bg-transparent">
             <Edit className="w-3 h-3 mr-1" />
           </Button>

@@ -4,8 +4,9 @@ import { ProfileSectionCard } from '@/components/profile/[id]/profile-section-ca
 import { Briefcase, FileText } from 'lucide-react';
 import { getUserDisplayInfo } from '@/lib/helpers/user-display-info';
 
-export default async function ProfilePage({ params }: { params: { id: string } }) {
-  const user = await getUserById(params.id);
+export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const user = await getUserById(id);
 
   if (!user) {
     return (
@@ -20,11 +21,11 @@ export default async function ProfilePage({ params }: { params: { id: string } }
   return (
     <div className="min-h-main">
       <main className="container py-6">
-        <ProfileHeader name={name} avatarUrl={avatarUrl} email={email} userId={String(user.id)} params={params} />
+        <ProfileHeader name={name} avatarUrl={avatarUrl} email={email} userId={String(user.id)} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <ProfileSectionCard
-            href={`/profile/${params.id}/my-services`}
+            href={`/profile/${id}/my-services`}
             icon={<Briefcase size={28} strokeWidth={2.2} className="text-blue-600" />}
             bgColor="bg-blue-100"
             title="Mis Servicios"
@@ -32,7 +33,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
             count={3}
           />
           <ProfileSectionCard
-            href={`/profile/${params.id}/my-contracts`}
+            href={`/profile/${id}/my-contracts`}
             icon={<FileText size={28} strokeWidth={2.2} className="text-green-600" />}
             bgColor="bg-green-100"
             title="Mis Contratos"
