@@ -1,23 +1,22 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { getCurrentUser } from '@/app/actions/user/get-current-user';
+import { logoutUser } from '@/app/actions/user/logout-user';
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
   Button,
-  Skeleton,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  Skeleton,
+  UserAvatar,
 } from '@/components/ui';
-import { logoutUser } from '@/app/actions/user/logout-user';
-import { getCurrentUser } from '@/app/actions/user/get-current-user';
+import { getUserDisplayInfo } from '@/lib/helpers/user-display-info';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-export function UserAvatar() {
+export function UserTrigger() {
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -52,31 +51,19 @@ export function UserAvatar() {
       </Button>
     );
 
-  const name = user.name || user.email?.split('@')[0] || 'Usuario';
-  const email = user.email || '';
-  const avatarUrl = user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}`;
+  const { name, email, avatarUrl } = getUserDisplayInfo(user);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" aria-label="Abrir menú de usuario">
-          <Avatar>
-            <AvatarImage src={avatarUrl} alt="Avatar" />
-            <AvatarFallback className="bg-primary text-primary-foreground">
-              {name[0]?.toUpperCase() || 'U'}
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar name="name" avatarUrl={avatarUrl} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-60">
         <DropdownMenuItem asChild className="flex items-center py-4 cursor-pointer">
           <Link href={`/profile/${user.id}`} className="flex items-center gap-3 w-full">
-            <Avatar>
-              <AvatarImage src={avatarUrl} alt="Avatar" />
-              <AvatarFallback className="bg-primary text-primary-foreground">
-                {name[0]?.toUpperCase() || 'U'}
-              </AvatarFallback>
-            </Avatar>
+            <UserAvatar avatarUrl={avatarUrl} name="name" />
             <div className="flex flex-col">
               <span className="font-medium text-sm">{name}</span>
               {email ? <span className="text-xs text-muted-foreground">{email}</span> : null}

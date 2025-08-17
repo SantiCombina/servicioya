@@ -10,6 +10,7 @@ import {
   Checkbox,
   Label,
   Slider,
+  Button,
 } from '@/components/ui';
 import { Filter } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -26,23 +27,22 @@ interface Props {
   categories: string[];
   locations: string[];
 }
-export function FiltersSidebar(props: Props) {
-  const {
-    selectedCategory,
-    setSelectedCategory,
-    selectedLocation,
-    setSelectedLocation,
-    priceRange,
-    setPriceRange,
-    showVerifiedOnly,
-    setShowVerifiedOnly,
-    categories,
-    locations,
-  } = props;
+
+export function FiltersSidebar({
+  selectedCategory,
+  setSelectedCategory,
+  selectedLocation,
+  setSelectedLocation,
+  priceRange,
+  setPriceRange,
+  showVerifiedOnly,
+  setShowVerifiedOnly,
+  categories,
+  locations,
+}: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Helper para actualizar los query params
   const updateQueryParams = (params: Record<string, any>) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     Object.entries(params).forEach(([key, value]) => {
@@ -97,21 +97,46 @@ export function FiltersSidebar(props: Props) {
     updateQueryParams({ verified: checked });
   };
 
+  const handleClearFilters = () => {
+    setSelectedCategory([]);
+    setSelectedLocation([]);
+    setPriceRange([0, 10000]);
+    setShowVerifiedOnly(false);
+    router.replace('?');
+  };
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <Filter className="w-5 h-5 mr-2" />
-          Filtros
+        <CardTitle className="flex items-center justify-between">
+          <span className="flex items-center">
+            <Filter className="w-5 h-5 mr-2" />
+            Filtros
+          </span>
+          <Button variant={'link'} size="sm" className="text-blue-400 pr-0" onClick={handleClearFilters}>
+            Remover filtros
+          </Button>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-3">
+        {/* Verified Only */}
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="verified"
+            checked={showVerifiedOnly}
+            onCheckedChange={(checked) => handleVerifiedChange(Boolean(checked))}
+          />
+          <Label htmlFor="verified" className="text-sm">
+            Solo verificados
+          </Label>
+        </div>
+
         {/* Categories */}
         <Accordion type="single" collapsible defaultValue="categories">
           <AccordionItem value="categories">
             <AccordionTrigger className="text-sm font-medium">Categoría</AccordionTrigger>
             <AccordionContent>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {categories.map((category) => (
                   <div key={category} className="flex items-center space-x-2">
                     <Checkbox
@@ -134,7 +159,7 @@ export function FiltersSidebar(props: Props) {
           <AccordionItem value="locations">
             <AccordionTrigger className="text-sm font-medium">Ubicación</AccordionTrigger>
             <AccordionContent>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {locations.map((location) => (
                   <div key={location} className="flex items-center space-x-2">
                     <Checkbox
@@ -153,7 +178,7 @@ export function FiltersSidebar(props: Props) {
         </Accordion>
 
         {/* Price Range */}
-        <div>
+        <>
           <Label className="text-sm font-medium mb-2 block">
             Precio: ${priceRange[0]} - ${priceRange[1]}
           </Label>
@@ -165,19 +190,7 @@ export function FiltersSidebar(props: Props) {
             step={500}
             className="w-full"
           />
-        </div>
-
-        {/* Verified Only */}
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="verified"
-            checked={showVerifiedOnly}
-            onCheckedChange={(checked) => handleVerifiedChange(Boolean(checked))}
-          />
-          <Label htmlFor="verified" className="text-sm">
-            Solo verificados
-          </Label>
-        </div>
+        </>
       </CardContent>
     </Card>
   );

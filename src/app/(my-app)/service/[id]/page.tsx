@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Avatar,
   AvatarFallback,
@@ -18,8 +19,8 @@ import {
   TabsTrigger,
 } from '@/components/ui';
 import { Award, Calendar, CheckCircle, Clock, MapPin, MessageCircle, Shield, Star } from 'lucide-react';
+import { formatDate } from '@/lib/helpers/format-date';
 import Image from 'next/image';
-import { useState } from 'react';
 
 // Mock data - en una app real vendría de una API
 const serviceData = {
@@ -253,55 +254,44 @@ export default function ServiceDetailPage() {
                 <div className="space-y-6">
                   {reviews.map((review) => (
                     <div key={review.id} className="border-b pb-6 last:border-b-0">
-                      <div className="flex items-start space-x-4">
-                        <Avatar>
-                          <AvatarImage src={review.avatar || '/placeholder.svg'} />
-                          <AvatarFallback>{review.user[0]}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-2">
-                            <div>
-                              <h4 className="font-semibold">{review.user}</h4>
-                              <div className="flex items-center">
-                                {[...Array(5)].map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    className={`w-4 h-4 ${
-                                      i < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                                    }`}
-                                  />
-                                ))}
-                                <span className="ml-2 text-sm text-gray-500">{review.date}</span>
-                              </div>
-                            </div>
+                      <div className="flex flex-col">
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`w-4 h-4 ${i < review.rating ? 'fill-blue-500 text-blue-500' : 'text-gray-300'}`}
+                              />
+                            ))}
                           </div>
-                          <p className="text-foreground mb-3">{review.comment}</p>
-
-                          {/* Detailed ratings */}
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-muted-foreground mb-3">
-                            <div>Servicio: {review.ratings.service}/5</div>
-                            <div>Puntualidad: {review.ratings.punctuality}/5</div>
-                            <div>Precio: {review.ratings.price}/5</div>
-                            <div>Trato: {review.ratings.treatment}/5</div>
-                          </div>
-
-                          {/* Provider response */}
-                          {review.response && (
-                            <div className="bg-blue-50 p-3 rounded-lg mt-3">
-                              <div className="flex items-center mb-1">
-                                <Avatar className="w-6 h-6 mr-2">
-                                  <AvatarImage src={serviceData.provider.avatar || '/placeholder.svg'} />
-                                  <AvatarFallback>{serviceData.provider.name[0]}</AvatarFallback>
-                                </Avatar>
-                                <span className="text-sm font-semibold">{serviceData.provider.name}</span>
-                                <Badge variant="secondary" className="ml-2 text-xs">
-                                  Proveedor
-                                </Badge>
-                              </div>
-                              <p className="text-sm text-foreground">{review.response}</p>
-                            </div>
-                          )}
+                          <span className="text-sm text-gray-500">{formatDate(review.date)}</span>
                         </div>
+                        <p className="text-foreground mb-3">{review.comment}</p>
+
+                        {/* Detailed ratings */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-muted-foreground mb-3">
+                          <div>Servicio: {review.ratings.service}/5</div>
+                          <div>Puntualidad: {review.ratings.punctuality}/5</div>
+                          <div>Precio: {review.ratings.price}/5</div>
+                          <div>Trato: {review.ratings.treatment}/5</div>
+                        </div>
+
+                        {/* Provider response */}
+                        {review.response && (
+                          <div className="bg-blue-50 p-3 rounded-lg mt-3">
+                            <div className="flex items-center mb-1">
+                              <Avatar className="w-6 h-6 mr-2">
+                                <AvatarImage src={serviceData.provider.avatar || '/placeholder.svg'} />
+                                <AvatarFallback>{serviceData.provider.name[0]}</AvatarFallback>
+                              </Avatar>
+                              <span className="text-sm font-semibold">{serviceData.provider.name}</span>
+                              <Badge variant="secondary" className="ml-2 text-xs">
+                                Proveedor
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-foreground">{review.response}</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}

@@ -18,6 +18,22 @@ export const Users: CollectionConfig = {
       type: 'text',
     },
     {
+      name: 'phone',
+      label: 'Teléfono',
+      type: 'text',
+    },
+    {
+      name: 'dni',
+      label: 'DNI',
+      type: 'number',
+    },
+    {
+      name: 'avatar',
+      label: 'Avatar',
+      type: 'upload',
+      relationTo: 'media',
+    },
+    {
       name: 'role',
       label: 'Rol',
       type: 'select',

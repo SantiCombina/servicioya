@@ -95,6 +95,7 @@ export function ServicesInteractive({ initialServices }: { initialServices: any[
               locations={locations}
             />
           </div>
+
           <div className="lg:col-span-3">
             {/* Header with sort */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
@@ -115,6 +116,7 @@ export function ServicesInteractive({ initialServices }: { initialServices: any[
                 </SelectContent>
               </Select>
             </div>
+
             {/* Services Grid */}
             {filteredServices.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

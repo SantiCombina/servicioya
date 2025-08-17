@@ -1,7 +1,7 @@
 import { Logo } from './logo';
 import { SearchInput } from './search-input';
 import { ThemeToggle } from './theme-toggle';
-import { UserAvatar } from './user-avatar';
+import { UserTrigger } from './user-trigger';
 
 export function Navbar() {
   return (
@@ -13,7 +13,7 @@ export function Navbar() {
 
         <div className="flex items-center space-x-3">
           <ThemeToggle />
-          <UserAvatar />
+          <UserTrigger />
         </div>
       </div>
     </nav>

@@ -170,7 +170,7 @@ export default function EditProfilePage() {
 
   return (
     <div className="min-h-main">
-      <main className="container py-8">
+      <main className="container py-6">
         <form onSubmit={handleSubmit}>
           <Card>
             <CardHeader>

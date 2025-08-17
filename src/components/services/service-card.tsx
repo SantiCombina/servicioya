@@ -44,13 +44,13 @@ export function ServiceCard({ service }: Props) {
         </div>
       </div>
       <CardHeader>
-        <CardTitle className="text-lg">{service.title || 'Sin título'}</CardTitle>
+        <CardTitle className="text-lg mb-0">{service.title || 'Sin título'}</CardTitle>
         <CardDescription>por {service.provider?.name || 'Sin proveedor'}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-gray-600 mb-4">{service.description || 'Sin descripción'}</p>
+        <p className="text-sm text-gray-600 mb-3">{service.description || 'Sin descripción'}</p>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-1">
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />

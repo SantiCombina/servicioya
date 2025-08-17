@@ -136,7 +136,7 @@ export default function MyServicesPage() {
 
   return (
     <div className="min-h-main">
-      <main className="container py-8">
+      <main className="container py-6">
         {/* Botones de Navegación */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
           <Link href={`/profile/${profileId}`}>
