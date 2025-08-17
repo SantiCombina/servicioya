@@ -4,12 +4,7 @@ import { ProfileSectionCard } from '@/components/profile/[id]/profile-section-ca
 import { Briefcase, FileText } from 'lucide-react';
 import { getUserDisplayInfo } from '@/lib/helpers/user-display-info';
 
-interface Props {
-  params: { id: string };
-}
-
-export default async function ProfilePage(props: Props) {
-  const params = await props.params;
+export default async function ProfilePage({ params }: { params: { id: string } }) {
   const user = await getUserById(params.id);
 
   if (!user) {
