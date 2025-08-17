@@ -1,19 +1,11 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, Button, Badge } from '@/components/ui';
 import { Clock, MapPin, Star } from 'lucide-react';
-import { Service, Category, Location, User, Media } from '@/payload-types';
 import Image from 'next/image';
 import Link from 'next/link';
-
-// Tipo para el service con relaciones pobladas
-interface ServiceCardData extends Service {
-  category: Category;
-  location: Location;
-  provider: User;
-  image?: (number | null) | Media;
-}
+import { ExtendedService } from '@/types/service';
 
 interface Props {
-  service: ServiceCardData;
+  service: ExtendedService;
 }
 
 export function ServiceCard({ service }: Props) {

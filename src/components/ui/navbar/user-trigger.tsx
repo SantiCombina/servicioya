@@ -13,11 +13,11 @@ import {
   Skeleton,
   UserAvatar,
 } from '@/components/ui';
-import { TypedUser } from 'payload';
+import { User } from '@/payload-types';
 import Link from 'next/link';
 
 export function UserTrigger() {
-  const [user, setUser] = useState<TypedUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const handleLogout = async () => {
@@ -55,15 +55,15 @@ export function UserTrigger() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" aria-label="Abrir menú de usuario">
-          <UserAvatar name={user.username} avatarUrl={''} />
+          <UserAvatar name={user.name} avatar={user.avatar} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-60">
         <DropdownMenuItem asChild className="flex items-center py-4 cursor-pointer">
           <Link href={`/profile/${user.id}`} className="flex items-center gap-3 w-full">
-            <UserAvatar avatarUrl={''} name={user.username} />
+            <UserAvatar avatar={user.avatar} name={user.name} />
             <div className="flex flex-col">
-              <span className="font-medium text-sm">{user.username}</span>
+              <span className="font-medium text-sm">{user.name}</span>
               {user.email ? <span className="text-xs text-muted-foreground">{user.email}</span> : null}
             </div>
           </Link>

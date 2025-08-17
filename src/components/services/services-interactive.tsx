@@ -7,14 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { normalize } from '@/lib/helpers/normalize';
 import { Search } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { Service, Category, Location, User } from '@/payload-types';
-
-// Tipos para el componente
-interface ExtendedService extends Service {
-  category: Category;
-  location: Location;
-  provider: User;
-}
+import { Category, Location } from '@/payload-types';
+import { ExtendedService, isServicePopulated } from '@/types/service';
 
 type SortOption = 'rating' | 'price-low' | 'price-high' | 'jobs' | 'reviews';
 
@@ -58,15 +52,6 @@ export function ServicesInteractive({ initialServices }: { initialServices: Exte
     const search = searchParams.get('search') || '';
     setSearchTerm(search);
   }, [searchParams]);
-
-  // Función helper para verificar si un service tiene las relaciones pobladas
-  const isServicePopulated = (service: Service): service is ExtendedService => {
-    return (
-      typeof service.category === 'object' &&
-      typeof service.location === 'object' &&
-      typeof service.provider === 'object'
-    );
-  };
 
   // Función de filtrado mejorada con tipos seguros
   const filterServices = useCallback(
