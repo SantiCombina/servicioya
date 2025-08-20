@@ -155,14 +155,20 @@ export interface User {
   password?: string | null;
 }
 /**
+ * Imágenes del sistema. Para mejor calidad, usa imágenes de al menos 800x600 píxeles.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
   id: number;
-  alt: string;
+  /**
+   * Se genera automáticamente basado en el nombre del archivo. Puedes editarlo si lo deseas.
+   */
+  alt?: string | null;
   publicUrl?: string | null;
   _key?: string | null;
+  prefix?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -174,6 +180,35 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      _key?: string | null;
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      _key?: string | null;
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    hero?: {
+      _key?: string | null;
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -207,7 +242,13 @@ export interface Service {
   id: number;
   title: string;
   description: string;
+  /**
+   * Sube entre 1 y 10 fotos de tu servicio. Para mejor calidad, usa imágenes de al menos 800x600 píxeles. Se optimizan automáticamente.
+   */
   photos?: (number | Media)[] | null;
+  /**
+   * Imagen principal para las tarjetas de servicio. Para mejor calidad, usa imágenes de al menos 800x600 píxeles.
+   */
   image?: (number | null) | Media;
   category: number | Category;
   location: number | Location;
@@ -391,6 +432,7 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   publicUrl?: T;
   _key?: T;
+  prefix?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -402,6 +444,43 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              _key?: T;
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              _key?: T;
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        hero?:
+          | T
+          | {
+              _key?: T;
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -20,11 +20,16 @@ export const Services: CollectionConfig = {
     },
     {
       name: 'photos',
-      label: 'Fotos',
+      label: 'Fotos del servicio',
       type: 'upload',
       relationTo: 'media',
       hasMany: true,
       required: false,
+      maxRows: 10,
+      admin: {
+        description:
+          'Sube entre 1 y 10 fotos de tu servicio. Para mejor calidad, usa imágenes de al menos 800x600 píxeles. Se optimizan automáticamente.',
+      },
     },
     {
       name: 'image',
@@ -32,6 +37,10 @@ export const Services: CollectionConfig = {
       type: 'upload',
       relationTo: 'media',
       required: false,
+      admin: {
+        description:
+          'Imagen principal para las tarjetas de servicio. Para mejor calidad, usa imágenes de al menos 800x600 píxeles.',
+      },
     },
     {
       name: 'category',

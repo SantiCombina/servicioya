@@ -9,10 +9,17 @@ interface Props {
 }
 
 export function ServiceCard({ service }: Props) {
-  // Helper para obtener la URL de la imagen
+  // Helper para obtener la URL de la imagen optimizada
   const getImageUrl = (): string => {
-    if (service.image && typeof service.image === 'object' && service.image.url) {
-      return service.image.url;
+    if (service.image && typeof service.image === 'object') {
+      // Usar la versión 'card' optimizada si está disponible
+      if (service.image.sizes?.card?.url) {
+        return service.image.sizes.card.url;
+      }
+      // Fallback a la imagen original
+      if (service.image.url) {
+        return service.image.url;
+      }
     }
     return '/placeholder.svg';
   };

@@ -23,7 +23,9 @@ export default buildConfig({
   plugins: [
     uploadthingStorage({
       collections: {
-        media: true,
+        media: {
+          prefix: 'service-images',
+        },
       },
       options: {
         token: process.env.UPLOADTHING_TOKEN,
