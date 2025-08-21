@@ -1,35 +1,50 @@
 'use server';
 
 import { getPayloadClient } from '@/lib/payload';
+import { Review } from '@/payload-types';
 
-export async function getUserRating(userId: string) {
-  const payload = await getPayloadClient();
+interface UserRatingData {
+  avgRating: number;
+  totalReviews: number;
+}
 
-  // 1. Obtener todos los servicios del usuario
-  const servicesResult = await payload.find({
-    collection: 'services',
-    where: {
-      provider: { equals: userId },
-    },
-    limit: 100,
-  });
-  const services = servicesResult.docs;
+export async function getUserRating(userId: string): Promise<UserRatingData | null> {
+  try {
+    const payload = await getPayloadClient();
 
-  // 2. Obtener todas las reseñas de esos servicios
-  let allReviews: any[] = [];
-  for (const service of services) {
-    if (service.reviews && Array.isArray(service.reviews)) {
-      allReviews = allReviews.concat(service.reviews);
+    // Buscar todas las reseñas donde el usuario es el targetUser
+    const reviewsResult = await payload.find({
+      collection: 'reviews',
+      where: {
+        targetUser: { equals: userId },
+      },
+      limit: 100,
+    });
+
+    const reviews = reviewsResult.docs as Review[];
+    const totalReviews = reviews.length;
+
+    if (totalReviews === 0) {
+      return {
+        avgRating: 0,
+        totalReviews: 0,
+      };
     }
+
+    // Calcular el promedio de los tres puntajes por reseña
+    const totalScore = reviews.reduce((sum, review) => {
+      const reviewAvg = ((review.scoreService || 0) + (review.scoreTrato || 0) + (review.scoreCosto || 0)) / 3;
+      return sum + reviewAvg;
+    }, 0);
+
+    const avgRating = totalScore / totalReviews;
+
+    return {
+      avgRating,
+      totalReviews,
+    };
+  } catch (error) {
+    console.error('Error obteniendo rating del usuario:', error);
+    return null;
   }
-
-  // 3. Calcular el promedio y el total
-  const totalReviews = allReviews.length;
-  const avgRating =
-    totalReviews > 0 ? allReviews.reduce((sum, review) => sum + (review.rating || 0), 0) / totalReviews : 0;
-
-  return {
-    avgRating,
-    totalReviews,
-  };
 }

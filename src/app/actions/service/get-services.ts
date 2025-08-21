@@ -1,9 +1,16 @@
 'use server';
 
 import { getPayloadClient } from '@/lib/payload';
-import { ExtendedService, isServicePopulated } from '@/types/service';
+import { Service } from '@/payload-types';
 
-export async function getServices(): Promise<ExtendedService[]> {
+// Helper function to check if service relationships are populated
+const isServicePopulated = (service: Service): boolean => {
+  return (
+    typeof service.category === 'object' && typeof service.location === 'object' && typeof service.provider === 'object'
+  );
+};
+
+export async function getServices(): Promise<Service[]> {
   const payload = await getPayloadClient();
   const result = await payload.find({
     collection: 'services',

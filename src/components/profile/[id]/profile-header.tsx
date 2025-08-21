@@ -9,10 +9,6 @@ interface Props {
 }
 
 export function ProfileHeader({ user }: Props) {
-  if (!user) {
-    return <div>Usuario no encontrado</div>;
-  }
-
   return (
     <Card className="mb-8 relative bg-card border-border">
       <div className="absolute top-4 right-4">
@@ -33,7 +29,6 @@ export function ProfileHeader({ user }: Props) {
               <Mail className="w-3.5 h-3.5 mr-1.5" />
               <span>{user.email}</span>
             </div>
-            {/* Agrega aquí más campos según tu modelo de usuario */}
           </div>
         </div>
       </CardContent>

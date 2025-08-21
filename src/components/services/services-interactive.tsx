@@ -7,21 +7,29 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { normalize } from '@/lib/helpers/normalize';
 import { Search } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { Category, Location } from '@/payload-types';
-import { ExtendedService, isServicePopulated } from '@/types/service';
+import { Category, Location, Service, User } from '@/payload-types';
 
 type SortOption = 'rating' | 'price-low' | 'price-high' | 'jobs' | 'reviews';
 
-export function ServicesInteractive({ initialServices }: { initialServices: ExtendedService[] }) {
+export function ServicesInteractive({ initialServices }: { initialServices: Service[] }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
   const [sortBy, setSortBy] = useState<SortOption>('rating');
   const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
-  const [services] = useState<ExtendedService[]>(initialServices);
+  const [services] = useState<Service[]>(initialServices);
 
   const searchParams = useSearchParams();
+
+  // Helper function to check if service relationships are populated
+  const isServicePopulated = (service: Service): boolean => {
+    return (
+      typeof service.category === 'object' &&
+      typeof service.location === 'object' &&
+      typeof service.provider === 'object'
+    );
+  };
 
   // Extraer categorías y ubicaciones únicas de los servicios usando los tipos correctos
   const categories = useMemo(
@@ -55,9 +63,16 @@ export function ServicesInteractive({ initialServices }: { initialServices: Exte
 
   // Función de filtrado mejorada con tipos seguros
   const filterServices = useCallback(
-    (services: ExtendedService[]): ExtendedService[] => {
+    (services: Service[]): Service[] => {
       return services.filter((service) => {
         if (!isServicePopulated(service)) return false;
+
+        // Type assertion después de verificar que están poblados
+        const populatedService = service as Service & {
+          category: Category;
+          location: Location;
+          provider: User;
+        };
 
         // Búsqueda por texto
         let matchesSearch = true;
@@ -66,8 +81,8 @@ export function ServicesInteractive({ initialServices }: { initialServices: Exte
           const keywords = term.split(/\s+/).filter(Boolean);
           const searchableFields = [
             normalize(service.title || ''),
-            normalize(service.provider.name || ''),
-            normalize(service.category.name || ''),
+            normalize(populatedService.provider.name || ''),
+            normalize(populatedService.category.name || ''),
             normalize(service.description || ''),
           ];
 
@@ -77,12 +92,12 @@ export function ServicesInteractive({ initialServices }: { initialServices: Exte
         // Filtro por categoría
         const matchesCategory =
           selectedCategory.length === 0 ||
-          selectedCategory.some((cat) => normalize(service.category.name) === normalize(cat));
+          selectedCategory.some((cat) => normalize(populatedService.category.name) === normalize(cat));
 
         // Filtro por ubicación
         const matchesLocation =
           selectedLocation.length === 0 ||
-          selectedLocation.some((loc) => normalize(service.location.name) === normalize(loc));
+          selectedLocation.some((loc) => normalize(populatedService.location.name) === normalize(loc));
 
         // Filtro por precio
         const matchesPrice = service.priceFrom >= priceRange[0] && service.priceFrom <= priceRange[1];
@@ -93,11 +108,11 @@ export function ServicesInteractive({ initialServices }: { initialServices: Exte
         return matchesSearch && matchesCategory && matchesLocation && matchesPrice && matchesVerified;
       });
     },
-    [searchTerm, selectedCategory, selectedLocation, priceRange, showVerifiedOnly],
+    [searchTerm, selectedCategory, selectedLocation, priceRange, showVerifiedOnly, isServicePopulated],
   );
 
   // Función de ordenamiento mejorada
-  const sortServices = useCallback((services: ExtendedService[], sortBy: SortOption): ExtendedService[] => {
+  const sortServices = useCallback((services: Service[], sortBy: SortOption): Service[] => {
     return [...services].sort((a, b) => {
       switch (sortBy) {
         case 'rating':
@@ -166,7 +181,7 @@ export function ServicesInteractive({ initialServices }: { initialServices: Exte
             {/* Services Grid */}
             {processedServices.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {processedServices.map((service: ExtendedService) => (
+                {processedServices.map((service: Service) => (
                   <ServiceCard key={service.id} service={service} />
                 ))}
               </div>

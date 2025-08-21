@@ -2,26 +2,18 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, Button, Badg
 import { Clock, MapPin, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ExtendedService } from '@/types/service';
+import { Service } from '@/payload-types';
+import { getUserName, getImageUrls, getCategoryName, getLocationName } from '@/lib/helpers/service-helpers';
 
 interface Props {
-  service: ExtendedService;
+  service: Service;
 }
 
 export function ServiceCard({ service }: Props) {
   // Helper para obtener la URL de la imagen optimizada
   const getImageUrl = (): string => {
-    if (service.image && typeof service.image === 'object') {
-      // Usar la versión 'card' optimizada si está disponible
-      if (service.image.sizes?.card?.url) {
-        return service.image.sizes.card.url;
-      }
-      // Fallback a la imagen original
-      if (service.image.url) {
-        return service.image.url;
-      }
-    }
-    return '/placeholder.svg';
+    const images = getImageUrls(service.image, service.photos);
+    return images.length > 0 ? images[0] : '/placeholder.svg';
   };
 
   // Helper para contar reviews
@@ -35,7 +27,7 @@ export function ServiceCard({ service }: Props) {
       <div className="relative">
         <Image src={getImageUrl()} alt={service.title} width={300} height={200} className="w-full h-48 object-cover" />
         <div className="absolute top-2 left-2 flex gap-2">
-          <Badge className="bg-blue-600">{service.category.name}</Badge>
+          <Badge className="bg-blue-600">{getCategoryName(service.category)}</Badge>
           {service.verified && (
             <Badge variant="secondary" className="bg-green-100 text-green-800">
               Verificado
@@ -45,7 +37,7 @@ export function ServiceCard({ service }: Props) {
       </div>
       <CardHeader>
         <CardTitle className="text-lg mb-0">{service.title}</CardTitle>
-        <CardDescription>por {service.provider.name || 'Proveedor sin nombre'}</CardDescription>
+        <CardDescription>por {getUserName(service.provider)}</CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-gray-600 mb-3">{service.description}</p>
@@ -62,11 +54,7 @@ export function ServiceCard({ service }: Props) {
 
           <div className="flex items-center text-gray-500">
             <MapPin className="w-4 h-4 mr-1" />
-            <span className="text-sm">
-              {service.location.province
-                ? `${service.location.name}, ${service.location.province}`
-                : service.location.name}
-            </span>
+            <span className="text-sm">{getLocationName(service.location)}</span>
           </div>
 
           <div className="flex items-center text-gray-500">

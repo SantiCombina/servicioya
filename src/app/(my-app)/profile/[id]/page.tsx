@@ -1,11 +1,19 @@
 import { getUserById } from '@/app/actions/user/get-user-by-id';
+import { getUserServicesCount } from '@/app/actions/user/get-user-services-count';
+import { getUserBookingsCount } from '@/app/actions/user/get-user-bookings-count';
 import { ProfileHeader } from '@/components/profile/[id]/profile-header';
 import { ProfileSectionCard } from '@/components/profile/[id]/profile-section-card';
 import { Briefcase, FileText } from 'lucide-react';
 
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const user = await getUserById(id);
+
+  // Obtener datos en paralelo
+  const [user, servicesCount, bookingsCount] = await Promise.all([
+    getUserById(id),
+    getUserServicesCount(id),
+    getUserBookingsCount(id),
+  ]);
 
   if (!user) {
     return (
@@ -27,7 +35,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
             bgColor="bg-blue-100"
             title="Mis Servicios"
             description="Gestiona y publica los servicios que ofreces"
-            count={3}
+            count={servicesCount}
           />
           <ProfileSectionCard
             href={`/profile/${id}/my-contracts`}
@@ -35,7 +43,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
             bgColor="bg-green-100"
             title="Mis Contratos"
             description="Revisa los contratos que has realizado"
-            count={2}
+            count={bookingsCount}
           />
         </div>
       </main>

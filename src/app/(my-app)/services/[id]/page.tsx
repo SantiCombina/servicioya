@@ -1,107 +1,46 @@
-'use client';
-
-import { useState } from 'react';
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
   Badge,
-  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  Progress,
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from '@/components/ui';
-import { Award, Calendar, CheckCircle, Clock, MapPin, MessageCircle, Shield, Star } from 'lucide-react';
-import { formatDate } from '@/lib/helpers/format-date';
-import Image from 'next/image';
+import { Clock, MapPin, Shield } from 'lucide-react';
+import { getServiceById } from '@/app/actions/service/get-service-by-id';
+import { User, Review } from '@/payload-types';
+import { notFound } from 'next/navigation';
+import { ServiceImageGallery } from '@/components/services/[id]/service-image-gallery';
+import { StarRating } from '@/components/services/[id]/star-rating';
+import { ReviewItem } from '@/components/services/[id]/review-item';
+import { ProviderSidebar } from '@/components/services/[id]/provider-sidebar';
+import {
+  getUserName,
+  getAvatarUrl,
+  getImageUrls,
+  getCategoryName,
+  getLocationName,
+} from '@/lib/helpers/service-helpers';
 
-// Mock data - en una app real vendría de una API
-const serviceData = {
-  id: 1,
-  title: 'Plomería Residencial y Comercial',
-  provider: {
-    name: 'Juan Pérez',
-    avatar: '/placeholder.svg?height=100&width=100',
-    rating: 4.8,
-    reviews: 127,
-    completedJobs: 89,
-    memberSince: '2020',
-    verified: true,
-    responseTime: '2 horas',
-    phone: '+54 11 1234-5678',
-    email: 'juan.perez@email.com',
-  },
-  description:
-    'Ofrezco servicios completos de plomería para hogares y comercios. Cuento con más de 15 años de experiencia en el rubro y todas las herramientas necesarias para resolver cualquier problema de plomería.',
-  services: [
-    'Reparación de cañerías',
-    'Instalación de grifos y llaves',
-    'Destapado de cañerías',
-    'Instalación de calefones',
-    'Reparación de inodoros',
-    'Instalación de sistemas de agua',
-  ],
-  priceFrom: 2500,
-  location: 'CABA, Buenos Aires',
-  category: 'Plomería',
-  availability: 'Lun-Vie 8:00-18:00, Sab 8:00-14:00',
-  coverageArea: 'CABA y Gran Buenos Aires',
-  images: [
-    '/placeholder.svg?height=400&width=600',
-    '/placeholder.svg?height=400&width=600',
-    '/placeholder.svg?height=400&width=600',
-  ],
-  ratings: {
-    overall: 4.8,
-    service: 4.9,
-    punctuality: 4.7,
-    price: 4.6,
-    treatment: 4.8,
-  },
-};
+export default async function ServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const service = await getServiceById(id);
 
-const reviews = [
-  {
-    id: 1,
-    user: 'María González',
-    avatar: '/placeholder.svg?height=40&width=40',
-    rating: 5,
-    date: '2024-01-15',
-    comment:
-      'Excelente servicio. Juan llegó puntual y resolvió el problema de la canilla en menos de una hora. Muy profesional y el precio fue justo.',
-    ratings: { service: 5, punctuality: 5, price: 4, treatment: 5 },
-    response: 'Muchas gracias María! Fue un placer ayudarte. Cualquier cosa que necesites, no dudes en contactarme.',
-  },
-  {
-    id: 2,
-    user: 'Carlos López',
-    avatar: '/placeholder.svg?height=40&width=40',
-    rating: 4,
-    date: '2024-01-10',
-    comment: 'Buen trabajo en la instalación del calefón. Llegó en horario y explicó todo el proceso. Recomendado.',
-    ratings: { service: 4, punctuality: 5, price: 4, treatment: 4 },
-  },
-  {
-    id: 3,
-    user: 'Ana Rodríguez',
-    avatar: '/placeholder.svg?height=40&width=40',
-    rating: 5,
-    date: '2024-01-05',
-    comment:
-      'Súper recomendable! Solucionó un problema complejo de cañerías que otros plomeros no pudieron resolver. Muy profesional.',
-    ratings: { service: 5, punctuality: 4, price: 5, treatment: 5 },
-  },
-];
+  if (!service) {
+    notFound();
+  }
 
-export default function ServiceDetailPage() {
-  const [selectedImage, setSelectedImage] = useState(0);
+  const reviews = Array.isArray(service.reviews)
+    ? service.reviews.filter((review): review is Review => typeof review === 'object')
+    : [];
+  const images = getImageUrls(service.image, service.photos);
+  const categoryName = getCategoryName(service.category);
+  const locationName = getLocationName(service.location);
+  const memberSince = new Date(service.createdAt).getFullYear().toString();
 
   return (
     <div className="min-h-main">
@@ -113,42 +52,16 @@ export default function ServiceDetailPage() {
             <Card>
               <CardContent className="p-0">
                 <div className="relative">
-                  <Image
-                    src={serviceData.images[selectedImage] || '/placeholder.svg'}
-                    alt={serviceData.title}
-                    width={600}
-                    height={400}
-                    className="w-full h-96 object-cover rounded-t-lg"
-                  />
+                  <ServiceImageGallery images={images} title={service.title} />
                   <div className="absolute top-4 left-4 flex gap-2">
-                    <Badge className="bg-primary text-primary-foreground">{serviceData.category}</Badge>
-                    {serviceData.provider.verified && (
+                    <Badge className="bg-primary text-primary-foreground">{categoryName}</Badge>
+                    {service.verified && (
                       <Badge variant="secondary" className="bg-green-100 text-green-800">
                         <Shield className="w-3 h-3 mr-1" />
                         Verificado
                       </Badge>
                     )}
                   </div>
-                </div>
-                <div className="flex gap-2 p-4">
-                  {serviceData.images.map((image, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      onClick={() => setSelectedImage(index)}
-                      className={`relative w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                        selectedImage === index ? 'border-primary' : 'border-muted'
-                      }`}
-                    >
-                      <Image
-                        src={image || '/placeholder.svg'}
-                        alt={`Vista ${index + 1}`}
-                        width={80}
-                        height={80}
-                        className="w-full h-full object-cover"
-                      />
-                    </button>
-                  ))}
                 </div>
               </CardContent>
             </Card>
@@ -158,15 +71,15 @@ export default function ServiceDetailPage() {
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="text-2xl text-primary font-bold">{serviceData.title}</CardTitle>
+                    <CardTitle className="text-2xl text-primary font-bold">{service.title}</CardTitle>
                     <CardDescription className="flex items-center mt-2 text-muted-foreground">
                       <MapPin className="w-4 h-4 mr-1 text-primary" />
-                      {serviceData.location} • Cobertura: {serviceData.coverageArea}
+                      {locationName}
                     </CardDescription>
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-bold text-green-600">
-                      Desde ${serviceData.priceFrom.toLocaleString()}
+                      Desde ${service.priceFrom?.toLocaleString() || 'Consultar'}
                     </div>
                     <div className="text-sm text-muted-foreground">por servicio</div>
                   </div>
@@ -174,33 +87,19 @@ export default function ServiceDetailPage() {
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="description" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3">
+                  <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="description">Descripción</TabsTrigger>
-                    <TabsTrigger value="services">Servicios</TabsTrigger>
                     <TabsTrigger value="availability">Disponibilidad</TabsTrigger>
                   </TabsList>
                   <TabsContent value="description" className="mt-4">
-                    <p className="text-foreground leading-relaxed">{serviceData.description}</p>
-                  </TabsContent>
-                  <TabsContent value="services" className="mt-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      {serviceData.services.map((service, index) => (
-                        <div key={index} className="flex items-center">
-                          <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
-                          <span className="text-sm text-foreground">{service}</span>
-                        </div>
-                      ))}
-                    </div>
+                    <p className="text-foreground leading-relaxed">{service.description}</p>
                   </TabsContent>
                   <TabsContent value="availability" className="mt-4">
                     <div className="space-y-2">
                       <div className="flex items-center">
                         <Clock className="w-4 h-4 mr-2 text-primary" />
-                        <span>{serviceData.availability}</span>
+                        <span>{service.availability || 'Disponibilidad a consultar'}</span>
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        Tiempo de respuesta promedio: {serviceData.provider.responseTime}
-                      </p>
                     </div>
                   </TabsContent>
                 </Tabs>
@@ -211,165 +110,55 @@ export default function ServiceDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Calificaciones y Reseñas</CardTitle>
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold">{serviceData.ratings.overall}</div>
-                    <div className="text-sm text-gray-500">General</div>
-                    <div className="flex justify-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-3 h-3 ${
-                            i < Math.floor(serviceData.ratings.overall)
-                              ? 'fill-yellow-400 text-yellow-400'
-                              : 'text-gray-300'
-                          }`}
-                        />
-                      ))}
-                    </div>
+                    <div className="text-2xl font-bold">{service.rating || 0}</div>
+                    <div className="text-sm text-gray-500">Calificación</div>
+                    <StarRating rating={service.rating || 0} size="sm" className="justify-center" />
                   </div>
                   <div className="text-center">
-                    <div className="text-lg font-semibold">{serviceData.ratings.service}</div>
-                    <div className="text-xs text-gray-500">Servicio</div>
-                    <Progress value={serviceData.ratings.service * 20} className="h-1 mt-1" />
+                    <div className="text-lg font-semibold">{reviews.length}</div>
+                    <div className="text-xs text-gray-500">Reseñas</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-lg font-semibold">{serviceData.ratings.punctuality}</div>
-                    <div className="text-xs text-gray-500">Puntualidad</div>
-                    <Progress value={serviceData.ratings.punctuality * 20} className="h-1 mt-1" />
-                  </div>
-                  <div className="text-center">
-                    <div className="text-lg font-semibold">{serviceData.ratings.price}</div>
-                    <div className="text-xs text-gray-500">Precio</div>
-                    <Progress value={serviceData.ratings.price * 20} className="h-1 mt-1" />
-                  </div>
-                  <div className="text-center">
-                    <div className="text-lg font-semibold">{serviceData.ratings.treatment}</div>
-                    <div className="text-xs text-gray-500">Trato</div>
-                    <Progress value={serviceData.ratings.treatment * 20} className="h-1 mt-1" />
+                    <div className="text-lg font-semibold">{service.completedJobs || 0}</div>
+                    <div className="text-xs text-gray-500">Trabajos</div>
                   </div>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  {reviews.map((review) => (
-                    <div key={review.id} className="border-b pb-6 last:border-b-0">
-                      <div className="flex flex-col">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`w-4 h-4 ${i < review.rating ? 'fill-blue-500 text-blue-500' : 'text-gray-300'}`}
-                              />
-                            ))}
-                          </div>
-                          <span className="text-sm text-gray-500">{formatDate(review.date)}</span>
-                        </div>
-                        <p className="text-foreground mb-3">{review.comment}</p>
-
-                        {/* Detailed ratings */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs text-muted-foreground mb-3">
-                          <div>Servicio: {review.ratings.service}/5</div>
-                          <div>Puntualidad: {review.ratings.punctuality}/5</div>
-                          <div>Precio: {review.ratings.price}/5</div>
-                          <div>Trato: {review.ratings.treatment}/5</div>
-                        </div>
-
-                        {/* Provider response */}
-                        {review.response && (
-                          <div className="bg-blue-50 p-3 rounded-lg mt-3">
-                            <div className="flex items-center mb-1">
-                              <Avatar className="w-6 h-6 mr-2">
-                                <AvatarImage src={serviceData.provider.avatar || '/placeholder.svg'} />
-                                <AvatarFallback>{serviceData.provider.name[0]}</AvatarFallback>
-                              </Avatar>
-                              <span className="text-sm font-semibold">{serviceData.provider.name}</span>
-                              <Badge variant="secondary" className="ml-2 text-xs">
-                                Proveedor
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-foreground">{review.response}</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                  {reviews.length > 0 && typeof service.provider === 'object' ? (
+                    reviews.map((review) => (
+                      <ReviewItem
+                        key={review.id}
+                        review={review}
+                        provider={service.provider as User}
+                        getUserName={getUserName}
+                        getAvatarUrl={getAvatarUrl}
+                      />
+                    ))
+                  ) : (
+                    <p className="text-center text-muted-foreground py-8">No hay reseñas disponibles aún.</p>
+                  )}
                 </div>
               </CardContent>
             </Card>
           </div>
 
           {/* Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24 space-y-6">
-              {/* Provider Info */}
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center space-x-4">
-                    <Avatar className="w-16 h-16">
-                      <AvatarImage src={serviceData.provider.avatar || '/placeholder.svg'} />
-                      <AvatarFallback>{serviceData.provider.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <CardTitle className="text-lg">{serviceData.provider.name}</CardTitle>
-                      <div className="flex items-center">
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
-                        <span className="font-semibold">{serviceData.provider.rating}</span>
-                        <span className="text-gray-500 ml-1">({serviceData.provider.reviews})</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4 text-center">
-                    <div>
-                      <div className="text-2xl font-bold text-blue-600">{serviceData.provider.completedJobs}</div>
-                      <div className="text-xs text-muted-foreground">Trabajos realizados</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-green-600">{serviceData.provider.memberSince}</div>
-                      <div className="text-xs text-muted-foreground">Miembro desde</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-center space-x-2">
-                    {serviceData.provider.verified && (
-                      <Badge variant="secondary" className="bg-green-100 text-green-800">
-                        <Shield className="w-3 h-3 mr-1" />
-                        Verificado
-                      </Badge>
-                    )}
-                    <Badge variant="secondary">
-                      <Award className="w-3 h-3 mr-1" />
-                      Pro
-                    </Badge>
-                  </div>
-
-                  <div className="text-center text-sm text-muted-foreground">
-                    Responde en {serviceData.provider.responseTime} promedio
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Contact Actions */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Contactar</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button className="w-full" size="lg">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Contratar servicio
-                  </Button>
-                  <Button variant="outline" className="w-full bg-transparent">
-                    <MessageCircle className="w-4 h-4 mr-2" />
-                    Enviar Mensaje
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+          {typeof service.provider === 'object' && (
+            <ProviderSidebar
+              provider={service.provider}
+              rating={service.rating || 0}
+              reviewsCount={reviews.length}
+              completedJobs={service.completedJobs || 0}
+              memberSince={memberSince}
+              isVerified={service.verified || false}
+              getUserName={getUserName}
+              getAvatarUrl={getAvatarUrl}
+            />
+          )}
         </div>
       </div>
     </div>
