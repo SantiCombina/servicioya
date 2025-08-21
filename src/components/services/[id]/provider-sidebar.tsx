@@ -10,29 +10,21 @@ import {
   CardTitle,
 } from '@/components/ui';
 import { Award, Calendar, MessageCircle, Shield, Star } from 'lucide-react';
-import { User } from '@/payload-types';
+import { User, Media, Service } from '@/payload-types';
 
-interface ProviderSidebarProps {
-  provider: User;
-  rating: number;
-  reviewsCount: number;
-  completedJobs: number;
-  memberSince: string;
-  isVerified: boolean;
-  getUserName: (user: User) => string;
-  getAvatarUrl: (user: User) => string;
+interface Props {
+  service: Service;
 }
 
-export function ProviderSidebar({
-  provider,
-  rating,
-  reviewsCount,
-  completedJobs,
-  memberSince,
-  isVerified,
-  getUserName,
-  getAvatarUrl,
-}: ProviderSidebarProps) {
+export function ProviderSidebar({ service }: Props) {
+  const provider = service.provider as User;
+  const avatarUrl = provider.avatar && typeof provider.avatar === 'object' ? (provider.avatar as Media).url || '' : '';
+  const rating = service.rating || 0;
+  const completedJobs = service.completedJobs || 0;
+  const isVerified = service.verified || false;
+  const reviewsCount = Array.isArray(service.reviews) ? service.reviews.length : 0;
+  const memberSince = new Date(provider.createdAt).getFullYear().toString();
+
   return (
     <div className="lg:col-span-1">
       <div className="sticky top-24 space-y-6">
@@ -41,11 +33,11 @@ export function ProviderSidebar({
           <CardHeader>
             <div className="flex items-center space-x-4">
               <Avatar className="w-16 h-16">
-                <AvatarImage src={getAvatarUrl(provider)} />
-                <AvatarFallback>{getUserName(provider)[0]?.toUpperCase()}</AvatarFallback>
+                <AvatarImage src={avatarUrl} />
+                <AvatarFallback>{provider.name?.[0]?.toUpperCase()}</AvatarFallback>
               </Avatar>
               <div>
-                <CardTitle className="text-lg">{getUserName(provider)}</CardTitle>
+                <CardTitle className="text-lg">{provider.name}</CardTitle>
                 <div className="flex items-center">
                   <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
                   <span className="font-semibold">{rating}</span>

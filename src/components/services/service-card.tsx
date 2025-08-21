@@ -2,8 +2,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, Button, Badg
 import { Clock, MapPin, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Service } from '@/payload-types';
-import { getUserName, getImageUrls, getCategoryName, getLocationName } from '@/lib/helpers/service-helpers';
+import { Service, User, Category, Location } from '@/payload-types';
 
 interface Props {
   service: Service;
@@ -12,8 +11,20 @@ interface Props {
 export function ServiceCard({ service }: Props) {
   // Helper para obtener la URL de la imagen optimizada
   const getImageUrl = (): string => {
-    const images = getImageUrls(service.image, service.photos);
-    return images.length > 0 ? images[0] : '/placeholder.svg';
+    // Intentar primero la imagen principal
+    if (service.image && typeof service.image === 'object' && service.image.url) {
+      return service.image.url;
+    }
+
+    // Si no hay imagen principal, usar la primera foto
+    if (service.photos && Array.isArray(service.photos) && service.photos.length > 0) {
+      const firstPhoto = service.photos[0];
+      if (typeof firstPhoto === 'object' && firstPhoto.url) {
+        return firstPhoto.url;
+      }
+    }
+
+    return '/placeholder.svg';
   };
 
   // Helper para contar reviews
@@ -22,12 +33,16 @@ export function ServiceCard({ service }: Props) {
     return Array.isArray(service.reviews) ? service.reviews.length : 0;
   };
 
+  const provider = service.provider as User;
+  const category = service.category as Category;
+  const location = service.location as Location;
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <div className="relative">
         <Image src={getImageUrl()} alt={service.title} width={300} height={200} className="w-full h-48 object-cover" />
         <div className="absolute top-2 left-2 flex gap-2">
-          <Badge className="bg-blue-600">{getCategoryName(service.category)}</Badge>
+          <Badge className="bg-blue-600">{category.name}</Badge>
           {service.verified && (
             <Badge variant="secondary" className="bg-green-100 text-green-800">
               Verificado
@@ -37,7 +52,7 @@ export function ServiceCard({ service }: Props) {
       </div>
       <CardHeader>
         <CardTitle className="text-lg mb-0">{service.title}</CardTitle>
-        <CardDescription>por {getUserName(service.provider)}</CardDescription>
+        <CardDescription>por {provider.name || provider.email}</CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-gray-600 mb-3">{service.description}</p>
@@ -54,7 +69,7 @@ export function ServiceCard({ service }: Props) {
 
           <div className="flex items-center text-gray-500">
             <MapPin className="w-4 h-4 mr-1" />
-            <span className="text-sm">{getLocationName(service.location)}</span>
+            <span className="text-sm">{location.name}</span>
           </div>
 
           <div className="flex items-center text-gray-500">

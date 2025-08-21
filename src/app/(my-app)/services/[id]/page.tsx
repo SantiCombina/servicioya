@@ -12,19 +12,12 @@ import {
 } from '@/components/ui';
 import { Clock, MapPin, Shield } from 'lucide-react';
 import { getServiceById } from '@/app/actions/service/get-service-by-id';
-import { User, Review } from '@/payload-types';
+import { User, Review, Category, Location, Media } from '@/payload-types';
 import { notFound } from 'next/navigation';
 import { ServiceImageGallery } from '@/components/services/[id]/service-image-gallery';
 import { StarRating } from '@/components/services/[id]/star-rating';
 import { ReviewItem } from '@/components/services/[id]/review-item';
 import { ProviderSidebar } from '@/components/services/[id]/provider-sidebar';
-import {
-  getUserName,
-  getAvatarUrl,
-  getImageUrls,
-  getCategoryName,
-  getLocationName,
-} from '@/lib/helpers/service-helpers';
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -37,10 +30,32 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   const reviews = Array.isArray(service.reviews)
     ? service.reviews.filter((review): review is Review => typeof review === 'object')
     : [];
-  const images = getImageUrls(service.image, service.photos);
-  const categoryName = getCategoryName(service.category);
-  const locationName = getLocationName(service.location);
-  const memberSince = new Date(service.createdAt).getFullYear().toString();
+  // Acceso directo con type assertions
+  const category = service.category as Category;
+  const location = service.location as Location;
+
+  // Manejar imágenes directamente
+  const images: string[] = [];
+
+  // Imagen principal
+  if (service.image && typeof service.image === 'object') {
+    const media = service.image as Media;
+    if (media.url) {
+      images.push(media.url);
+    }
+  }
+
+  // Fotos adicionales
+  if (service.photos) {
+    service.photos.forEach((photo) => {
+      if (typeof photo === 'object') {
+        const media = photo as Media;
+        if (media.url) {
+          images.push(media.url);
+        }
+      }
+    });
+  }
 
   return (
     <div className="min-h-main">
@@ -54,7 +69,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                 <div className="relative">
                   <ServiceImageGallery images={images} title={service.title} />
                   <div className="absolute top-4 left-4 flex gap-2">
-                    <Badge className="bg-primary text-primary-foreground">{categoryName}</Badge>
+                    <Badge className="bg-primary text-primary-foreground">{category.name}</Badge>
                     {service.verified && (
                       <Badge variant="secondary" className="bg-green-100 text-green-800">
                         <Shield className="w-3 h-3 mr-1" />
@@ -74,7 +89,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                     <CardTitle className="text-2xl text-primary font-bold">{service.title}</CardTitle>
                     <CardDescription className="flex items-center mt-2 text-muted-foreground">
                       <MapPin className="w-4 h-4 mr-1 text-primary" />
-                      {locationName}
+                      {location.name}
                     </CardDescription>
                   </div>
                   <div className="text-right">
@@ -130,13 +145,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                 <div className="space-y-6">
                   {reviews.length > 0 && typeof service.provider === 'object' ? (
                     reviews.map((review) => (
-                      <ReviewItem
-                        key={review.id}
-                        review={review}
-                        provider={service.provider as User}
-                        getUserName={getUserName}
-                        getAvatarUrl={getAvatarUrl}
-                      />
+                      <ReviewItem key={review.id} review={review} provider={service.provider as User} />
                     ))
                   ) : (
                     <p className="text-center text-muted-foreground py-8">No hay reseñas disponibles aún.</p>
@@ -147,18 +156,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           </div>
 
           {/* Sidebar */}
-          {typeof service.provider === 'object' && (
-            <ProviderSidebar
-              provider={service.provider}
-              rating={service.rating || 0}
-              reviewsCount={reviews.length}
-              completedJobs={service.completedJobs || 0}
-              memberSince={memberSince}
-              isVerified={service.verified || false}
-              getUserName={getUserName}
-              getAvatarUrl={getAvatarUrl}
-            />
-          )}
+          {typeof service.provider === 'object' && <ProviderSidebar service={service} />}
         </div>
       </div>
     </div>

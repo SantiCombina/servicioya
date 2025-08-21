@@ -22,57 +22,23 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
 
   const searchParams = useSearchParams();
 
-  // Helper function to check if service relationships are populated
-  const isServicePopulated = (service: Service): boolean => {
-    return (
-      typeof service.category === 'object' &&
-      typeof service.location === 'object' &&
-      typeof service.provider === 'object'
-    );
-  };
+  // Extraer categorías y ubicaciones únicas de los servicios
+  const categories = useMemo(() => Array.from(new Set(services.map((s) => (s.category as Category).name))), [services]);
 
-  // Extraer categorías y ubicaciones únicas de los servicios usando los tipos correctos
-  const categories = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          services
-            .filter((s) => typeof s.category === 'object' && s.category.name)
-            .map((s) => (s.category as Category).name),
-        ),
-      ),
-    [services],
-  );
-
-  const locations = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          services
-            .filter((s) => typeof s.location === 'object' && s.location.name)
-            .map((s) => (s.location as Location).name),
-        ),
-      ),
-    [services],
-  );
+  const locations = useMemo(() => Array.from(new Set(services.map((s) => (s.location as Location).name))), [services]);
 
   useEffect(() => {
     const search = searchParams.get('search') || '';
     setSearchTerm(search);
   }, [searchParams]);
 
-  // Función de filtrado mejorada con tipos seguros
+  // Función de filtrado simplificada
   const filterServices = useCallback(
     (services: Service[]): Service[] => {
       return services.filter((service) => {
-        if (!isServicePopulated(service)) return false;
-
-        // Type assertion después de verificar que están poblados
-        const populatedService = service as Service & {
-          category: Category;
-          location: Location;
-          provider: User;
-        };
+        const provider = service.provider as User;
+        const category = service.category as Category;
+        const location = service.location as Location;
 
         // Búsqueda por texto
         let matchesSearch = true;
@@ -81,8 +47,8 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
           const keywords = term.split(/\s+/).filter(Boolean);
           const searchableFields = [
             normalize(service.title || ''),
-            normalize(populatedService.provider.name || ''),
-            normalize(populatedService.category.name || ''),
+            normalize(provider.name || ''),
+            normalize(category.name || ''),
             normalize(service.description || ''),
           ];
 
@@ -91,13 +57,11 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
 
         // Filtro por categoría
         const matchesCategory =
-          selectedCategory.length === 0 ||
-          selectedCategory.some((cat) => normalize(populatedService.category.name) === normalize(cat));
+          selectedCategory.length === 0 || selectedCategory.some((cat) => normalize(category.name) === normalize(cat));
 
         // Filtro por ubicación
         const matchesLocation =
-          selectedLocation.length === 0 ||
-          selectedLocation.some((loc) => normalize(populatedService.location.name) === normalize(loc));
+          selectedLocation.length === 0 || selectedLocation.some((loc) => normalize(location.name) === normalize(loc));
 
         // Filtro por precio
         const matchesPrice = service.priceFrom >= priceRange[0] && service.priceFrom <= priceRange[1];
@@ -108,7 +72,7 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
         return matchesSearch && matchesCategory && matchesLocation && matchesPrice && matchesVerified;
       });
     },
-    [searchTerm, selectedCategory, selectedLocation, priceRange, showVerifiedOnly, isServicePopulated],
+    [searchTerm, selectedCategory, selectedLocation, priceRange, showVerifiedOnly],
   );
 
   // Función de ordenamiento mejorada
