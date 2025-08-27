@@ -4,11 +4,12 @@ import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
 import { userSignupSchema, UserSignupValues } from '@/lib/schemas/user-signup-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { createUser } from '@/app/actions/user/create-user';
-import { useRouter } from 'next/navigation';
+import { useAction } from 'next-safe-action/hooks';
+import { userSignUp } from './action';
 
 export function SignupForm() {
-  const router = useRouter();
+  const { executeAsync, isExecuting } = useAction(userSignUp);
+
   const methods = useForm<UserSignupValues>({
     resolver: zodResolver(userSignupSchema),
     defaultValues: {
@@ -20,36 +21,12 @@ export function SignupForm() {
   });
 
   const onSubmit = async (data: UserSignupValues) => {
-    try {
-      const result = await createUser({
-        data: {
-          name: data.name,
-          email: data.email,
-          password: data.password,
-          role: 'user',
-        },
-      });
-      if (result && !result.error && result.success) {
-        router.push('/');
-      } else {
-        methods.setError('root', { type: 'manual', message: result?.error || 'Error al crear usuario' });
-      }
-    } catch (error) {
-      console.error('Error al registrarse:', error);
-      methods.setError('root', { type: 'manual', message: 'Error inesperado al registrarse' });
-    }
+    executeAsync(data);
   };
 
   return (
     <Form {...methods}>
       <form className="space-y-1" onSubmit={methods.handleSubmit(onSubmit)}>
-        {methods.formState.errors.root && (
-          <div
-            className={`mb-2 text-sm ${methods.formState.errors.root.message === '¡Registro exitoso!' ? 'text-green-600' : 'text-red-500'}`}
-          >
-            {methods.formState.errors.root.message}
-          </div>
-        )}
         <FormField
           name="name"
           render={({ field }) => (
@@ -106,8 +83,8 @@ export function SignupForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={methods.formState.isSubmitting}>
-          {methods.formState.isSubmitting ? 'Creando...' : 'Crear Cuenta'}
+        <Button type="submit" className="w-full" disabled={isExecuting}>
+          {isExecuting ? 'Creando...' : 'Crear Cuenta'}
         </Button>
       </form>
     </Form>

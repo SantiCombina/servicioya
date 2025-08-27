@@ -11,7 +11,7 @@ import {
   TabsTrigger,
 } from '@/components/ui';
 import { Clock, MapPin, Shield } from 'lucide-react';
-import { getServiceById } from '@/app/actions/service/get-service-by-id';
+import { getServiceById } from '@/app/services/service/get-service-by-id';
 import { User, Review, Category, Location, Media } from '@/payload-types';
 import { notFound } from 'next/navigation';
 import { ServiceImageGallery } from '@/components/services/[id]/service-image-gallery';

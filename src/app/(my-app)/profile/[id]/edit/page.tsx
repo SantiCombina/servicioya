@@ -1,5 +1,5 @@
-import { getCurrentUser } from '@/app/actions/user/get-current-user';
-import { getUserById } from '@/app/actions/user/get-user-by-id';
+import { getCurrentUser } from '@/app/services/user/get-current-user';
+import { getUserById } from '@/app/services/user/get-user-by-id';
 import { EditProfileForm } from '@/components/profile/[id]/edit/edit-profile-form';
 import { redirect } from 'next/navigation';
 

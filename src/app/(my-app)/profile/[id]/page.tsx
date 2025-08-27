@@ -1,6 +1,6 @@
-import { getUserById } from '@/app/actions/user/get-user-by-id';
-import { getUserServicesCount } from '@/app/actions/user/get-user-services-count';
-import { getUserBookingsCount } from '@/app/actions/user/get-user-bookings-count';
+import { getUserById } from '@/app/services/user/get-user-by-id';
+import { getUserServicesCount } from '@/app/services/user/get-user-services-count';
+import { getUserBookingsCount } from '@/app/services/user/get-user-bookings-count';
 import { ProfileHeader } from '@/components/profile/[id]/profile-header';
 import { ProfileSectionCard } from '@/components/profile/[id]/profile-section-card';
 import { Briefcase, FileText } from 'lucide-react';
@@ -8,7 +8,6 @@ import { Briefcase, FileText } from 'lucide-react';
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  // Obtener datos en paralelo
   const [user, servicesCount, bookingsCount] = await Promise.all([
     getUserById(id),
     getUserServicesCount(id),

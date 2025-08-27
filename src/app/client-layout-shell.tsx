@@ -1,6 +1,6 @@
 'use client';
 
-import { Navbar } from '@/components/ui';
+import { Navbar, Toaster } from '@/components/ui';
 import { usePathname } from 'next/navigation';
 import { ThemeProvider } from './theme-provider';
 
@@ -19,6 +19,7 @@ export default function ClientLayoutShell({ children }: { children: React.ReactN
     >
       {!shouldHideNavbar && <Navbar />}
       {children}
+      <Toaster />
     </ThemeProvider>
   );
 }

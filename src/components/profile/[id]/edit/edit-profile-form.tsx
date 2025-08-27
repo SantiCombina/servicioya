@@ -2,14 +2,15 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { useAction } from 'next-safe-action/hooks';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { userUpdateSchema, type UserUpdateValues } from '@/lib/schemas/user-update-schema';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
-import { updateUser } from '@/app/actions/user/update-user';
+import { userUpdate } from './action';
 import { User } from '@/payload-types';
+import { toast } from 'sonner';
 
 interface Props {
   user: User;
@@ -17,6 +18,20 @@ interface Props {
 
 export function EditProfileForm({ user }: Props) {
   const router = useRouter();
+
+  const { executeAsync, isExecuting } = useAction(userUpdate, {
+    onSuccess: (result) => {
+      if (result.data?.success) {
+        toast.success(result.data.message);
+        router.push(`/profile/${result.data.userId}`);
+      }
+    },
+    onError: (error) => {
+      console.error('Error updating profile:', error);
+      toast.error('Error al actualizar el perfil');
+    },
+  });
+
   const form = useForm<UserUpdateValues>({
     resolver: zodResolver(userUpdateSchema),
     defaultValues: {
@@ -27,14 +42,10 @@ export function EditProfileForm({ user }: Props) {
   });
 
   async function onSubmit(values: UserUpdateValues) {
-    const result = await updateUser(user.id, values);
-
-    if (result.success) {
-      toast.success('Perfil actualizado con éxito');
-      router.push(`/profile/${user.id}`);
-    } else {
-      toast.error(result.error);
-    }
+    executeAsync({
+      ...values,
+      userId: user.id,
+    });
   }
 
   return (
@@ -73,13 +84,15 @@ export function EditProfileForm({ user }: Props) {
             <FormItem>
               <FormLabel>DNI</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="12345678" {...field} />
+                <Input type="number" placeholder="12345678" {...field} value={field.value ?? ''} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Guardar cambios</Button>
+        <Button type="submit" disabled={isExecuting}>
+          {isExecuting ? 'Guardando...' : 'Guardar cambios'}
+        </Button>
       </form>
     </Form>
   );

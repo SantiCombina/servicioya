@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getCurrentUser } from '@/app/actions/user/get-current-user';
-import { logoutUser } from '@/app/actions/user/logout-user';
+import { getCurrentUser } from '@/app/services/user/get-current-user';
+import { useAction } from 'next-safe-action/hooks';
+import { userLogout } from './action';
 import {
   Button,
   DropdownMenu,
@@ -20,13 +21,11 @@ export function UserTrigger() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const { executeAsync: executeLogout } = useAction(userLogout);
+
   const handleLogout = async () => {
-    try {
-      await logoutUser();
-      setUser(null);
-    } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-    }
+    executeLogout({});
+    setUser(null);
   };
 
   useEffect(() => {

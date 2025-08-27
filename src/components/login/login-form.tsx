@@ -2,43 +2,29 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-
+import { useAction } from 'next-safe-action/hooks';
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@/components/ui';
-import { userLoginSchema, type UserLoginValues } from '@/lib/schemas/user-login-schema';
-
-import { loginUser } from '@/app/actions/user/login-user';
-import { useRouter } from 'next/navigation';
+import { userSignInSchema, UserSignInValues } from '@/lib/schemas/user-signin-schema';
+import { userSignIn } from './action';
 
 export function LoginForm() {
-  const router = useRouter();
-  const methods = useForm<UserLoginValues>({
-    resolver: zodResolver(userLoginSchema),
+  const { executeAsync, isExecuting } = useAction(userSignIn);
+
+  const methods = useForm<UserSignInValues>({
+    resolver: zodResolver(userSignInSchema),
     defaultValues: {
       email: '',
       password: '',
     },
   });
 
-  const onSubmit = async (data: UserLoginValues) => {
-    try {
-      const result = await loginUser({ data });
-      if (result.success) {
-        router.push('/');
-      } else {
-        methods.setError('root', { type: 'manual', message: result.message });
-      }
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      methods.setError('root', { type: 'manual', message: 'Error inesperado al iniciar sesión' });
-    }
+  const onSubmit = async (data: UserSignInValues) => {
+    executeAsync(data);
   };
 
   return (
     <Form {...methods}>
       <form className="space-y-1" onSubmit={methods.handleSubmit(onSubmit)}>
-        {methods.formState.errors.root && (
-          <div className="text-red-500 text-sm mb-2">{methods.formState.errors.root.message}</div>
-        )}
         <FormField
           control={methods.control}
           name="email"
@@ -69,8 +55,8 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={methods.formState.isSubmitting}>
-          {methods.formState.isSubmitting ? 'Iniciando...' : 'Iniciar Sesión'}
+        <Button type="submit" className="w-full" disabled={isExecuting}>
+          {isExecuting ? 'Iniciando...' : 'Iniciar Sesión'}
         </Button>
       </form>
     </Form>
