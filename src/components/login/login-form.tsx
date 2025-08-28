@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useAction } from 'next-safe-action/hooks';
 import { Button, Form, FormControl, FormField, FormItem, FormLabel, FormMessage, Input } from '@/components/ui';
 import { userSignInSchema, UserSignInValues } from '@/lib/schemas/user-signin-schema';
-import { userSignIn } from './action';
+import { userSignIn } from './actions';
 
 export function LoginForm() {
   const { executeAsync, isExecuting } = useAction(userSignIn);

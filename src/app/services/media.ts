@@ -1,10 +1,8 @@
-'use server';
-
 import { getPayloadClient } from '@/lib/payload';
 
-export async function uploadImage(
+export const uploadImage = async (
   formData: FormData,
-): Promise<{ success: boolean; imageId?: number; message: string }> {
+): Promise<{ success: boolean; imageId?: number; message: string }> => {
   try {
     const payload = await getPayloadClient();
     const file = formData.get('file') as File;
@@ -49,4 +47,4 @@ export async function uploadImage(
     console.error('Error uploading image:', error);
     return { success: false, message: 'Error al subir la imagen' };
   }
-}
+};

@@ -1,5 +1,5 @@
 import { Star } from 'lucide-react';
-import { getUserRating } from '@/app/services/user/get-user-rating';
+import { getUserRating } from '@/app/services/user';
 
 interface Props {
   userId: string | number;

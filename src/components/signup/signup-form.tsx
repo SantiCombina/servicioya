@@ -5,7 +5,7 @@ import { userSignupSchema, UserSignupValues } from '@/lib/schemas/user-signup-sc
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useAction } from 'next-safe-action/hooks';
-import { userSignUp } from './action';
+import { userSignUp } from './actions';
 
 export function SignupForm() {
   const { executeAsync, isExecuting } = useAction(userSignUp);

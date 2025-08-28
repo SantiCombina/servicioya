@@ -1,6 +1,4 @@
-import { getUserById } from '@/app/services/user/get-user-by-id';
-import { getUserServicesCount } from '@/app/services/user/get-user-services-count';
-import { getUserBookingsCount } from '@/app/services/user/get-user-bookings-count';
+import { getUserById, getUserServicesCount, getUserBookingsCount } from '@/app/services/user';
 import { ProfileHeader } from '@/components/profile/[id]/profile-header';
 import { ProfileSectionCard } from '@/components/profile/[id]/profile-section-card';
 import { Briefcase, FileText } from 'lucide-react';

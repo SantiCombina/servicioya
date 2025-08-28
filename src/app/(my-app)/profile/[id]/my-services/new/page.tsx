@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAction } from 'next-safe-action/hooks';
 import {
   Button,
   Card,
@@ -28,12 +29,7 @@ import {
 import { ArrowLeft, Save, Plus, Upload, X } from 'lucide-react';
 import Link from 'next/link';
 import { serviceCreateSchema, ServiceCreateValues } from '@/lib/schemas/service-create-schema';
-import { createService } from '@/app/services/service/create-service';
-import { getCategories } from '@/app/services/category/get-categories';
-import { getLocations } from '@/app/services/location/get-locations';
-import { uploadImage } from '@/app/services/media/upload-image';
-import { getCurrentUser } from '@/app/services/user/get-current-user';
-import { Category, Location } from '@/payload-types';
+import { serviceCreate, loadNewServiceDataAction, uploadImageActionSafe } from './actions';
 import { toast } from 'sonner';
 
 export default function NewServicePage() {
@@ -41,53 +37,81 @@ export default function NewServicePage() {
   const params = useParams();
   const profileId = params.id as string;
 
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [locations, setLocations] = useState<Location[]>([]);
-  const [currentUser, setCurrentUser] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  // Solo mantenemos el estado necesario que no maneja next-safe-action
   const [uploadedImageId, setUploadedImageId] = useState<number | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [uploadingImage, setUploadingImage] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+
+  // Actions con next-safe-action - manejan su propio estado
+  const {
+    execute: loadData,
+    result: loadDataResult,
+    isExecuting: isLoadingData,
+  } = useAction(loadNewServiceDataAction, {
+    onSuccess: (result) => {
+      // Verificar permisos
+      if (!result.data?.user || (result.data.user.id.toString() !== profileId && result.data.user.role !== 'admin')) {
+        router.push('/login');
+        return;
+      }
+    },
+    onError: (error) => {
+      console.error('Error loading data:', error);
+      toast.error('Error al cargar los datos');
+    },
+  });
+
+  const { executeAsync: createService, isExecuting: isCreatingService } = useAction(serviceCreate, {
+    onSuccess: (result) => {
+      if (result.data?.success) {
+        toast.success(result.data.message);
+        router.push(`/profile/${profileId}/my-services`);
+      } else {
+        toast.error(result.data?.message || 'Error al crear el servicio');
+      }
+    },
+    onError: (error) => {
+      console.error('Error creating service:', error);
+      toast.error('Error al crear el servicio');
+    },
+  });
+
+  const { executeAsync: uploadImage } = useAction(uploadImageActionSafe, {
+    onSuccess: (result) => {
+      if (result.data?.imageId) {
+        setUploadedImageId(result.data.imageId);
+        toast.success('Imagen subida correctamente');
+      }
+    },
+    onError: (error) => {
+      console.error('Error uploading image:', error);
+      toast.error('Error al subir la imagen');
+      setPreviewImage(null);
+    },
+  });
+
+  // Cargar datos al montar el componente
+  useEffect(() => {
+    loadData({});
+  }, [loadData]);
+
+  // Extraer datos del resultado del action
+  const currentUser = loadDataResult?.data?.user || null;
+  const categories = loadDataResult?.data?.categories || [];
+  const locations = loadDataResult?.data?.locations || [];
 
   const form = useForm<ServiceCreateValues>({
     resolver: zodResolver(serviceCreateSchema),
     defaultValues: {
       title: '',
       description: '',
-      categoryId: 0,
-      locationId: 0,
-      priceFrom: 0,
+      categoryId: undefined,
+      locationId: undefined,
+      priceFrom: undefined,
       availability: '',
       isActive: true,
     },
   });
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [user, categoriesData, locationsData] = await Promise.all([
-          getCurrentUser(),
-          getCategories(),
-          getLocations(),
-        ]);
-
-        setCurrentUser(user);
-        setCategories(categoriesData);
-        setLocations(locationsData);
-
-        // Verificar permisos
-        if (!user || (user.id.toString() !== profileId && user.role !== 'admin')) {
-          router.push('/login');
-          return;
-        }
-      } catch (error) {
-        console.error('Error loading data:', error);
-        toast.error('Error al cargar los datos');
-      }
-    };
-
-    loadData();
-  }, [profileId, router]);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -104,9 +128,9 @@ export default function NewServicePage() {
       return;
     }
 
-    setUploadingImage(true);
-
     try {
+      setIsUploadingImage(true);
+
       // Crear preview
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -114,24 +138,17 @@ export default function NewServicePage() {
       };
       reader.readAsDataURL(file);
 
-      // Subir imagen
+      // Subir imagen usando la action
       const formData = new FormData();
       formData.append('file', file);
 
-      const result = await uploadImage(formData);
-      if (result.success && result.imageId) {
-        setUploadedImageId(result.imageId);
-        toast.success('Imagen subida correctamente');
-      } else {
-        toast.error(result.message);
-        setPreviewImage(null);
-      }
+      await uploadImage({ formData });
     } catch (error) {
       console.error('Error uploading image:', error);
       toast.error('Error al subir la imagen');
       setPreviewImage(null);
     } finally {
-      setUploadingImage(false);
+      setIsUploadingImage(false);
     }
   };
 
@@ -146,35 +163,37 @@ export default function NewServicePage() {
       return;
     }
 
-    setIsLoading(true);
+    const serviceData = {
+      title: values.title,
+      description: values.description,
+      categoryId: values.categoryId!,
+      locationId: values.locationId!,
+      priceFrom: values.priceFrom!,
+      availability: values.availability,
+      imageId: uploadedImageId || undefined,
+      providerId: currentUser.id,
+      isActive: isDraft ? false : (values.isActive ?? true),
+    };
 
-    try {
-      const serviceData = {
-        ...values,
-        imageId: uploadedImageId || undefined,
-        providerId: currentUser.id,
-        isActive: isDraft ? false : values.isActive,
-      };
-
-      const result = await createService(serviceData);
-
-      if (result.success) {
-        toast.success(isDraft ? 'Servicio guardado como borrador' : 'Servicio creado correctamente');
-        router.push(`/profile/${profileId}/my-services`);
-      } else {
-        toast.error(result.message);
-      }
-    } catch (error) {
-      console.error('Error creating service:', error);
-      toast.error('Error al crear el servicio');
-    } finally {
-      setIsLoading(false);
-    }
+    await createService(serviceData);
   };
 
   const handleSubmit = (isDraft = false) => {
     return form.handleSubmit((values) => onSubmit(values, isDraft));
   };
+
+  // Verificar si está cargando datos o el usuario no está autenticado
+  if (isLoadingData) {
+    return (
+      <div className="min-h-main">
+        <main className="container py-6">
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-main">
@@ -215,7 +234,7 @@ export default function NewServicePage() {
                         type="button"
                         onClick={removeImage}
                         className="absolute top-2 right-2 bg-destructive text-destructive-foreground rounded-full p-1 hover:bg-destructive/90 transition-colors"
-                        disabled={uploadingImage}
+                        disabled={isUploadingImage}
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -231,13 +250,13 @@ export default function NewServicePage() {
                   <div className="flex justify-center">
                     <Label htmlFor="serviceImage" className="cursor-pointer">
                       <div className="flex items-center space-x-2 px-4 py-2 bg-primary/10 text-primary rounded-md hover:bg-primary/20 transition-colors">
-                        {uploadingImage ? (
+                        {isUploadingImage ? (
                           <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                         ) : (
                           <Upload className="w-4 h-4" />
                         )}
                         <span className="text-sm font-medium">
-                          {uploadingImage ? 'Subiendo...' : previewImage ? 'Cambiar imagen' : 'Subir imagen'}
+                          {isUploadingImage ? 'Subiendo...' : previewImage ? 'Cambiar imagen' : 'Subir imagen'}
                         </span>
                       </div>
                     </Label>
@@ -247,7 +266,7 @@ export default function NewServicePage() {
                       accept="image/*"
                       onChange={handleImageChange}
                       className="hidden"
-                      disabled={uploadingImage}
+                      disabled={isUploadingImage}
                     />
                   </div>
                   <p className="text-xs text-muted-foreground text-center">JPG, PNG máximo 5MB</p>
@@ -292,7 +311,7 @@ export default function NewServicePage() {
                       <FormItem>
                         <FormLabel>Categoría *</FormLabel>
                         <Select
-                          value={field.value.toString()}
+                          value={field.value ? field.value.toString() : undefined}
                           onValueChange={(value) => field.onChange(parseInt(value))}
                         >
                           <FormControl>
@@ -320,7 +339,7 @@ export default function NewServicePage() {
                       <FormItem>
                         <FormLabel>Ubicación *</FormLabel>
                         <Select
-                          value={field.value.toString()}
+                          value={field.value ? field.value.toString() : undefined}
                           onValueChange={(value) => field.onChange(parseInt(value))}
                         >
                           <FormControl>
@@ -353,11 +372,12 @@ export default function NewServicePage() {
                         <FormControl>
                           <Input
                             type="number"
-                            placeholder="2500"
-                            min="0"
-                            step="50"
-                            {...field}
-                            onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                            placeholder="Ej: 2500"
+                            value={field.value || ''}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              field.onChange(value === '' ? undefined : parseInt(value) || undefined);
+                            }}
                           />
                         </FormControl>
                         <FormMessage />
@@ -392,14 +412,14 @@ export default function NewServicePage() {
                     type="button"
                     variant="outline"
                     className="flex-1"
-                    disabled={isLoading}
+                    disabled={isCreatingService}
                     onClick={handleSubmit(true)}
                   >
                     Guardar como Borrador
                   </Button>
 
-                  <Button type="submit" className="flex-1" disabled={isLoading}>
-                    {isLoading ? (
+                  <Button type="submit" className="flex-1" disabled={isCreatingService}>
+                    {isCreatingService ? (
                       <>
                         <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
                         Publicando...

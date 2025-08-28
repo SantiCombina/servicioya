@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { getCurrentUser } from '@/app/services/user/get-current-user';
+import { useEffect } from 'react';
 import { useAction } from 'next-safe-action/hooks';
-import { userLogout } from './action';
+import { getCurrentUserAction, userLogout } from './actions';
 import {
   Button,
   DropdownMenu,
@@ -14,32 +13,24 @@ import {
   Skeleton,
   UserAvatar,
 } from '@/components/ui';
-import { User } from '@/payload-types';
 import Link from 'next/link';
 
 export function UserTrigger() {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { execute: loadCurrentUser, result: userResult, isExecuting: isLoadingUser } = useAction(getCurrentUserAction);
 
   const { executeAsync: executeLogout } = useAction(userLogout);
 
   const handleLogout = async () => {
     executeLogout({});
-    setUser(null);
   };
 
   useEffect(() => {
-    getCurrentUser()
-      .then((data) => {
-        setUser(data);
-        setIsLoading(false);
-      })
-      .catch(() => {
-        setIsLoading(false);
-      });
+    loadCurrentUser({});
   }, []);
 
-  if (isLoading) {
+  const user = userResult.data?.user || null;
+
+  if (isLoadingUser) {
     return <Skeleton className="w-8 h-8 rounded-full" />;
   }
 

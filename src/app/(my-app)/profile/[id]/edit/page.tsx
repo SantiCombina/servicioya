@@ -1,11 +1,14 @@
-import { getCurrentUser } from '@/app/services/user/get-current-user';
-import { getUserById } from '@/app/services/user/get-user-by-id';
+import { getCurrentUser, getUserById } from '@/app/services/user';
 import { EditProfileForm } from '@/components/profile/[id]/edit/edit-profile-form';
 import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 
 export default async function EditProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const currentUser = await getCurrentUser();
+  const cookieStore = await cookies();
+  const token = cookieStore.get('payload-token')?.value || null;
+
+  const currentUser = await getCurrentUser(token);
   const userToEdit = await getUserById(id);
 
   if (!currentUser) {

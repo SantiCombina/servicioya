@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { getServices } from '@/app/services/service/get-services';
+import { getServices } from '@/app/services/service';
 import { ServicesInteractive } from '@/components/services/services-interactive';
 
 export default async function ServicesPage() {

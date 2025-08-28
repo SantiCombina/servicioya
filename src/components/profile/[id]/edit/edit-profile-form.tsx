@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { userUpdateSchema, type UserUpdateValues } from '@/lib/schemas/user-update-schema';
-import { userUpdate } from './action';
+import { userUpdate } from './actions';
 import { User } from '@/payload-types';
 import { toast } from 'sonner';
 

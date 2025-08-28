@@ -14,43 +14,49 @@ import {
 } from '@/components/ui';
 import { Star, ArrowLeft, Plus, Edit, Trash2, MapPin, Clock, DollarSign, Eye, MoreVertical } from 'lucide-react';
 import Link from 'next/link';
-import { Service, Category, Location, Media } from '@/payload-types';
-import { getUserServices } from '@/app/services/service/get-user-services';
-import { deleteService } from '@/app/services/service/delete-service';
-import { getCurrentUser } from '@/app/services/user/get-current-user';
+import { Category, Location, Media } from '@/payload-types';
+import { loadMyServicesAction, serviceDelete } from './actions';
 import { toast } from 'sonner';
+import { useAction } from 'next-safe-action/hooks';
 
 export default function MyServicesPage() {
   const params = useParams();
   const profileId = params.id as string;
 
-  const [services, setServices] = useState<Service[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState<any>(null);
   const [serviceFilter, setServiceFilter] = useState<'all' | 'active' | 'inactive'>('all');
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
+  const {
+    execute: loadData,
+    result: loadResult,
+    isExecuting: isLoadingData,
+  } = useAction(loadMyServicesAction, {
+    onError: (error) => {
+      console.error('Error loading data:', error);
+      toast.error('Error al cargar los datos');
+    },
+  });
 
-        // Obtener usuario actual para verificar permisos
-        const user = await getCurrentUser();
-        setCurrentUser(user);
-
-        // Obtener servicios del usuario
-        const userServices = await getUserServices(profileId);
-        setServices(userServices);
-      } catch (error) {
-        console.error('Error loading data:', error);
-        toast.error('Error al cargar los datos');
-      } finally {
-        setLoading(false);
+  const { executeAsync: deleteServiceAction } = useAction(serviceDelete, {
+    onSuccess: (result) => {
+      if (result.data?.success) {
+        // Recargar datos después de eliminar
+        loadData({ profileId });
+        toast.success(result.data.message);
       }
-    };
+    },
+    onError: (error) => {
+      console.error('Error deleting service:', error);
+      toast.error('Error al eliminar el servicio');
+    },
+  });
 
-    loadData();
+  useEffect(() => {
+    loadData({ profileId });
   }, [profileId]);
+
+  // Obtener datos de la respuesta de la action
+  const currentUser = loadResult.data?.user || null;
+  const services = loadResult.data?.services || [];
 
   const getStatusBadge = (isActive: boolean | null | undefined) => {
     if (isActive) {
@@ -84,17 +90,10 @@ export default function MyServicesPage() {
 
   const handleDeleteService = async (serviceId: number) => {
     if (confirm('¿Estás seguro de que quieres eliminar este servicio?')) {
-      try {
-        const result = await deleteService(serviceId.toString());
-        if (result.success) {
-          setServices(services.filter((service) => service.id !== serviceId));
-          toast.success('Servicio eliminado correctamente');
-        } else {
-          toast.error(result.message);
-        }
-      } catch {
-        toast.error('Error al eliminar el servicio');
-      }
+      await deleteServiceAction({
+        serviceId: serviceId.toString(),
+        userId: profileId,
+      });
     }
   };
 
@@ -134,7 +133,7 @@ export default function MyServicesPage() {
   // Verificar si el usuario actual puede ver/editar estos servicios
   const canEdit = currentUser && (currentUser.id.toString() === profileId || currentUser.role === 'admin');
 
-  if (loading) {
+  if (isLoadingData) {
     return (
       <div className="min-h-main">
         <main className="container py-6">
