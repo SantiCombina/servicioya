@@ -11,12 +11,14 @@ import {
 } from '@/components/ui';
 import { Award, Calendar, MessageCircle, Shield, Star } from 'lucide-react';
 import { User, Media, Service } from '@/payload-types';
+import { BookServiceDialog } from './book-service-dialog';
 
 interface Props {
   service: Service;
+  currentUser: User | null;
 }
 
-export function ProviderSidebar({ service }: Props) {
+export function ProviderSidebar({ service, currentUser }: Props) {
   const provider = service.provider as User;
   const avatarUrl = provider.avatar && typeof provider.avatar === 'object' ? (provider.avatar as Media).url || '' : '';
   const rating = service.rating || 0;
@@ -79,10 +81,12 @@ export function ProviderSidebar({ service }: Props) {
             <CardTitle>Contactar</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button className="w-full" size="lg">
-              <Calendar className="w-4 h-4 mr-2" />
-              Contratar servicio
-            </Button>
+            <BookServiceDialog service={service} currentUser={currentUser}>
+              <Button className="w-full" size="lg">
+                <Calendar className="w-4 h-4 mr-2" />
+                Contratar servicio
+              </Button>
+            </BookServiceDialog>
             <Button variant="outline" className="w-full bg-transparent">
               <MessageCircle className="w-4 h-4 mr-2" />
               Enviar Mensaje

@@ -12,16 +12,23 @@ import {
 } from '@/components/ui';
 import { Clock, MapPin, Shield } from 'lucide-react';
 import { getServiceById } from '@/app/services/service';
+import { getCurrentUser } from '@/app/services/user';
 import { User, Review, Category, Location, Media } from '@/payload-types';
 import { notFound } from 'next/navigation';
 import { ServiceImageGallery } from '@/components/services/[id]/service-image-gallery';
 import { StarRating } from '@/components/services/[id]/star-rating';
 import { ReviewItem } from '@/components/services/[id]/review-item';
 import { ProviderSidebar } from '@/components/services/[id]/provider-sidebar';
+import { cookies } from 'next/headers';
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const service = await getServiceById(id);
+
+  // Obtener el servicio y el usuario actual en paralelo
+  const [service, currentUser] = await Promise.all([
+    getServiceById(id),
+    getCurrentUser((await cookies()).get('payload-token')?.value || null),
+  ]);
 
   if (!service) {
     notFound();
@@ -156,7 +163,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           </div>
 
           {/* Sidebar */}
-          {typeof service.provider === 'object' && <ProviderSidebar service={service} />}
+          {typeof service.provider === 'object' && <ProviderSidebar service={service} currentUser={currentUser} />}
         </div>
       </div>
     </div>
