@@ -94,7 +94,6 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
     });
   };
 
-  // No mostrar el dialog si no hay usuario autenticado
   if (!currentUser) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -115,7 +114,6 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
     );
   }
 
-  // No permitir que un usuario contrate su propio servicio
   if (currentUser.id === provider.id) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -176,8 +174,6 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
                 </div>
               </CardContent>
             </Card>
-
-            {/* Separador visual */}
 
             {/* Fecha y hora */}
             <div className="space-y-4">

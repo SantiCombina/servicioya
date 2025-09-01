@@ -22,6 +22,10 @@ export const getServices = async (): Promise<Service[]> => {
 };
 
 export const getServiceById = async (id: string): Promise<Service | null> => {
+  if (!id) {
+    console.error('Error: id is undefined, null, or empty in getServiceById');
+    return null;
+  }
   try {
     const payload = await getPayloadClient();
     const result = await payload.findByID({
