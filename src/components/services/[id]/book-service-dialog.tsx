@@ -1,9 +1,12 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Calendar as CalendarIcon, DollarSign, MapPin, MessageSquare, ChevronDownIcon } from 'lucide-react';
+import { useAction } from 'next-safe-action/hooks';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useAction } from 'next-safe-action/hooks';
+import { toast } from 'sonner';
+
 import {
   Dialog,
   DialogContent,
@@ -25,11 +28,10 @@ import {
 } from '@/components/ui';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar as CalendarIcon, DollarSign, MapPin, MessageSquare, ChevronDownIcon } from 'lucide-react';
 import { bookingCreateSchema, BookingCreateValues } from '@/lib/schemas/booking-create-schema';
-import { bookingCreate } from './actions';
-import { toast } from 'sonner';
 import { Service, User } from '@/payload-types';
+
+import { bookingCreate } from './actions';
 
 interface Props {
   service: Service;
@@ -143,7 +145,8 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
             Contratar Servicio
           </DialogTitle>
           <DialogDescription className="text-base mt-2">
-            Completa los detalles para solicitar la contratación de &ldquo;{service.title}&rdquo; con {provider.name}.
+            Completa los detalles para solicitar la contratación de &ldquo;
+            {service.title}&rdquo; con {provider.name}.
           </DialogDescription>
         </DialogHeader>
 

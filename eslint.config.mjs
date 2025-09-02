@@ -112,6 +112,37 @@ const eslintConfig = [
       "import/prefer-default-export": "off",
       "import/no-unresolved": "error",
       "import/no-anonymous-default-export": "off",
+      "import/order": [
+        "warn",
+        {
+          groups: [
+            "builtin",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index",
+          ],
+          "newlines-between": "always",
+          pathGroups: [
+            {
+              pattern: "@/**",
+              group: "internal",
+              position: "before",
+            },
+            {
+              pattern: "./**",
+              group: "sibling",
+              position: "after",
+            },
+          ],
+          pathGroupsExcludedImportTypes: ["builtin"],
+          alphabetize: {
+            order: "asc",
+            caseInsensitive: true,
+          },
+        },
+      ],
       "import/extensions": [
         "error",
         "ignorePackages",

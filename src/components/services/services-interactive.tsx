@@ -1,12 +1,13 @@
 'use client';
 
+import { Search } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, useMemo, useCallback } from 'react';
+
 import { FiltersSidebar } from '@/components/services/filters-sidebar';
 import { ServiceCard } from '@/components/services/service-card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
 import { normalize } from '@/lib/helpers/normalize';
-import { Search } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
 import { Category, Location, Service, User } from '@/payload-types';
 
 type SortOption = 'rating' | 'price-low' | 'price-high' | 'jobs' | 'reviews';

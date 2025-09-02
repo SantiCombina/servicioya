@@ -1,3 +1,5 @@
+import { Award, Calendar, MessageCircle, Shield, Star } from 'lucide-react';
+
 import {
   Avatar,
   AvatarFallback,
@@ -9,8 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui';
-import { Award, Calendar, MessageCircle, Shield, Star } from 'lucide-react';
 import { User, Media, Service } from '@/payload-types';
+
 import { BookServiceDialog } from './book-service-dialog';
 
 interface Props {

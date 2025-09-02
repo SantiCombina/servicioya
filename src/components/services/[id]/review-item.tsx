@@ -1,6 +1,6 @@
+import { StarRating } from '@/components/services/[id]/star-rating';
 import { Avatar, AvatarFallback, AvatarImage, Badge } from '@/components/ui';
 import { formatDate } from '@/lib/helpers/format-date';
-import { StarRating } from '@/components/services/[id]/star-rating';
 import { Review, User, Media } from '@/payload-types';
 
 interface ReviewItemProps {

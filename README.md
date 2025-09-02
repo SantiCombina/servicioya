@@ -27,31 +27,33 @@ Plataforma web que conecta a proveedores de servicios profesionales (plomeros, e
 
 ## 📋 Prerrequisitos
 
-- Node.js 18+ 
+- Node.js 18+
 - pnpm
 - Base de datos PostgreSQL (recomendado: Neon Tech)
 
 ## 🔧 Instalación
 
 1. **Clona el repositorio**
+
    ```bash
    git clone <repository-url>
    cd servicioya
    ```
 
 2. **Instala las dependencias**
+
    ```bash
    pnpm install
    ```
 
 3. **Configura las variables de entorno**
-   
+
    ⚠️ **IMPORTANTE**: Crea un archivo `.env.local` en la raíz del proyecto con las siguientes variables:
 
    ```env
    # Configuración de Payload CMS
    PAYLOAD_SECRET=tu-secret-key-muy-segura-aqui
-   
+
    # Base de datos PostgreSQL (Neon Tech)
    DATABASE_URL=postgresql://usuario:password@host.neon.tech/nombre_db?sslmode=require
    ```
@@ -59,7 +61,7 @@ Plataforma web que conecta a proveedores de servicios profesionales (plomeros, e
    **Notas importantes sobre las variables de entorno:**
    - `PAYLOAD_SECRET`: Debe ser una cadena secreta y única para tu aplicación (mínimo 32 caracteres)
    - `DATABASE_URL`: URL de conexión a tu base de datos PostgreSQL en Neon Tech
-   
+
    **Para obtener tu DATABASE_URL de Neon Tech:**
    1. Ve a tu dashboard de [Neon Tech](https://neon.tech)
    2. Selecciona tu proyecto
@@ -67,6 +69,7 @@ Plataforma web que conecta a proveedores de servicios profesionales (plomeros, e
    4. Copia la "Connection string" completa
 
 4. **Ejecuta el servidor de desarrollo**
+
    ```bash
    pnpm dev
    ```
@@ -115,13 +118,16 @@ Este proyecto utiliza **PostgreSQL** como base de datos, específicamente hosped
 ## 🔒 Configuración de Acceso
 
 ### Panel de Administración
+
 Accede al panel de administración de Payload en `/admin` para:
+
 - Gestión de usuarios del sistema
 - Configuración de categorías de servicios
 - Moderación de contenido
 - Análisis y reportes
 
 ### Roles de Usuario (Planificados)
+
 - **Admin**: Acceso completo al sistema y panel de administración
 - **Proveedor**: Puede publicar y gestionar servicios
 - **Cliente**: Puede buscar y contratar servicios
@@ -129,12 +135,15 @@ Accede al panel de administración de Payload en `/admin` para:
 ## 🎨 Personalización
 
 ### Componentes UI
+
 Los componentes están construidos con shadcn/ui y pueden personalizarse fácilmente editando los archivos en `src/components/ui/`.
 
 ### Modelos de Datos
+
 Los modelos de Payload CMS están en `src/collections/` y pueden extenderse según las necesidades del marketplace.
 
 ### Schemas de Validación
+
 Los schemas de Zod están en `src/lib/schemas/` y pueden modificarse según tus necesidades.
 
 ## 📝 Scripts Disponibles

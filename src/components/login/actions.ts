@@ -1,10 +1,11 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { actionClient } from '@/lib/safe-action-client';
 import { redirect } from 'next/navigation';
-import { userSignInSchema } from '@/lib/schemas/user-signin-schema';
+
 import { loginUser } from '@/app/services/user';
+import { actionClient } from '@/lib/safe-action-client';
+import { userSignInSchema } from '@/lib/schemas/user-signin-schema';
 
 export const userSignIn = actionClient.schema(userSignInSchema).action(async ({ parsedInput }) => {
   try {

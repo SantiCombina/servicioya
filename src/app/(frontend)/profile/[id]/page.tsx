@@ -1,7 +1,8 @@
+import { Briefcase, FileText } from 'lucide-react';
+
 import { getUserById, getUserServicesCount, getUserBookingsCount } from '@/app/services/user';
 import { ProfileHeader } from '@/components/profile/[id]/profile-header';
 import { ProfileSectionCard } from '@/components/profile/[id]/profile-section-card';
-import { Briefcase, FileText } from 'lucide-react';
 
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

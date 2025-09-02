@@ -1,7 +1,8 @@
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
 import { getCurrentUser, getUserById } from '@/app/services/user';
 import { EditProfileForm } from '@/components/profile/[id]/edit/edit-profile-form';
-import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
 
 export default async function EditProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

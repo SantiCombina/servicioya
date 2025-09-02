@@ -1,6 +1,7 @@
-import { Separator } from '@/components/ui';
 import { Mail, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
+
+import { Separator } from '@/components/ui';
 
 export function Footer() {
   return (

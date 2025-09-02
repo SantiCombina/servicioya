@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+
 import { getServices } from '@/app/services/service';
 import { ServicesInteractive } from '@/components/services/services-interactive';
 

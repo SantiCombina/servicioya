@@ -1,9 +1,10 @@
 'use client';
 
 import { Moon, Sun } from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { Button } from '@/components/ui';
 import { usePathname } from 'next/navigation';
+import { useTheme } from 'next-themes';
+
+import { Button } from '@/components/ui';
 
 export function ThemeToggle() {
   const { theme, setTheme, resolvedTheme } = useTheme();

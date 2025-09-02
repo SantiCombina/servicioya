@@ -1,10 +1,11 @@
-import sharp from 'sharp';
+import { postgresAdapter } from '@payloadcms/db-postgres';
 import { lexicalEditor } from '@payloadcms/richtext-lexical';
 import { uploadthingStorage } from '@payloadcms/storage-uploadthing';
-import { postgresAdapter } from '@payloadcms/db-postgres';
 import { en } from '@payloadcms/translations/languages/en';
 import { es } from '@payloadcms/translations/languages/es';
 import { buildConfig } from 'payload';
+import sharp from 'sharp';
+
 import { Bookings, Categories, Locations, Media, ReviewReplies, Reviews, Services, Users } from './collections';
 
 export default buildConfig({

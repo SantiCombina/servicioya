@@ -1,9 +1,10 @@
 'use client';
 
-import { useParams } from 'next/navigation';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { ArrowLeft, Edit } from 'lucide-react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
+
+import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 
 export default function EditServicePage() {
   const params = useParams();

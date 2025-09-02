@@ -1,3 +1,6 @@
+import { Filter } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+
 import {
   Card,
   CardHeader,
@@ -12,8 +15,6 @@ import {
   Slider,
   Button,
 } from '@/components/ui';
-import { Filter } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
 
 interface Props {
   selectedCategory: string[];

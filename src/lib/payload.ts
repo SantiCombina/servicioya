@@ -1,8 +1,9 @@
+import dotenv from 'dotenv';
 import type { Payload } from 'payload';
 import { getPayload } from 'payload';
 import { cache } from 'react';
+
 import config from '../payload.config';
-import dotenv from 'dotenv';
 
 dotenv.config();
 

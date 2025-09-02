@@ -1,8 +1,10 @@
-import { Button, Card, CardContent, UserAvatar } from '@/components/ui';
 import { Edit, Mail } from 'lucide-react';
-import { UserStars } from './user-stars';
-import { User } from '@/payload-types';
 import Link from 'next/link';
+
+import { Button, Card, CardContent, UserAvatar } from '@/components/ui';
+import { User } from '@/payload-types';
+
+import { UserStars } from './user-stars';
 
 interface Props {
   user: User;

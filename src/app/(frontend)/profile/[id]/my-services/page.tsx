@@ -1,10 +1,11 @@
 'use client';
 
-import { useParams } from 'next/navigation';
-import { Card, CardContent } from '@/components/ui';
 import { ArrowLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
+
 import { MyServicesList } from '@/components/profile/[id]/my-service/my-services-list';
+import { Card, CardContent } from '@/components/ui';
 
 export default function MyServicesPage() {
   const params = useParams();

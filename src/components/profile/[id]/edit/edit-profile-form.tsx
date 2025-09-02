@@ -1,16 +1,18 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { useAction } from 'next-safe-action/hooks';
 import { useRouter } from 'next/navigation';
+import { useAction } from 'next-safe-action/hooks';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { userUpdateSchema, type UserUpdateValues } from '@/lib/schemas/user-update-schema';
-import { userUpdate } from './actions';
 import { User } from '@/payload-types';
-import { toast } from 'sonner';
+
+import { userUpdate } from './actions';
 
 interface Props {
   user: User;

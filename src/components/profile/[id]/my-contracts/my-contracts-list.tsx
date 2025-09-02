@@ -1,9 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import { useAction } from 'next-safe-action/hooks';
-import { Button, Card, CardContent, Avatar, AvatarFallback, AvatarImage, Badge } from '@/components/ui';
 import {
   User,
   Star,
@@ -19,9 +15,15 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import Link from 'next/link';
-import { loadMyContractsAction, updateContractStatusAction } from './actions';
+import { useParams } from 'next/navigation';
+import { useAction } from 'next-safe-action/hooks';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
+
+import { Button, Card, CardContent, Avatar, AvatarFallback, AvatarImage, Badge } from '@/components/ui';
 import { Booking, Service, User as UserType, Category, Location, Media } from '@/payload-types';
+
+import { loadMyContractsAction, updateContractStatusAction } from './actions';
 
 export function MyContractsList() {
   const params = useParams();

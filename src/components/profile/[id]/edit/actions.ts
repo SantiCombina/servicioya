@@ -1,10 +1,11 @@
 'use server';
 
-import { actionClient } from '@/lib/safe-action-client';
 import { revalidatePath } from 'next/cache';
-import { userUpdateSchema } from '@/lib/schemas/user-update-schema';
-import { updateUser } from '@/app/services/user';
 import { z } from 'zod';
+
+import { updateUser } from '@/app/services/user';
+import { actionClient } from '@/lib/safe-action-client';
+import { userUpdateSchema } from '@/lib/schemas/user-update-schema';
 
 const updateUserActionSchema = userUpdateSchema.extend({
   userId: z.union([z.string(), z.number()]),

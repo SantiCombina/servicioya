@@ -1,10 +1,11 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { actionClient } from '@/lib/safe-action-client';
 import { redirect } from 'next/navigation';
-import { logoutUser, getCurrentUser } from '@/app/services/user';
 import { z } from 'zod';
+
+import { logoutUser, getCurrentUser } from '@/app/services/user';
+import { actionClient } from '@/lib/safe-action-client';
 
 const logoutSchema = z.object({});
 const getCurrentUserSchema = z.object({});

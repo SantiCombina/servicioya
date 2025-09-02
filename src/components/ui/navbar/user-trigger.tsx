@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
+import Link from 'next/link';
 import { useAction } from 'next-safe-action/hooks';
-import { getCurrentUserAction, userLogout } from './actions';
+import { useEffect } from 'react';
+
 import {
   Button,
   DropdownMenu,
@@ -13,7 +14,8 @@ import {
   Skeleton,
   UserAvatar,
 } from '@/components/ui';
-import Link from 'next/link';
+
+import { getCurrentUserAction, userLogout } from './actions';
 
 export function UserTrigger() {
   const { execute: loadCurrentUser, result: userResult, isExecuting: isLoadingUser } = useAction(getCurrentUserAction);

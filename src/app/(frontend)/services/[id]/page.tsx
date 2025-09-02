@@ -1,3 +1,7 @@
+import { Clock, MapPin } from 'lucide-react';
+import { cookies } from 'next/headers';
+import { notFound } from 'next/navigation';
+
 import { getServiceById } from '@/app/services/service';
 import { getCurrentUser } from '@/app/services/user';
 import { ProviderSidebar } from '@/components/services/[id]/provider-sidebar';
@@ -16,9 +20,6 @@ import {
   TabsTrigger,
 } from '@/components/ui';
 import { Location, Media, Review, User } from '@/payload-types';
-import { Clock, MapPin } from 'lucide-react';
-import { cookies } from 'next/headers';
-import { notFound } from 'next/navigation';
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

@@ -1,10 +1,10 @@
 'use client';
 
 import { Search } from 'lucide-react';
-import { Input } from '@/components/ui';
-
-import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+
+import { Input } from '@/components/ui';
 
 function SearchInput() {
   const [value, setValue] = useState('');

@@ -1,7 +1,8 @@
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, Button, Badge } from '@/components/ui';
 import { Clock, MapPin, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, Button, Badge } from '@/components/ui';
 import { Service, User, Category, Location } from '@/payload-types';
 
 interface Props {

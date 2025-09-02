@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "generate:types": "payload generate:types",
     "generate:importmap": "payload generate:importmap"
   },

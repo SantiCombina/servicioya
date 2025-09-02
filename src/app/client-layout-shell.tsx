@@ -1,8 +1,10 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
+
 import { Navbar, Toaster } from '@/components/ui';
 import { Footer } from '@/components/ui/footer/footer';
-import { usePathname } from 'next/navigation';
+
 import { ThemeProvider } from './theme-provider';
 
 export default function ClientLayoutShell({ children }: { children: React.ReactNode }) {

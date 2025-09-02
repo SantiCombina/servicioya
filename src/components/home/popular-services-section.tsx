@@ -1,4 +1,5 @@
 import { Wrench, Zap, Home, Users, Search, Shield } from 'lucide-react';
+
 import { Card } from '@/components/ui';
 
 export function PopularServicesSection() {
@@ -12,12 +13,36 @@ export function PopularServicesSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            { icon: Wrench, title: 'Plomería', description: 'Reparaciones y instalaciones de plomería' },
-            { icon: Zap, title: 'Electricidad', description: 'Servicios eléctricos profesionales' },
-            { icon: Home, title: 'Hogar', description: 'Limpieza, jardinería y mantenimiento' },
-            { icon: Users, title: 'Belleza', description: 'Servicios de peluquería y estética' },
-            { icon: Search, title: 'Tecnología', description: 'Reparación de dispositivos electrónicos' },
-            { icon: Shield, title: 'Seguridad', description: 'Instalación de sistemas de seguridad' },
+            {
+              icon: Wrench,
+              title: 'Plomería',
+              description: 'Reparaciones y instalaciones de plomería',
+            },
+            {
+              icon: Zap,
+              title: 'Electricidad',
+              description: 'Servicios eléctricos profesionales',
+            },
+            {
+              icon: Home,
+              title: 'Hogar',
+              description: 'Limpieza, jardinería y mantenimiento',
+            },
+            {
+              icon: Users,
+              title: 'Belleza',
+              description: 'Servicios de peluquería y estética',
+            },
+            {
+              icon: Search,
+              title: 'Tecnología',
+              description: 'Reparación de dispositivos electrónicos',
+            },
+            {
+              icon: Shield,
+              title: 'Seguridad',
+              description: 'Instalación de sistemas de seguridad',
+            },
           ].map((service, index) => (
             <Card key={index} className="p-6 hover:shadow-lg transition-shadow duration-300">
               <div className="flex items-center space-x-4">
