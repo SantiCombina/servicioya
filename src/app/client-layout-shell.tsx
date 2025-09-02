@@ -1,13 +1,14 @@
 'use client';
 
 import { Navbar, Toaster } from '@/components/ui';
+import { Footer } from '@/components/ui/footer/footer';
 import { usePathname } from 'next/navigation';
 import { ThemeProvider } from './theme-provider';
 
 export default function ClientLayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const hideNavbarRoutes = ['/login', '/signup', '/admin'];
-  const shouldHideNavbar = hideNavbarRoutes.some((route) => pathname.startsWith(route));
+  const hideRoutes = ['/login', '/signup', '/admin'];
+  const shouldHide = hideRoutes.some((route) => pathname.startsWith(route));
 
   return (
     <ThemeProvider
@@ -17,8 +18,9 @@ export default function ClientLayoutShell({ children }: { children: React.ReactN
       disableTransitionOnChange
       storageKey="servicioya-theme"
     >
-      {!shouldHideNavbar && <Navbar />}
+      {!shouldHide && <Navbar />}
       {children}
+      {!shouldHide && <Footer />}
       <Toaster />
     </ThemeProvider>
   );
