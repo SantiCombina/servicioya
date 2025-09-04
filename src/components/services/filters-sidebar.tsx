@@ -44,7 +44,7 @@ export function FiltersSidebar({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const updateQueryParams = (params: Record<string, any>) => {
+  const updateQueryParams = (params: Record<string, string | number | boolean | string[]>) => {
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     Object.entries(params).forEach(([key, value]) => {
       if (Array.isArray(value)) {

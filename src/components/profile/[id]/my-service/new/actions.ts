@@ -37,8 +37,8 @@ export const loadNewServiceDataAction = actionClient.schema(loadDataSchema).acti
       categories,
       locations,
     };
-  } catch (error: any) {
-    throw new Error(error.message || 'Error al cargar los datos');
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'Error al cargar los datos');
   }
 });
 
@@ -55,8 +55,8 @@ export const uploadImageActionSafe = actionClient.schema(uploadImageSchema).acti
       imageId: result.imageId,
       message: result.message,
     };
-  } catch (error: any) {
-    throw new Error(error.message || 'Error al subir la imagen');
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'Error al subir la imagen');
   }
 });
 
@@ -91,7 +91,7 @@ export const serviceCreate = actionClient.schema(createServiceActionSchema).acti
       serviceId: response.serviceId,
       providerId: parsedInput.providerId,
     };
-  } catch (error: any) {
-    throw new Error(error.message || 'Error al crear el servicio');
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'Error al crear el servicio');
   }
 });

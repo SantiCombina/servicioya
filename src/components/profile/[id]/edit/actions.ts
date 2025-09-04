@@ -28,7 +28,7 @@ export const userUpdate = actionClient.schema(updateUserActionSchema).action(asy
       message: 'Perfil actualizado con éxito',
       userId: userId,
     };
-  } catch (error: any) {
-    throw new Error(error.message || 'Error al actualizar el usuario');
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'Error al actualizar el usuario');
   }
 });

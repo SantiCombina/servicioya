@@ -54,7 +54,7 @@ export const bookingCreate = actionClient.schema(bookingCreateSchema).action(asy
       message: response.message,
       bookingId: response.bookingId,
     };
-  } catch (error: any) {
-    throw new Error(error.message || 'Error al crear la contratación');
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'Error al crear la contratación');
   }
 });

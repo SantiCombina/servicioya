@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { Button, Card, CardContent, Avatar, AvatarFallback, AvatarImage, Badge } from '@/components/ui';
 import { Booking, Service, User as UserType, Category, Location, Media } from '@/payload-types';
 
-import { loadMyContractsAction, updateContractStatusAction } from './actions';
+import { loadMyContractsAction } from './actions';
 
 export function MyContractsList() {
   const params = useParams();
@@ -26,20 +26,6 @@ export function MyContractsList() {
     onError: (error) => {
       console.error('Error loading data:', error);
       toast.error('Error al cargar los contratos');
-    },
-  });
-
-  const { executeAsync: updateStatusAction } = useAction(updateContractStatusAction, {
-    onSuccess: (result) => {
-      if (result.data?.success) {
-        // Recargar datos después de actualizar
-        loadData({ profileId });
-        toast.success(result.data.message);
-      }
-    },
-    onError: (error) => {
-      console.error('Error updating contract status:', error);
-      toast.error('Error al actualizar el estado del contrato');
     },
   });
 
@@ -130,13 +116,6 @@ export function MyContractsList() {
         timeZone: 'America/Argentina/Buenos_Aires', // Especificar zona horaria explícitamente
       }),
     };
-  };
-
-  const handleStatusUpdate = async (bookingId: number, status: 'accepted' | 'cancelled' | 'completed') => {
-    await updateStatusAction({
-      bookingId: bookingId.toString(),
-      status,
-    });
   };
 
   // Helper functions para obtener datos de las relaciones
@@ -324,7 +303,6 @@ export function MyContractsList() {
 
             // Determinar si el usuario actual es el cliente o el proveedor
             const isClient = currentUser && currentUser.id === clientData?.id;
-            const isProvider = currentUser && currentUser.id === providerData.id;
             const otherUser = isClient ? providerData : clientData;
 
             return (

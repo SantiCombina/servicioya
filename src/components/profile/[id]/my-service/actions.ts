@@ -69,7 +69,7 @@ export const serviceDelete = actionClient.schema(deleteServiceActionSchema).acti
       message: response.message,
       serviceId: parsedInput.serviceId,
     };
-  } catch (error: any) {
-    throw new Error(error.message || 'Error al eliminar el servicio');
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'Error al eliminar el servicio');
   }
 });

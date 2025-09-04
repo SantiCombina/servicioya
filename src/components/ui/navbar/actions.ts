@@ -44,8 +44,8 @@ export const userLogout = actionClient.schema(logoutSchema).action(async () => {
       path: '/',
       httpOnly: true,
     });
-  } catch (error: any) {
-    throw new Error(error.message || 'Error al cerrar sesión');
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'Error al cerrar sesión');
   }
 
   redirect('/');

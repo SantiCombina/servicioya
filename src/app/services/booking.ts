@@ -47,11 +47,11 @@ export async function createBooking(data: CreateBookingData) {
       message: 'Solicitud de contratación enviada exitosamente',
       bookingId: booking.id,
     };
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error creating booking:', error);
     return {
       success: false,
-      message: error.message || 'Error al crear la contratación',
+      message: error instanceof Error ? error.message : 'Error al crear la contratación',
     };
   }
 }
@@ -81,9 +81,9 @@ export async function getUserBookings(userId: string) {
     });
 
     return bookings.docs;
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching user bookings:', error);
-    throw new Error(error.message || 'Error al obtener las contrataciones');
+    throw new Error(error instanceof Error ? error.message : 'Error al obtener las contrataciones');
   }
 }
 
@@ -107,11 +107,11 @@ export async function updateBookingStatus(
       message: 'Estado de la contratación actualizado',
       booking,
     };
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error updating booking status:', error);
     return {
       success: false,
-      message: error.message || 'Error al actualizar el estado de la contratación',
+      message: error instanceof Error ? error.message : 'Error al actualizar el estado de la contratación',
     };
   }
 }

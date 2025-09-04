@@ -49,12 +49,8 @@ export function EditProfileForm({ user, locations }: Props) {
       name: user.name || '',
       phone: user.phone || '',
       dni: user.dni || undefined,
-      location: (user as any).location
-        ? typeof (user as any).location === 'object'
-          ? (user as any).location?.id
-          : (user as any).location
-        : undefined,
-      address: (user as any).address || '',
+      location: user.location ? (typeof user.location === 'object' ? user.location.id : user.location) : undefined,
+      address: user.address || '',
       avatar: typeof user.avatar === 'object' ? user.avatar?.id : user.avatar,
     },
   });

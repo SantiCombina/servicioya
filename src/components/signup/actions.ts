@@ -17,8 +17,8 @@ export const userSignUp = actionClient.schema(userSignupSchema).action(async ({ 
 
     const cookieStore = await cookies();
     cookieStore.set('payload-token', response.token);
-  } catch (error: any) {
-    throw new Error(error.message || 'Error al crear usuario');
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'Error al crear usuario');
   }
 
   redirect('/services');

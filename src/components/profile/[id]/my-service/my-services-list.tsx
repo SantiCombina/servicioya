@@ -17,7 +17,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui';
-import { Category, Location, Media } from '@/payload-types';
+import { Category, Location, Media, Review } from '@/payload-types';
 
 import { loadMyServicesAction, serviceDelete } from './actions';
 
@@ -121,7 +121,7 @@ export function MyServicesList() {
     return 'Ubicación';
   };
 
-  const getReviewCount = (reviews: (number | any)[] | null | undefined): number => {
+  const getReviewCount = (reviews: (number | Review)[] | null | undefined): number => {
     return reviews ? reviews.length : 0;
   };
 

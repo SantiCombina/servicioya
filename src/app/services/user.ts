@@ -24,9 +24,9 @@ export const createUser = async (email: string, password: string, name: string) 
       token: loginResult.token,
       user: loginResult.user,
     };
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error creating user:', error);
-    let message = error.message || 'Error al crear usuario';
+    let message = error instanceof Error ? error.message : 'Error al crear usuario';
     if (message.toLowerCase().includes('email') && message.toLowerCase().includes('exists')) {
       message = 'El email ya está registrado.';
     }

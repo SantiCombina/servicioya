@@ -67,7 +67,7 @@ export const updateContractStatusAction = actionClient
         message: response.message,
         booking: response.booking,
       };
-    } catch (error: any) {
-      throw new Error(error.message || 'Error al actualizar el estado del contrato');
+    } catch (error) {
+      throw new Error(error instanceof Error ? error.message : 'Error al actualizar el estado del contrato');
     }
   });
