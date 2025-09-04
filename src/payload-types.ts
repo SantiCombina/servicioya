@@ -134,6 +134,8 @@ export interface User {
   name?: string | null;
   phone?: string | null;
   dni?: number | null;
+  location?: (number | null) | Location;
+  address?: string | null;
   avatar?: (number | null) | Media;
   role: 'admin' | 'user';
   updatedAt: string;
@@ -153,6 +155,18 @@ export interface User {
       }[]
     | null;
   password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "locations".
+ */
+export interface Location {
+  id: number;
+  name: string;
+  province?: string | null;
+  country?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Imágenes del sistema. Para mejor calidad, usa imágenes de al menos 800x600 píxeles.
@@ -219,18 +233,6 @@ export interface Category {
   name: string;
   description?: string | null;
   icon?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "locations".
- */
-export interface Location {
-  id: number;
-  name: string;
-  province?: string | null;
-  country?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -405,6 +407,8 @@ export interface UsersSelect<T extends boolean = true> {
   name?: T;
   phone?: T;
   dni?: T;
+  location?: T;
+  address?: T;
   avatar?: T;
   role?: T;
   updatedAt?: T;

@@ -28,6 +28,17 @@ export const Users: CollectionConfig = {
       type: 'number',
     },
     {
+      name: 'location',
+      label: 'Ubicación',
+      type: 'relationship',
+      relationTo: 'locations',
+    },
+    {
+      name: 'address',
+      label: 'Dirección',
+      type: 'text',
+    },
+    {
       name: 'avatar',
       label: 'Avatar',
       type: 'upload',

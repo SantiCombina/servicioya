@@ -43,6 +43,15 @@ export const userUpdateSchema = z.object({
     .refine((val) => val === undefined || (val >= 10000000 && val <= 99999999), {
       message: 'El DNI debe tener entre 8 dígitos (10.000.000 - 99.999.999).',
     }),
+  location: z.union([z.string(), z.number()]).optional(),
+  address: z
+    .string()
+    .trim()
+    .max(200, {
+      message: 'La dirección debe tener como máximo 200 caracteres.',
+    })
+    .optional(),
+  avatar: z.union([z.string(), z.number(), z.null()]).optional(),
 });
 
 export type UserUpdateValues = z.infer<typeof userUpdateSchema>;
