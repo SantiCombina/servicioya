@@ -1,19 +1,6 @@
 'use client';
 
-import {
-  User,
-  Star,
-  Calendar,
-  MapPin,
-  Clock,
-  DollarSign,
-  MessageSquare,
-  Phone,
-  Mail,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-} from 'lucide-react';
+import { User, Star, Calendar, MapPin, Clock, DollarSign, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
@@ -279,7 +266,7 @@ export function MyContractsList() {
 
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <h3 className="text-2xl font-bold text-foreground">Mis Contratos</h3>
+          <h3 className="text-xl font-semibold text-foreground">Todos los Contratos</h3>
           {activeFilter !== 'all' && (
             <div className="flex items-center space-x-2">
               <span className="text-sm text-muted-foreground">Mostrando:</span>
@@ -369,46 +356,45 @@ export function MyContractsList() {
                             <div className="flex items-center space-x-1">
                               <DollarSign className="w-4 h-4" />
                               <span className="font-semibold">
-                                ${contract.finalPrice?.toLocaleString('es-AR') || 'Consultar'}
+                                {contract.finalPrice?.toLocaleString('es-AR') || 'Consultar'}
                               </span>
                             </div>
                           </div>
                         </div>
+
+                        {/* Botones para contratos completados - Esquina superior derecha */}
+                        {canEdit && contract.status === 'completed' && isClient && !contract.reviewed && (
+                          <div className="flex flex-col gap-2 ml-4">
+                            <Button variant="secondary" size="sm">
+                              Calificar
+                            </Button>
+                            <Button variant="outline" size="sm">
+                              Contratar Nuevamente
+                            </Button>
+                          </div>
+                        )}
                       </div>
 
                       {/* Información del otro usuario (proveedor si eres cliente, cliente si eres proveedor) */}
                       {otherUser && (
                         <div className="bg-muted/50 rounded-lg p-4">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                              <Avatar className="w-10 h-10">
-                                <AvatarImage src={getImageUrl(otherUser.avatar) || '/placeholder.svg'} />
-                                <AvatarFallback className="bg-primary text-primary-foreground">
-                                  <User className="w-5 h-5" />
-                                </AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <p className="font-medium text-foreground">
-                                  {otherUser.name} {isClient ? '(Proveedor)' : '(Cliente)'}
-                                </p>
-                                {isClient && (
-                                  <div className="flex items-center space-x-1">
-                                    <div className="flex items-center space-x-1">{renderStars(serviceData.rating)}</div>
-                                    <span className="text-sm text-muted-foreground">({serviceData.rating || 0})</span>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <Button variant="outline" size="sm">
-                                <Phone className="w-4 h-4" />
-                              </Button>
-                              <Button variant="outline" size="sm">
-                                <Mail className="w-4 h-4" />
-                              </Button>
-                              <Button variant="outline" size="sm">
-                                <MessageSquare className="w-4 h-4" />
-                              </Button>
+                          <div className="flex items-center space-x-3">
+                            <Avatar className="w-10 h-10">
+                              <AvatarImage src={getImageUrl(otherUser.avatar) || '/placeholder.svg'} />
+                              <AvatarFallback className="bg-primary text-primary-foreground">
+                                <User className="w-5 h-5" />
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium text-foreground">
+                                {otherUser.name} {isClient ? '(Proveedor)' : '(Cliente)'}
+                              </p>
+                              {isClient && (
+                                <div className="flex items-center space-x-1">
+                                  <div className="flex items-center space-x-1">{renderStars(serviceData.rating)}</div>
+                                  <span className="text-sm text-muted-foreground">({serviceData.rating || 0})</span>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -428,65 +414,6 @@ export function MyContractsList() {
                         </p>
                       </div>
                     </div>
-
-                    {/* Acciones */}
-                    {canEdit && (
-                      <div className="flex flex-col space-y-2 lg:ml-6">
-                        {contract.status === 'pending' && isProvider && (
-                          <>
-                            <Button
-                              size="sm"
-                              className="w-full lg:w-auto"
-                              onClick={() => handleStatusUpdate(contract.id, 'accepted')}
-                            >
-                              Aceptar
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="w-full lg:w-auto"
-                              onClick={() => handleStatusUpdate(contract.id, 'cancelled')}
-                            >
-                              Rechazar
-                            </Button>
-                          </>
-                        )}
-                        {contract.status === 'accepted' && isProvider && (
-                          <>
-                            <Button
-                              size="sm"
-                              className="w-full lg:w-auto"
-                              onClick={() => handleStatusUpdate(contract.id, 'completed')}
-                            >
-                              Marcar Completado
-                            </Button>
-                            <Button variant="outline" size="sm" className="w-full lg:w-auto">
-                              Ver Detalles
-                            </Button>
-                          </>
-                        )}
-                        {contract.status === 'completed' && isClient && !contract.reviewed && (
-                          <>
-                            <Button size="sm" className="w-full lg:w-auto">
-                              Calificar
-                            </Button>
-                            <Button variant="outline" size="sm" className="w-full lg:w-auto">
-                              Contratar Nuevamente
-                            </Button>
-                          </>
-                        )}
-                        {contract.status === 'pending' && isClient && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="w-full lg:w-auto"
-                            onClick={() => handleStatusUpdate(contract.id, 'cancelled')}
-                          >
-                            Cancelar
-                          </Button>
-                        )}
-                      </div>
-                    )}
                   </div>
                 </CardContent>
               </Card>

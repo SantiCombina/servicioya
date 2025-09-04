@@ -104,7 +104,7 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
 
   return (
     <div className="min-h-main">
-      <div className="container py-6">
+      <div className="container py-12">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Filters Sidebar */}
           <div className="lg:col-span-1">

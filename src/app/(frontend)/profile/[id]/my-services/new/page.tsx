@@ -13,7 +13,7 @@ export default function NewServicePage() {
 
   return (
     <div className="min-h-main">
-      <main className="container py-6">
+      <main className="container py-12">
         {/* Botón de Navegación */}
         <div className="mb-6">
           <Link href={`/profile/${profileId}/my-services`}>

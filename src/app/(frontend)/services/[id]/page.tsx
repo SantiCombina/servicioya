@@ -65,10 +65,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="min-h-main">
-      <div className="container py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="container py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-3 space-y-6">
             <ServiceImageGallery images={images} title={service.title} />
 
             {/* Service Details */}

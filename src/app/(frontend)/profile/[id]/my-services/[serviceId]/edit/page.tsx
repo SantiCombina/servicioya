@@ -13,7 +13,7 @@ export default function EditServicePage() {
 
   return (
     <div className="min-h-main">
-      <main className="container py-6 max-w-2xl">
+      <main className="container py-12">
         {/* Header */}
         <div className="flex items-center space-x-4 mb-6">
           <Link href={`/profile/${profileId}/my-services`}>

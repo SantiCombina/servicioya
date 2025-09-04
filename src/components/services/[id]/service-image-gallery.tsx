@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { Media } from '@/payload-types';
 
@@ -32,48 +32,30 @@ function getImageSize(img: GalleryImage, fallback: { width: number; height: numb
 
 export function ServiceImageGallery({ images, title }: ServiceImageGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [showAll, setShowAll] = useState(false);
-  const [maxVisible, setMaxVisible] = useState(images.length);
-
-  const thumbsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!thumbsRef.current || showAll) {
-      setMaxVisible(images.length);
-      return;
-    }
-    const containerWidth = thumbsRef.current.offsetWidth;
-    const thumbWidth = 80 + 8;
-    const visible = Math.floor(containerWidth / thumbWidth);
-    setMaxVisible(visible < images.length ? visible : images.length);
-  }, [images.length, showAll]);
+  const maxThumbnails = 6; // Máximo número de miniaturas visibles
 
   if (!images || images.length === 0) return null;
 
   const main = images[selectedIndex];
   const mainUrl = getImageUrl(main);
   const mainAlt = getImageAlt(main, title);
-  const mainSize = getImageSize(main, { width: 600, height: 400 });
-  const hiddenCount = images.length - maxVisible;
-  const visibleThumbs = images.slice(0, maxVisible);
+
+  // Solo mostrar thumbnails si hay más de una imagen
+  const showThumbnails = images.length > 1;
+  const visibleThumbs = images.slice(0, maxThumbnails);
+  const hiddenCount = Math.max(0, images.length - maxThumbnails);
 
   return (
-    <>
-      <Image
-        src={mainUrl}
-        alt={mainAlt}
-        width={mainSize.width}
-        height={mainSize.height}
-        className="w-full h-96 object-cover rounded-t-lg transition-all duration-200"
-      />
-      {images.length > 1 && (
-        <div ref={thumbsRef} className="flex gap-2 justify-start">
+    <div className="flex gap-4">
+      {/* Thumbnails Column - Solo mostrar si hay más de una imagen */}
+      {showThumbnails && (
+        <div className="flex flex-col justify-between w-16 h-[500px] flex-shrink-0">
           {visibleThumbs.map((img, index) => {
             const url = getImageUrl(img);
             const alt = getImageAlt(img, `Vista ${index + 1}`);
-            const size = getImageSize(img, { width: 80, height: 80 });
-            const isLastVisible = !showAll && index === maxVisible - 1 && hiddenCount > 0;
+            const size = getImageSize(img, { width: 64, height: 64 });
+            const isLastVisible = index === maxThumbnails - 1 && hiddenCount > 0;
+
             return (
               <button
                 key={index}
@@ -83,7 +65,14 @@ export function ServiceImageGallery({ images, title }: ServiceImageGalleryProps)
                     setSelectedIndex(index);
                   }
                 }}
-                className={`relative w-20 h-20 rounded-lg overflow-hidden border-2 flex-shrink-0 focus:outline-none transition-all duration-150 ${selectedIndex === index ? 'border-primary ring-2 ring-primary' : 'border-muted'}`}
+                onClick={() => {
+                  if (!isLastVisible) {
+                    setSelectedIndex(index);
+                  }
+                }}
+                className={`relative w-16 h-16 rounded-sm overflow-hidden border flex-shrink-0 focus:outline-none transition-all duration-150 hover:border-primary ${
+                  selectedIndex === index ? 'border-primary ring-1 ring-primary' : 'border-muted'
+                }`}
                 aria-label={isLastVisible ? `Ver ${hiddenCount} imágenes más` : `Ver imagen ${index + 1}`}
               >
                 <Image
@@ -94,7 +83,7 @@ export function ServiceImageGallery({ images, title }: ServiceImageGalleryProps)
                   className="w-full h-full object-cover"
                 />
                 {isLastVisible && (
-                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-xl font-bold">
+                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-2xl">
                     +{hiddenCount}
                   </div>
                 )}
@@ -103,6 +92,13 @@ export function ServiceImageGallery({ images, title }: ServiceImageGalleryProps)
           })}
         </div>
       )}
-    </>
+
+      {/* Main Image */}
+      <div className="flex-1 flex justify-center">
+        <div className="relative w-full h-[500px] overflow-hidden">
+          <Image src={mainUrl} alt={mainAlt} fill className="object-contain transition-all duration-200" priority />
+        </div>
+      </div>
+    </div>
   );
 }

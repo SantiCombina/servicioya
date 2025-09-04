@@ -27,7 +27,7 @@ export default async function EditProfilePage({ params }: { params: Promise<{ id
   }
   return (
     <div className="min-h-main">
-      <main className="container py-6">
+      <main className="container py-12">
         <h1 className="text-3xl font-bold mb-6">Editar Perfil</h1>
         <EditProfileForm user={userToEdit} />
       </main>

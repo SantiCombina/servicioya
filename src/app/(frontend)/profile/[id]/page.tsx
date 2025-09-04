@@ -23,7 +23,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="min-h-main">
-      <main className="container py-6">
+      <main className="container py-12">
         <ProfileHeader user={user} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
