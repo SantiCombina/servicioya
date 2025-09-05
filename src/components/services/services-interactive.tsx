@@ -2,36 +2,45 @@
 
 import { Search } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 
+import { FiltersDrawer } from '@/components/services/filters-drawer';
 import { FiltersSidebar } from '@/components/services/filters-sidebar';
 import { ServiceCard } from '@/components/services/service-card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui';
 import { normalize } from '@/lib/helpers/normalize';
 import { Category, Location, Service, User } from '@/payload-types';
 
-type SortOption = 'rating' | 'price-low' | 'price-high' | 'jobs' | 'reviews';
+type SortOption = 'rating' | 'price-low' | 'price-high' | 'jobs';
 
 export function ServicesInteractive({ initialServices }: { initialServices: Service[] }) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string[]>([]);
-  const [selectedLocation, setSelectedLocation] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
-  const [sortBy, setSortBy] = useState<SortOption>('rating');
-  const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
-  const [services] = useState<Service[]>(initialServices);
-
   const searchParams = useSearchParams();
+
+  // Inicializar estados desde URL params
+  const [searchTerm] = useState(() => searchParams.get('search') || '');
+  const [selectedCategory, setSelectedCategory] = useState<string[]>(() => {
+    const categories = searchParams.get('category');
+    return categories ? categories.split(',') : [];
+  });
+  const [selectedLocation, setSelectedLocation] = useState<string[]>(() => {
+    const locations = searchParams.get('location');
+    return locations ? locations.split(',') : [];
+  });
+  const [priceRange, setPriceRange] = useState<[number, number]>(() => {
+    const priceFrom = searchParams.get('priceFrom');
+    const priceTo = searchParams.get('priceTo');
+    return [priceFrom ? parseInt(priceFrom, 10) : 0, priceTo ? parseInt(priceTo, 10) : 10000];
+  });
+  const [sortBy, setSortBy] = useState<SortOption>('rating');
+  const [showVerifiedOnly, setShowVerifiedOnly] = useState(() => {
+    return searchParams.get('verified') === '1';
+  });
+  const [services] = useState<Service[]>(initialServices);
 
   // Extraer categorías y ubicaciones únicas de los servicios
   const categories = useMemo(() => Array.from(new Set(services.map((s) => (s.category as Category).name))), [services]);
 
   const locations = useMemo(() => Array.from(new Set(services.map((s) => (s.location as Location).name))), [services]);
-
-  useEffect(() => {
-    const search = searchParams.get('search') || '';
-    setSearchTerm(search);
-  }, [searchParams]);
 
   // Función de filtrado simplificada
   const filterServices = useCallback(
@@ -88,8 +97,6 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
           return b.priceFrom - a.priceFrom;
         case 'jobs':
           return (b.completedJobs || 0) - (a.completedJobs || 0);
-        case 'reviews':
-          return (Array.isArray(b.reviews) ? b.reviews.length : 0) - (Array.isArray(a.reviews) ? a.reviews.length : 0);
         default:
           return 0;
       }
@@ -106,8 +113,8 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
     <div className="min-h-main">
       <div className="container py-12">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Filters Sidebar */}
-          <div className="lg:col-span-1">
+          {/* Filters Sidebar - Desktop Only */}
+          <div className="hidden lg:block lg:col-span-1">
             <FiltersSidebar
               selectedCategory={selectedCategory}
               setSelectedCategory={setSelectedCategory}
@@ -122,25 +129,80 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
             />
           </div>
 
-          <div className="lg:col-span-3">
-            {/* Header with sort */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-              <div>
-                <h1 className="text-2xl font-bold">Servicios Disponibles</h1>
-                <p className="text-gray-600">{processedServices.length} servicios encontrados</p>
+          <div className="col-span-1 lg:col-span-3">
+            {/* Header with sort and mobile filters */}
+            <div className="mb-6">
+              <div className="hidden sm:flex sm:items-end sm:justify-between">
+                <div>
+                  <h1 className="text-2xl font-bold">Servicios Disponibles</h1>
+                  <p className="text-gray-600">{processedServices.length} servicios encontrados</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
+                    <SelectTrigger className="w-[200px]">
+                      <SelectValue placeholder="Ordenar por" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="rating">Más calificación</SelectItem>
+                      <SelectItem value="price-low">Menor precio</SelectItem>
+                      <SelectItem value="price-high">Mayor precio</SelectItem>
+                      <SelectItem value="jobs">Más trabajos realizados</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  {/* Botón filtros solo en tablet/desktop */}
+                  <div className="lg:hidden">
+                    <FiltersDrawer
+                      selectedCategory={selectedCategory}
+                      setSelectedCategory={setSelectedCategory}
+                      selectedLocation={selectedLocation}
+                      setSelectedLocation={setSelectedLocation}
+                      priceRange={priceRange}
+                      setPriceRange={(value: number[]) => setPriceRange([value[0], value[1]])}
+                      showVerifiedOnly={showVerifiedOnly}
+                      setShowVerifiedOnly={setShowVerifiedOnly}
+                      categories={categories}
+                      locations={locations}
+                      resultsCount={processedServices.length}
+                    />
+                  </div>
+                </div>
               </div>
-              <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
-                <SelectTrigger className="w-[200px]">
-                  <SelectValue placeholder="Ordenar por" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="rating">Mejor calificados</SelectItem>
-                  <SelectItem value="price-low">Precio: menor a mayor</SelectItem>
-                  <SelectItem value="price-high">Precio: mayor a menor</SelectItem>
-                  <SelectItem value="jobs">Más trabajos realizados</SelectItem>
-                  <SelectItem value="reviews">Más reseñas</SelectItem>
-                </SelectContent>
-              </Select>
+
+              {/* Mobile pequeño: Header arriba, controles debajo */}
+              <div className="sm:hidden">
+                <div className="mb-4">
+                  <h1 className="text-2xl font-bold">Servicios Disponibles</h1>
+                  <p className="text-gray-600">{processedServices.length} servicios encontrados</p>
+                </div>
+                <div className="flex items-center justify-end gap-3">
+                  <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
+                    <SelectTrigger className="w-[200px]">
+                      <SelectValue placeholder="Ordenar por" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="rating">Más calificación</SelectItem>
+                      <SelectItem value="price-low">Menor precio</SelectItem>
+                      <SelectItem value="price-high">Mayor precio</SelectItem>
+                      <SelectItem value="jobs">Más trabajos realizados</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <FiltersDrawer
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                    selectedLocation={selectedLocation}
+                    setSelectedLocation={setSelectedLocation}
+                    priceRange={priceRange}
+                    setPriceRange={(value: number[]) => setPriceRange([value[0], value[1]])}
+                    showVerifiedOnly={showVerifiedOnly}
+                    setShowVerifiedOnly={setShowVerifiedOnly}
+                    categories={categories}
+                    locations={locations}
+                    resultsCount={processedServices.length}
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Services Grid */}

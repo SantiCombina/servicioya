@@ -8,13 +8,25 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-import { Separator } from '@/components/ui';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { UserAvatar } from '@/components/ui/user-avatar';
+import {
+  Button,
+  Card,
+  CardContent,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Separator,
+  UserAvatar,
+} from '@/components/ui';
 import { userUpdateSchema, type UserUpdateValues } from '@/lib/schemas/user-update-schema';
 import { Location, Media, User } from '@/payload-types';
 
