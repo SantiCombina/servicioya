@@ -1,6 +1,4 @@
-import { getPayload } from 'payload';
-
-import config from '@/payload.config';
+import { getPayloadClient } from '@/lib/payload';
 
 interface CreateBookingData {
   serviceId: number;
@@ -15,7 +13,7 @@ interface CreateBookingData {
 
 export async function createBooking(data: CreateBookingData) {
   try {
-    const payload = await getPayload({ config });
+    const payload = await getPayloadClient();
 
     // Asegurar que la fecha sea válida convirtiéndola a Date y luego a ISO string
     const bookingDate = new Date(data.requestedDate);
@@ -58,7 +56,7 @@ export async function createBooking(data: CreateBookingData) {
 
 export async function getUserBookings(userId: string) {
   try {
-    const payload = await getPayload({ config });
+    const payload = await getPayloadClient();
 
     const bookings = await payload.find({
       collection: 'bookings',
@@ -92,7 +90,7 @@ export async function updateBookingStatus(
   status: 'pending' | 'accepted' | 'completed' | 'cancelled',
 ) {
   try {
-    const payload = await getPayload({ config });
+    const payload = await getPayloadClient();
 
     const booking = await payload.update({
       collection: 'bookings',
