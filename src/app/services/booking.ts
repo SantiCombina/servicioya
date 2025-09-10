@@ -5,9 +5,7 @@ interface CreateBookingData {
   providerId: number;
   clientId: number;
   requestedDate: string;
-  proposedPrice: number;
   location: string;
-  contactPhone: string;
   message?: string;
 }
 
@@ -35,7 +33,6 @@ export async function createBooking(data: CreateBookingData) {
         client: data.clientId,
         date: isoDateString,
         status: 'pending',
-        finalPrice: data.proposedPrice,
         reviewed: false,
       },
     });

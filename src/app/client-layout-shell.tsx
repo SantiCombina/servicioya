@@ -23,7 +23,7 @@ export default function ClientLayoutShell({ children }: { children: React.ReactN
       {!shouldHide && <Navbar />}
       {children}
       {!shouldHide && <Footer />}
-      <Toaster />
+      <Toaster richColors />
     </ThemeProvider>
   );
 }

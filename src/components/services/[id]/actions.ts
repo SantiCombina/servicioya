@@ -34,9 +34,7 @@ export const bookingCreate = actionClient.schema(bookingCreateSchema).action(asy
       providerId: parsedInput.providerId,
       clientId: parsedInput.clientId,
       requestedDate: parsedInput.requestedDate,
-      proposedPrice: parsedInput.proposedPrice,
       location: parsedInput.location,
-      contactPhone: parsedInput.contactPhone,
       message: parsedInput.message,
     });
 

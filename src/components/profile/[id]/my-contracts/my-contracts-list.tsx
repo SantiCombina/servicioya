@@ -334,7 +334,9 @@ export function MyContractsList() {
                             <div className="flex items-center space-x-1">
                               <DollarSign className="w-4 h-4" />
                               <span className="font-semibold">
-                                {contract.finalPrice?.toLocaleString('es-AR') || 'Consultar'}
+                                {contract.finalPrice?.toLocaleString('es-AR') ||
+                                  serviceData.priceFrom?.toLocaleString('es-AR') ||
+                                  'A consultar'}
                               </span>
                             </div>
                           </div>

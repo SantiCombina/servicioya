@@ -32,14 +32,6 @@ export const bookingCreateSchema = z.object({
       message: 'El mensaje no puede exceder los 500 caracteres.',
     })
     .optional(),
-  proposedPrice: z
-    .number({
-      required_error: 'El precio propuesto es requerido.',
-      invalid_type_error: 'El precio debe ser un número válido.',
-    })
-    .min(1, {
-      message: 'El precio debe ser mayor a 0.',
-    }),
   location: z
     .string({
       required_error: 'La ubicación es requerida.',
@@ -47,17 +39,6 @@ export const bookingCreateSchema = z.object({
     })
     .min(5, {
       message: 'Proporciona una ubicación más específica (mínimo 5 caracteres).',
-    }),
-  contactPhone: z
-    .string({
-      required_error: 'El teléfono de contacto es requerido.',
-      invalid_type_error: 'El teléfono debe ser válido.',
-    })
-    .min(8, {
-      message: 'Proporciona un número de teléfono válido (mínimo 8 dígitos).',
-    })
-    .max(20, {
-      message: 'El número de teléfono es demasiado largo.',
     }),
 });
 
