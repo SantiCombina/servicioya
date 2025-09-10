@@ -101,7 +101,7 @@ export function FiltersSidebar({
   const handleClearFilters = () => {
     setSelectedCategory([]);
     setSelectedLocation([]);
-    setPriceRange([0, 10000]);
+    setPriceRange([0, 100000]);
     setShowVerifiedOnly(false);
     router.replace('?');
   };
@@ -186,9 +186,9 @@ export function FiltersSidebar({
           <Slider
             value={priceRange}
             onValueChange={handlePriceChange}
-            max={10000}
+            max={100000}
             min={0}
-            step={500}
+            step={5000}
             className="w-full"
           />
         </>

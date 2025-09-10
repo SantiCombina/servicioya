@@ -29,7 +29,7 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
   const [priceRange, setPriceRange] = useState<[number, number]>(() => {
     const priceFrom = searchParams.get('priceFrom');
     const priceTo = searchParams.get('priceTo');
-    return [priceFrom ? parseInt(priceFrom, 10) : 0, priceTo ? parseInt(priceTo, 10) : 10000];
+    return [priceFrom ? parseInt(priceFrom, 10) : 0, priceTo ? parseInt(priceTo, 10) : 100000];
   });
   const [sortBy, setSortBy] = useState<SortOption>('rating');
   const [showVerifiedOnly, setShowVerifiedOnly] = useState(() => {
@@ -207,7 +207,7 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
 
             {/* Services Grid */}
             {processedServices.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {processedServices.map((service: Service) => (
                   <ServiceCard key={service.id} service={service} />
                 ))}

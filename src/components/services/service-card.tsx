@@ -75,8 +75,6 @@ export function ServiceCard({ service }: Props) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-600 mb-3">{service.description}</p>
-
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-1">

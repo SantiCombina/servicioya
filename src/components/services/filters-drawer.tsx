@@ -139,7 +139,7 @@ export function FiltersDrawer({
                 onValueChange={setPriceRange}
                 max={100000}
                 min={0}
-                step={1000}
+                step={5000}
                 className="w-full"
               />
               <div className="flex justify-between text-sm text-muted-foreground mt-2">
