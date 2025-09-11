@@ -1,7 +1,6 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 import { logoutUser, getCurrentUser } from '@/app/services/user';
@@ -44,9 +43,12 @@ export const userLogout = actionClient.schema(logoutSchema).action(async () => {
       path: '/',
       httpOnly: true,
     });
+
+    return {
+      success: true,
+      message: 'Sesión cerrada exitosamente',
+    };
   } catch (error) {
     throw new Error(error instanceof Error ? error.message : 'Error al cerrar sesión');
   }
-
-  redirect('/');
 });

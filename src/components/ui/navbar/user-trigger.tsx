@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
 import { useEffect } from 'react';
 
@@ -18,12 +19,23 @@ import {
 import { getCurrentUserAction, userLogout } from './actions';
 
 export function UserTrigger() {
+  const router = useRouter();
   const { execute: loadCurrentUser, result: userResult, isExecuting: isLoadingUser } = useAction(getCurrentUserAction);
 
-  const { executeAsync: executeLogout } = useAction(userLogout);
+  const { executeAsync: executeLogout } = useAction(userLogout, {
+    onSuccess: () => {
+      // Recargar el usuario después del logout exitoso para actualizar el estado local
+      loadCurrentUser({});
+      // Opcional: redirigir a home después del logout
+      router.push('/');
+    },
+    onError: (error) => {
+      console.error('Error during logout:', error);
+    },
+  });
 
   const handleLogout = async () => {
-    executeLogout({});
+    await executeLogout({});
   };
 
   useEffect(() => {
