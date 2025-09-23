@@ -4,7 +4,6 @@ export default function MyContractsPage() {
   return (
     <div className="min-h-main">
       <main className="container py-12 relative">
-        {/* Header con título */}
         <div className="mb-6">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Mis Contratos</h1>

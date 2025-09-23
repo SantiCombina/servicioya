@@ -76,9 +76,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="text-2xl text-primary font-bold">{service.title}</CardTitle>
+                    <CardTitle className="text-2xl font-bold">{service.title}</CardTitle>
                     <CardDescription className="flex items-center mt-2 text-muted-foreground">
-                      <MapPin className="w-4 h-4 mr-1 text-primary" />
+                      <MapPin className="w-4 h-4 mr-1" />
                       {location.name}
                     </CardDescription>
                   </div>

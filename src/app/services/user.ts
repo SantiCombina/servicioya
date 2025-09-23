@@ -80,7 +80,14 @@ export const logoutUser = async () => {
 
 export const updateUser = async (
   userId: number | string,
-  userData: { name?: string; phone?: string; dni?: number },
+  userData: {
+    name?: string;
+    phone?: string;
+    dni?: number;
+    location?: number;
+    address?: string;
+    avatar?: number | null;
+  },
 ) => {
   try {
     const payload = await getPayloadClient();

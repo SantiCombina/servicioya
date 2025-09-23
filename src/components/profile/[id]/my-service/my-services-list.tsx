@@ -41,7 +41,6 @@ export function MyServicesList() {
   const { executeAsync: deleteServiceAction } = useAction(serviceDelete, {
     onSuccess: (result) => {
       if (result.data?.success) {
-        // Recargar datos después de eliminar
         loadData({ profileId });
         toast.success(result.data.message);
       }
@@ -56,7 +55,6 @@ export function MyServicesList() {
     loadData({ profileId });
   }, [profileId]);
 
-  // Obtener datos de la respuesta de la action
   const currentUser = loadResult.data?.user || null;
   const services = loadResult.data?.services || [];
 
@@ -125,14 +123,12 @@ export function MyServicesList() {
     return reviews ? reviews.length : 0;
   };
 
-  // Filtros
   const activeServices = services.filter((service) => service.isActive === true);
   const inactiveServices = services.filter((service) => service.isActive !== true);
 
   const filteredServices =
     serviceFilter === 'all' ? services : serviceFilter === 'active' ? activeServices : inactiveServices;
 
-  // Verificar si el usuario actual puede ver/editar estos servicios
   const canEdit = currentUser && (currentUser.id.toString() === profileId || currentUser.role === 'admin');
 
   if (isLoadingData) {
@@ -190,19 +186,16 @@ export function MyServicesList() {
         <Card className="border-border">
           <CardContent className="pt-6">
             <div className="text-center py-12">
-              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                <Plus className="w-8 h-8 text-muted-foreground" />
-              </div>
               <h3 className="text-lg font-medium text-foreground mb-2">No tienes servicios aún</h3>
               <p className="text-muted-foreground mb-4">
                 Comienza creando tu primer servicio para ofrecer a la comunidad.
               </p>
-              <Link href={`/profile/${profileId}/my-services/new`}>
-                <Button>
+              <Button asChild variant="secondary">
+                <Link href={`/profile/${profileId}/my-services/new`}>
                   <Plus className="h-4 w-4 mr-2" />
                   Crear mi primer servicio
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </CardContent>
         </Card>

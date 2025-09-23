@@ -20,7 +20,7 @@ export default function MyServicesPage() {
             <p className="text-muted-foreground">Gestiona todos tus servicios publicados</p>
           </div>
 
-          <Button asChild size="lg" variant="secondary" className="shadow-lg">
+          <Button asChild size="lg" className="shadow-lg">
             <Link href={`/profile/${profileId}/my-services/new`}>
               <Plus className="w-4 h-4 mr-2" />
               Nuevo Servicio

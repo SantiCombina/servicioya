@@ -24,9 +24,7 @@ export function UserTrigger() {
 
   const { executeAsync: executeLogout } = useAction(userLogout, {
     onSuccess: () => {
-      // Recargar el usuario después del logout exitoso para actualizar el estado local
       loadCurrentUser({});
-      // Opcional: redirigir a home después del logout
       router.push('/');
     },
     onError: (error) => {
@@ -40,6 +38,20 @@ export function UserTrigger() {
 
   useEffect(() => {
     loadCurrentUser({});
+
+    // Escuchar evento de actualización de usuario
+    const handleUserUpdate = (event: CustomEvent) => {
+      console.log('Evento user-updated recibido:', event.detail);
+      if (event.detail) {
+        window.location.reload();
+      }
+    };
+
+    window.addEventListener('user-updated', handleUserUpdate as EventListener);
+
+    return () => {
+      window.removeEventListener('user-updated', handleUserUpdate as EventListener);
+    };
   }, []);
 
   const user = userResult.data?.user || null;

@@ -9,6 +9,25 @@ import { actionClient } from '@/lib/safe-action-client';
 const logoutSchema = z.object({});
 const getCurrentUserSchema = z.object({});
 
+const refreshUserSchema = z.object({});
+
+export const refreshCurrentUser = actionClient.schema(refreshUserSchema).action(async () => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('payload-token')?.value || null;
+
+    const user = await getCurrentUser(token);
+
+    return {
+      success: true,
+      user,
+    };
+  } catch (error) {
+    console.error('Error refreshing current user:', error);
+    throw new Error('Error al actualizar el usuario actual');
+  }
+});
+
 export const getCurrentUserAction = actionClient.schema(getCurrentUserSchema).action(async () => {
   try {
     const cookieStore = await cookies();

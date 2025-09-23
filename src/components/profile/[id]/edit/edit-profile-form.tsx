@@ -30,7 +30,7 @@ import {
 import { userUpdateSchema, type UserUpdateValues } from '@/lib/schemas/user-update-schema';
 import { Location, Media, User } from '@/payload-types';
 
-import { userUpdate } from './actions';
+import { userUpdate, uploadAvatar } from './actions';
 
 interface Props {
   user: User;
@@ -46,12 +46,34 @@ export function EditProfileForm({ user, locations }: Props) {
     onSuccess: (result) => {
       if (result.data?.success) {
         toast.success(result.data.message);
-        router.push(`/profile/${result.data.userId}`);
+
+        window.dispatchEvent(
+          new CustomEvent('user-updated', {
+            detail: result.data.user,
+          }),
+        );
+
+        setTimeout(() => {
+          router.push(`/profile/${result.data.userId}`);
+        }, 100);
       }
     },
     onError: (error) => {
       console.error('Error updating profile:', error);
       toast.error('Error al actualizar el perfil');
+    },
+  });
+
+  const { executeAsync: uploadAvatarAsync, isExecuting: isUploadingAvatar } = useAction(uploadAvatar, {
+    onSuccess: (result) => {
+      if (result.data?.success && result.data.imageId) {
+        form.setValue('avatar', result.data.imageId);
+      }
+    },
+    onError: (error) => {
+      console.error('Error uploading avatar:', error);
+      toast.error('Error al subir el avatar');
+      setAvatarPreview(null);
     },
   });
 
@@ -67,42 +89,37 @@ export function EditProfileForm({ user, locations }: Props) {
     },
   });
 
-  // Set avatar preview when user data loads
   useEffect(() => {
     if (user.avatar && typeof user.avatar === 'object') {
       setAvatarPreview((user.avatar as Media).url || null);
     }
   }, [user.avatar]);
 
-  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         setAvatarPreview(e.target?.result as string);
-        setAvatarRemoved(false); // Reset removed state when new image is selected
+        setAvatarRemoved(false);
       };
       reader.readAsDataURL(file);
-      // TODO: Upload file to server and get media ID
-      // form.setValue('avatar', mediaId);
+
+      const formData = new FormData();
+      formData.append('file', file);
+      await uploadAvatarAsync({ formData });
     }
   };
 
   const handleRemoveAvatar = () => {
-    // Limpiar el preview
     setAvatarPreview(null);
     setAvatarRemoved(true);
-
-    // Establecer avatar como null para removerlo en el servidor
     form.setValue('avatar', null);
 
-    // También limpiar el input file si existe
     const fileInput = document.getElementById('avatar-upload') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = '';
     }
-
-    toast.success('Avatar marcado para eliminación');
   };
 
   async function onSubmit(values: UserUpdateValues) {
@@ -147,10 +164,15 @@ export function EditProfileForm({ user, locations }: Props) {
                     type="button"
                     variant="outline"
                     size="sm"
+                    disabled={isUploadingAvatar}
                     onClick={() => document.getElementById('avatar-upload')?.click()}
                   >
                     <Camera className="w-4 h-4 mr-2" />
-                    {avatarPreview || (user.avatar && !avatarRemoved) ? 'Cambiar' : 'Subir'}
+                    {isUploadingAvatar
+                      ? 'Subiendo...'
+                      : avatarPreview || (user.avatar && !avatarRemoved)
+                        ? 'Cambiar'
+                        : 'Subir'}
                   </Button>
                   {(avatarPreview || user.avatar) && !avatarRemoved && (
                     <Button type="button" variant="outline" size="sm" onClick={handleRemoveAvatar}>
@@ -261,8 +283,8 @@ export function EditProfileForm({ user, locations }: Props) {
                 <Button type="button" variant="outline" onClick={() => router.push(`/profile/${user.id}`)}>
                   Cancelar
                 </Button>
-                <Button type="submit" disabled={isExecuting}>
-                  {isExecuting ? 'Guardando...' : 'Guardar cambios'}
+                <Button type="submit" disabled={isExecuting || isUploadingAvatar}>
+                  {isExecuting ? 'Guardando...' : isUploadingAvatar ? 'Subiendo imagen...' : 'Guardar cambios'}
                 </Button>
               </div>
             </CardContent>

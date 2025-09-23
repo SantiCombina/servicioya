@@ -16,8 +16,8 @@ type SortOption = 'rating' | 'price-low' | 'price-high' | 'jobs';
 export function ServicesInteractive({ initialServices }: { initialServices: Service[] }) {
   const searchParams = useSearchParams();
 
-  // Inicializar estados desde URL params
-  const [searchTerm] = useState(() => searchParams.get('search') || '');
+  const searchTerm = searchParams.get('search') || '';
+
   const [selectedCategory, setSelectedCategory] = useState<string[]>(() => {
     const categories = searchParams.get('category');
     return categories ? categories.split(',') : [];
@@ -37,12 +37,10 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
   });
   const [services] = useState<Service[]>(initialServices);
 
-  // Extraer categorías y ubicaciones únicas de los servicios
   const categories = useMemo(() => Array.from(new Set(services.map((s) => (s.category as Category).name))), [services]);
 
   const locations = useMemo(() => Array.from(new Set(services.map((s) => (s.location as Location).name))), [services]);
 
-  // Función de filtrado simplificada
   const filterServices = useCallback(
     (services: Service[]): Service[] => {
       return services.filter((service) => {
@@ -50,7 +48,6 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
         const category = service.category as Category;
         const location = service.location as Location;
 
-        // Búsqueda por texto
         let matchesSearch = true;
         if (searchTerm.trim() !== '') {
           const term = normalize(searchTerm);
@@ -65,18 +62,14 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
           matchesSearch = keywords.some((keyword) => searchableFields.some((field) => field.includes(keyword)));
         }
 
-        // Filtro por categoría
         const matchesCategory =
           selectedCategory.length === 0 || selectedCategory.some((cat) => normalize(category.name) === normalize(cat));
 
-        // Filtro por ubicación
         const matchesLocation =
           selectedLocation.length === 0 || selectedLocation.some((loc) => normalize(location.name) === normalize(loc));
 
-        // Filtro por precio
         const matchesPrice = service.priceFrom >= priceRange[0] && service.priceFrom <= priceRange[1];
 
-        // Filtro por verificación
         const matchesVerified = !showVerifiedOnly || Boolean(service.verified);
 
         return matchesSearch && matchesCategory && matchesLocation && matchesPrice && matchesVerified;
@@ -85,7 +78,6 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
     [searchTerm, selectedCategory, selectedLocation, priceRange, showVerifiedOnly],
   );
 
-  // Función de ordenamiento mejorada
   const sortServices = useCallback((services: Service[], sortBy: SortOption): Service[] => {
     return [...services].sort((a, b) => {
       switch (sortBy) {
@@ -103,7 +95,6 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
     });
   }, []);
 
-  // Servicios filtrados y ordenados
   const processedServices = useMemo(() => {
     const filtered = filterServices(services);
     return sortServices(filtered, sortBy);
@@ -113,7 +104,6 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
     <div className="min-h-main">
       <div className="container py-12">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Filters Sidebar - Desktop Only */}
           <div className="hidden lg:block lg:col-span-1">
             <FiltersSidebar
               selectedCategory={selectedCategory}
@@ -130,7 +120,6 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
           </div>
 
           <div className="col-span-1 lg:col-span-3">
-            {/* Header with sort and mobile filters */}
             <div className="mb-6">
               <div className="hidden sm:flex sm:items-end sm:justify-between">
                 <div>
@@ -150,7 +139,6 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
                     </SelectContent>
                   </Select>
 
-                  {/* Botón filtros solo en tablet/desktop */}
                   <div className="lg:hidden">
                     <FiltersDrawer
                       selectedCategory={selectedCategory}
@@ -169,7 +157,6 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
                 </div>
               </div>
 
-              {/* Mobile pequeño: Header arriba, controles debajo */}
               <div className="sm:hidden">
                 <div className="mb-4">
                   <h1 className="text-2xl font-bold">Servicios Disponibles</h1>
@@ -205,7 +192,6 @@ export function ServicesInteractive({ initialServices }: { initialServices: Serv
               </div>
             </div>
 
-            {/* Services Grid */}
             {processedServices.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {processedServices.map((service: Service) => (

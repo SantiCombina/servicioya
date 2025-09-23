@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { Button, Card, CardContent, Avatar, AvatarFallback, AvatarImage, Badge } from '@/components/ui';
 import { Booking, Service, User as UserType, Category, Location, Media } from '@/payload-types';
 
-import { loadMyContractsAction } from './actions';
+import { loadMyContractsAction, updateContractStatusAction } from './actions';
 
 export function MyContractsList() {
   const params = useParams();
@@ -29,9 +29,38 @@ export function MyContractsList() {
     },
   });
 
+  const { executeAsync: updateContractStatus, isExecuting: isUpdatingStatus } = useAction(updateContractStatusAction, {
+    onSuccess: (result) => {
+      if (result.data?.success) {
+        toast.success(result.data.message);
+        loadData({ profileId });
+      }
+    },
+    onError: (error) => {
+      console.error('Error updating contract status:', error);
+      toast.error('Error al actualizar el estado del contrato');
+    },
+  });
+
   useEffect(() => {
     loadData({ profileId });
   }, [profileId]);
+
+  const handleAcceptContract = async (bookingId: number) => {
+    await updateContractStatus({
+      bookingId: bookingId.toString(),
+      status: 'accepted',
+    });
+  };
+
+  const handleRejectContract = async (bookingId: number) => {
+    if (confirm('¿Estás seguro de que quieres rechazar este contrato?')) {
+      await updateContractStatus({
+        bookingId: bookingId.toString(),
+        status: 'cancelled',
+      });
+    }
+  };
 
   // Obtener datos de la respuesta de la action
   const currentUser = loadResult.data?.user || null;
@@ -308,7 +337,7 @@ export function MyContractsList() {
             return (
               <Card key={contract.id} className="hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
-                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+                  <div className="flex flex-col space-y-4">
                     {/* Información Principal */}
                     <div className="flex-1 space-y-3">
                       <div className="flex items-start justify-between">
@@ -342,17 +371,61 @@ export function MyContractsList() {
                           </div>
                         </div>
 
-                        {/* Botones para contratos completados - Esquina superior derecha */}
-                        {canEdit && contract.status === 'completed' && isClient && !contract.reviewed && (
-                          <div className="flex flex-col gap-2 ml-4">
-                            <Button variant="secondary" size="sm">
-                              Calificar
-                            </Button>
-                            <Button variant="outline" size="sm">
-                              Contratar Nuevamente
-                            </Button>
-                          </div>
-                        )}
+                        {/* Botones en la esquina superior derecha */}
+                        <div className="flex flex-col gap-2 ml-4">
+                          {/* Botones para contratos completados */}
+                          {canEdit && contract.status === 'completed' && isClient && !contract.reviewed && (
+                            <>
+                              <Button variant="secondary" size="sm">
+                                Calificar
+                              </Button>
+                              <Button variant="outline" size="sm">
+                                Contratar Nuevamente
+                              </Button>
+                            </>
+                          )}
+
+                          {/* Botones de Aceptar/Rechazar para contratos pendientes */}
+                          {canEdit && contract.status === 'pending' && !isClient && (
+                            <>
+                              <Button
+                                onClick={() => handleAcceptContract(contract.id)}
+                                disabled={isUpdatingStatus}
+                                size="sm"
+                              >
+                                {isUpdatingStatus ? (
+                                  <>
+                                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
+                                    Procesando...
+                                  </>
+                                ) : (
+                                  <>
+                                    <CheckCircle className="w-4 h-4 mr-2" />
+                                    Aceptar Contrato
+                                  </>
+                                )}
+                              </Button>
+                              <Button
+                                onClick={() => handleRejectContract(contract.id)}
+                                disabled={isUpdatingStatus}
+                                variant="destructive"
+                                size="sm"
+                              >
+                                {isUpdatingStatus ? (
+                                  <>
+                                    <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
+                                    Procesando...
+                                  </>
+                                ) : (
+                                  <>
+                                    <XCircle className="w-4 h-4 mr-2" />
+                                    Rechazar
+                                  </>
+                                )}
+                              </Button>
+                            </>
+                          )}
+                        </div>
                       </div>
 
                       {/* Información del otro usuario (proveedor si eres cliente, cliente si eres proveedor) */}
