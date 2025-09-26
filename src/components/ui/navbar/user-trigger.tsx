@@ -39,9 +39,7 @@ export function UserTrigger() {
   useEffect(() => {
     loadCurrentUser({});
 
-    // Escuchar evento de actualización de usuario
     const handleUserUpdate = (event: CustomEvent) => {
-      console.log('Evento user-updated recibido:', event.detail);
       if (event.detail) {
         window.location.reload();
       }

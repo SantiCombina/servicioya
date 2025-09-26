@@ -53,8 +53,6 @@ export function ServiceCard({ service }: Props) {
             width={300}
             height={200}
             className="w-full h-48 object-cover"
-            placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
           />
           <div className="absolute top-2 left-2 flex gap-2">
             <Badge className="bg-blue-600">{category.name}</Badge>
@@ -66,7 +64,7 @@ export function ServiceCard({ service }: Props) {
           </div>
         </div>
         <CardHeader>
-          <CardTitle className="text-lg mb-0">{service.title}</CardTitle>
+          <CardTitle>{service.title}</CardTitle>
           <CardDescription>
             por{' '}
             <span className="hover:text-blue-600 transition-colors cursor-pointer" onClick={handleProviderClick}>
@@ -79,7 +77,7 @@ export function ServiceCard({ service }: Props) {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-1">
                 <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                <span className="font-semibold">{service.rating ?? '-'}</span>
+                <span>{service.rating ?? '-'}</span>
                 <span className="text-gray-500">({getReviewsCount()})</span>
               </div>
               <span className="text-sm text-gray-500">{service.completedJobs ?? 0} trabajos</span>
@@ -96,7 +94,7 @@ export function ServiceCard({ service }: Props) {
             </div>
 
             <div className="flex justify-end items-center pt-2">
-              <span className="text-lg font-bold text-green-600">Desde ${service.priceFrom.toLocaleString()}</span>
+              <span className="font-semibold text-green-600">Desde ${service.priceFrom.toLocaleString()}</span>
             </div>
           </div>
         </CardContent>

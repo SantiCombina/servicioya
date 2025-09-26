@@ -9,6 +9,7 @@ import { ThemeProvider } from './theme-provider';
 
 export default function ClientLayoutShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
   const hideRoutes = ['/login', '/signup', '/admin'];
   const shouldHide = hideRoutes.some((route) => pathname.startsWith(route));
 
