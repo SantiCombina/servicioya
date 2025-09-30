@@ -1,4 +1,5 @@
 export * from './accordion';
+export * from './alert-dialog';
 export * from './avatar';
 export * from './badge';
 export * from './button';
@@ -26,6 +27,7 @@ export * from './separator';
 export * from './skeleton';
 export * from './slider';
 export * from './sonner';
+export * from './stats-card';
 export * from './table';
 export * from './tabs';
 export * from './textarea';

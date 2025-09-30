@@ -1,22 +1,29 @@
 'use client';
 
-import { User, Star, Calendar, MapPin, Clock, DollarSign, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { Star, Calendar, MapPin, Clock, DollarSign, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
-import { Button, Card, CardContent, Avatar, AvatarFallback, AvatarImage, Badge } from '@/components/ui';
+import { Button, Card, CardContent, Badge, StatsCard, UserAvatar } from '@/components/ui';
 import { Booking, Service, User as UserType, Category, Location, Media } from '@/payload-types';
 
 import { loadMyContractsAction, updateContractStatusAction } from './actions';
+import { ContractActionDialog } from './contract-action-dialog';
 
 export function MyContractsList() {
   const params = useParams();
   const profileId = params.id as string;
 
   const [activeFilter, setActiveFilter] = useState<string>('all');
+  const [loadingContractId, setLoadingContractId] = useState<number | null>(null);
+  const [dialogState, setDialogState] = useState<{
+    open: boolean;
+    type: 'accept' | 'reject' | 'complete' | null;
+    contractId: number | null;
+  }>({ open: false, type: null, contractId: null });
 
   const {
     execute: loadData,
@@ -29,7 +36,7 @@ export function MyContractsList() {
     },
   });
 
-  const { executeAsync: updateContractStatus, isExecuting: isUpdatingStatus } = useAction(updateContractStatusAction, {
+  const { executeAsync: updateContractStatus } = useAction(updateContractStatusAction, {
     onSuccess: (result) => {
       if (result.data?.success) {
         toast.success(result.data.message);
@@ -46,20 +53,38 @@ export function MyContractsList() {
     loadData({ profileId });
   }, [profileId]);
 
-  const handleAcceptContract = async (bookingId: number) => {
-    await updateContractStatus({
-      bookingId: bookingId.toString(),
-      status: 'accepted',
-    });
+  const openDialog = (type: 'accept' | 'reject' | 'complete', contractId: number) => {
+    setDialogState({ open: true, type, contractId });
   };
 
-  const handleRejectContract = async (bookingId: number) => {
-    if (confirm('¿Estás seguro de que quieres rechazar este contrato?')) {
+  const closeDialog = () => {
+    setDialogState({ open: false, type: null, contractId: null });
+  };
+
+  const handleDialogConfirm = async () => {
+    if (!dialogState.contractId || !dialogState.type) return;
+
+    const statusMap = {
+      accept: 'accepted' as const,
+      reject: 'cancelled' as const,
+      complete: 'completed' as const,
+    };
+
+    setLoadingContractId(dialogState.contractId);
+
+    try {
       await updateContractStatus({
-        bookingId: bookingId.toString(),
-        status: 'cancelled',
+        bookingId: dialogState.contractId.toString(),
+        status: statusMap[dialogState.type],
       });
+    } finally {
+      setLoadingContractId(null);
     }
+  };
+
+  const handleRateContract = () => {
+    // TODO: Implementar funcionalidad de calificación
+    toast.info('Funcionalidad de calificación próximamente');
   };
 
   // Obtener datos de la respuesta de la action
@@ -176,13 +201,7 @@ export function MyContractsList() {
     return null;
   };
 
-  const getImageUrl = (image: number | Media | null | undefined): string | null => {
-    if (!image) return null;
-    if (typeof image === 'object' && 'url' in image) {
-      return image.url || null;
-    }
-    return null;
-  };
+  // Helper functions para obtener datos de las relaciones
 
   // Filtros
   const pendingContracts = contracts.filter((contract) => contract.status === 'pending');
@@ -220,56 +239,34 @@ export function MyContractsList() {
     <div className="space-y-6">
       {/* Estadísticas de Contratos */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <Card
-          className={`cursor-pointer transition-all hover:shadow-md ${
-            activeFilter === 'pending'
-              ? 'bg-yellow-100 border-yellow-300 ring-2 ring-yellow-200'
-              : 'bg-yellow-50 border-yellow-200'
-          }`}
+        <StatsCard
+          count={pendingContracts.length}
+          label="Pendientes"
+          color="yellow"
+          isActive={activeFilter === 'pending'}
           onClick={() => setActiveFilter(activeFilter === 'pending' ? 'all' : 'pending')}
-        >
-          <CardContent className="p-6 text-center">
-            <div className="text-3xl font-bold text-yellow-800">{pendingContracts.length}</div>
-            <div className="text-sm font-medium text-yellow-600">Pendientes</div>
-          </CardContent>
-        </Card>
-        <Card
-          className={`cursor-pointer transition-all hover:shadow-md ${
-            activeFilter === 'confirmed'
-              ? 'bg-blue-100 border-blue-300 ring-2 ring-blue-200'
-              : 'bg-blue-50 border-blue-200'
-          }`}
+        />
+        <StatsCard
+          count={confirmedContracts.length}
+          label="Confirmados"
+          color="blue"
+          isActive={activeFilter === 'confirmed'}
           onClick={() => setActiveFilter(activeFilter === 'confirmed' ? 'all' : 'confirmed')}
-        >
-          <CardContent className="p-6 text-center">
-            <div className="text-3xl font-bold text-blue-800">{confirmedContracts.length}</div>
-            <div className="text-sm font-medium text-blue-600">Confirmados</div>
-          </CardContent>
-        </Card>
-        <Card
-          className={`cursor-pointer transition-all hover:shadow-md ${
-            activeFilter === 'completed'
-              ? 'bg-green-100 border-green-300 ring-2 ring-green-200'
-              : 'bg-green-50 border-green-200'
-          }`}
+        />
+        <StatsCard
+          count={completedContracts.length}
+          label="Completados"
+          color="green"
+          isActive={activeFilter === 'completed'}
           onClick={() => setActiveFilter(activeFilter === 'completed' ? 'all' : 'completed')}
-        >
-          <CardContent className="p-6 text-center">
-            <div className="text-3xl font-bold text-green-800">{completedContracts.length}</div>
-            <div className="text-sm font-medium text-green-600">Completados</div>
-          </CardContent>
-        </Card>
-        <Card
-          className={`cursor-pointer transition-all hover:shadow-md ${
-            activeFilter === 'all' ? 'bg-gray-100 border-gray-300 ring-2 ring-gray-200' : 'bg-gray-50 border-gray-200'
-          }`}
+        />
+        <StatsCard
+          count={contracts.length}
+          label="Total"
+          color="gray"
+          isActive={activeFilter === 'all'}
           onClick={() => setActiveFilter('all')}
-        >
-          <CardContent className="p-6 text-center">
-            <div className="text-3xl font-bold text-gray-800">{contracts.length}</div>
-            <div className="text-sm font-medium text-gray-600">Total</div>
-          </CardContent>
-        </Card>
+        />
       </div>
 
       <div className="flex items-center justify-between">
@@ -373,10 +370,10 @@ export function MyContractsList() {
 
                         {/* Botones en la esquina superior derecha */}
                         <div className="flex flex-col gap-2 ml-4">
-                          {/* Botones para contratos completados */}
+                          {/* Botones para contratos completados - Cliente puede calificar */}
                           {canEdit && contract.status === 'completed' && isClient && !contract.reviewed && (
                             <>
-                              <Button variant="secondary" size="sm">
+                              <Button variant="secondary" size="sm" onClick={handleRateContract}>
                                 Calificar
                               </Button>
                               <Button variant="outline" size="sm">
@@ -385,15 +382,37 @@ export function MyContractsList() {
                             </>
                           )}
 
+                          {/* Botones para contratos aceptados - Proveedor puede marcar como completado */}
+                          {canEdit && contract.status === 'accepted' && !isClient && (
+                            <Button
+                              onClick={() => openDialog('complete', contract.id)}
+                              disabled={loadingContractId === contract.id}
+                              variant="secondary"
+                              size="sm"
+                            >
+                              {loadingContractId === contract.id ? (
+                                <>
+                                  <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-600 mr-2"></div>
+                                  Procesando...
+                                </>
+                              ) : (
+                                <>
+                                  <CheckCircle className="w-4 h-4 mr-2" />
+                                  Marcar Completado
+                                </>
+                              )}
+                            </Button>
+                          )}
+
                           {/* Botones de Aceptar/Rechazar para contratos pendientes */}
                           {canEdit && contract.status === 'pending' && !isClient && (
                             <>
                               <Button
-                                onClick={() => handleAcceptContract(contract.id)}
-                                disabled={isUpdatingStatus}
+                                onClick={() => openDialog('accept', contract.id)}
+                                disabled={loadingContractId === contract.id}
                                 size="sm"
                               >
-                                {isUpdatingStatus ? (
+                                {loadingContractId === contract.id ? (
                                   <>
                                     <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
                                     Procesando...
@@ -406,12 +425,12 @@ export function MyContractsList() {
                                 )}
                               </Button>
                               <Button
-                                onClick={() => handleRejectContract(contract.id)}
-                                disabled={isUpdatingStatus}
+                                onClick={() => openDialog('reject', contract.id)}
+                                disabled={loadingContractId === contract.id}
                                 variant="destructive"
                                 size="sm"
                               >
-                                {isUpdatingStatus ? (
+                                {loadingContractId === contract.id ? (
                                   <>
                                     <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
                                     Procesando...
@@ -432,12 +451,7 @@ export function MyContractsList() {
                       {otherUser && (
                         <div className="bg-muted/50 rounded-lg p-4">
                           <div className="flex items-center space-x-3">
-                            <Avatar className="w-10 h-10">
-                              <AvatarImage src={getImageUrl(otherUser.avatar) || '/placeholder.svg'} />
-                              <AvatarFallback className="bg-primary text-primary-foreground">
-                                <User className="w-5 h-5" />
-                              </AvatarFallback>
-                            </Avatar>
+                            <UserAvatar name={otherUser.name} avatar={otherUser.avatar} className="w-10 h-10" />
                             <div>
                               <p className="font-medium text-foreground">
                                 {otherUser.name} {isClient ? '(Proveedor)' : '(Cliente)'}
@@ -474,6 +488,16 @@ export function MyContractsList() {
           })}
         </div>
       )}
+
+      {/* Componente de diálogo reutilizable */}
+      <ContractActionDialog
+        open={dialogState.open}
+        onOpenChange={(open) => {
+          if (!open) closeDialog();
+        }}
+        actionType={dialogState.type || 'accept'}
+        onConfirm={handleDialogConfirm}
+      />
     </div>
   );
 }

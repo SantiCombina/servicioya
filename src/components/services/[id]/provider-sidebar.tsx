@@ -1,30 +1,19 @@
 import { Award, Calendar, MessageCircle, Shield, Star } from 'lucide-react';
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  Badge,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui';
-import { User, Media, Service } from '@/payload-types';
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle, UserAvatar } from '@/components/ui';
+import { User, Service } from '@/payload-types';
 
 import { BookServiceDialog } from './book-service-dialog';
 
 interface Props {
   service: Service;
   currentUser: User | null;
+  completedJobs: number;
 }
 
-export function ProviderSidebar({ service, currentUser }: Props) {
+export function ProviderSidebar({ service, currentUser, completedJobs }: Props) {
   const provider = service.provider as User;
-  const avatarUrl = provider.avatar && typeof provider.avatar === 'object' ? (provider.avatar as Media).url || '' : '';
   const rating = service.rating || 0;
-  const completedJobs = service.completedJobs || 0;
   const isVerified = service.verified || false;
   const reviewsCount = Array.isArray(service.reviews) ? service.reviews.length : 0;
   const memberSince = new Date(provider.createdAt).getFullYear().toString();
@@ -36,10 +25,7 @@ export function ProviderSidebar({ service, currentUser }: Props) {
         <Card>
           <CardHeader>
             <div className="flex items-center space-x-4">
-              <Avatar className="w-16 h-16">
-                <AvatarImage src={avatarUrl} />
-                <AvatarFallback>{provider.name?.[0]?.toUpperCase()}</AvatarFallback>
-              </Avatar>
+              <UserAvatar name={provider.name} avatar={provider.avatar} className="w-16 h-16" />
               <div>
                 <CardTitle className="text-lg">{provider.name}</CardTitle>
                 <div className="flex items-center">

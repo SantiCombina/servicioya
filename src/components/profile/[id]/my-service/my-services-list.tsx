@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  StatsCard,
 } from '@/components/ui';
 import { Category, Location, Media, Review } from '@/payload-types';
 
@@ -142,39 +143,27 @@ export function MyServicesList() {
     <div className="space-y-6">
       {/* Estadísticas Rápidas */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <Card
-          className={`border-border cursor-pointer transition-shadow ${serviceFilter === 'active' ? 'ring-2 ring-green-400' : ''}`}
-          onClick={() => setServiceFilter('active')}
-        >
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{activeServices.length}</div>
-              <p className="text-sm text-muted-foreground">Servicios Activos</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card
-          className={`border-border cursor-pointer transition-shadow ${serviceFilter === 'inactive' ? 'ring-2 ring-gray-400' : ''}`}
-          onClick={() => setServiceFilter('inactive')}
-        >
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gray-600">{inactiveServices.length}</div>
-              <p className="text-sm text-muted-foreground">Inactivos</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card
-          className={`border-border cursor-pointer transition-shadow ${serviceFilter === 'all' ? 'ring-2 ring-blue-400' : ''}`}
+        <StatsCard
+          count={activeServices.length}
+          label="Activos"
+          color="green"
+          isActive={serviceFilter === 'active'}
+          onClick={() => setServiceFilter(serviceFilter === 'active' ? 'all' : 'active')}
+        />
+        <StatsCard
+          count={inactiveServices.length}
+          label="Inactivos"
+          color="gray"
+          isActive={serviceFilter === 'inactive'}
+          onClick={() => setServiceFilter(serviceFilter === 'inactive' ? 'all' : 'inactive')}
+        />
+        <StatsCard
+          count={services.length}
+          label="Total"
+          color="blue"
+          isActive={serviceFilter === 'all'}
           onClick={() => setServiceFilter('all')}
-        >
-          <CardContent className="pt-6">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{services.length}</div>
-              <p className="text-sm text-muted-foreground">Total</p>
-            </div>
-          </CardContent>
-        </Card>
+        />
       </div>
 
       <div className="flex justify-between items-center">

@@ -110,3 +110,33 @@ export async function updateBookingStatus(
     };
   }
 }
+
+export async function getProviderCompletedJobs(providerId: string | number) {
+  try {
+    const payload = await getPayloadClient();
+
+    const completedBookings = await payload.find({
+      collection: 'bookings',
+      where: {
+        and: [
+          {
+            provider: {
+              equals: providerId,
+            },
+          },
+          {
+            status: {
+              equals: 'completed',
+            },
+          },
+        ],
+      },
+      limit: 0, // Solo queremos el count, no los documentos
+    });
+
+    return completedBookings.totalDocs;
+  } catch (error) {
+    console.error('Error fetching provider completed jobs:', error);
+    return 0;
+  }
+}

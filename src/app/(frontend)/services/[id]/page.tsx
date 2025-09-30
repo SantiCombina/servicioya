@@ -2,6 +2,7 @@ import { Clock, MapPin } from 'lucide-react';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
+import { getProviderCompletedJobs } from '@/app/services/booking';
 import { getServiceById } from '@/app/services/service';
 import { getCurrentUser } from '@/app/services/user';
 import { ProviderSidebar } from '@/components/services/[id]/provider-sidebar';
@@ -33,6 +34,10 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   if (!service) {
     notFound();
   }
+
+  // Obtener trabajos completados del proveedor
+  const provider = service.provider as User;
+  const completedJobs = await getProviderCompletedJobs(provider.id);
 
   const reviews = Array.isArray(service.reviews)
     ? service.reviews.filter((review): review is Review => typeof review === 'object')
@@ -126,7 +131,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                     <div className="text-xs text-gray-500">Reseñas</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-lg font-semibold">{service.completedJobs || 0}</div>
+                    <div className="text-lg font-semibold">{completedJobs}</div>
                     <div className="text-xs text-gray-500">Trabajos</div>
                   </div>
                 </div>
@@ -146,7 +151,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           </div>
 
           {/* Sidebar */}
-          {typeof service.provider === 'object' && <ProviderSidebar service={service} currentUser={currentUser} />}
+          {typeof service.provider === 'object' && (
+            <ProviderSidebar service={service} currentUser={currentUser} completedJobs={completedJobs} />
+          )}
         </div>
       </div>
     </div>
