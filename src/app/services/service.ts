@@ -129,3 +129,27 @@ export const deleteService = async (serviceId: string) => {
     };
   }
 };
+
+export const updateService = async (serviceId: number, serviceData: any) => {
+  try {
+    const payload = await getPayloadClient();
+
+    const result = await payload.update({
+      collection: 'services',
+      id: serviceId,
+      data: serviceData,
+    });
+
+    return {
+      success: true,
+      message: 'Servicio actualizado correctamente',
+      service: result,
+    };
+  } catch (error) {
+    console.error('Error updating service:', error);
+    return {
+      success: false,
+      message: 'Error al actualizar el servicio',
+    };
+  }
+};

@@ -387,8 +387,8 @@ export function MyContractsList() {
                             <Button
                               onClick={() => openDialog('complete', contract.id)}
                               disabled={loadingContractId === contract.id}
-                              variant="secondary"
                               size="sm"
+                              className="bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
                             >
                               {loadingContractId === contract.id ? (
                                 <>

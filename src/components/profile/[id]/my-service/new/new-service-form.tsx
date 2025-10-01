@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus, X, Upload, Save } from 'lucide-react';
+import { Upload, Save } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
@@ -11,8 +11,6 @@ import { toast } from 'sonner';
 
 import {
   Card,
-  CardHeader,
-  CardTitle,
   CardContent,
   Input,
   FormField,
@@ -154,14 +152,14 @@ export function NewServiceForm() {
     }
   };
 
-  const removeImage = () => {
-    setPreviewImage(null);
-    setUploadedImageId(null);
-  };
-
   const onSubmit = async (values: ServiceCreateValues, isDraft = false) => {
     if (!currentUser) {
       toast.error('Debes estar autenticado para crear un servicio');
+      return;
+    }
+
+    if (!uploadedImageId) {
+      toast.error('Debes subir una imagen para el servicio');
       return;
     }
 
@@ -172,7 +170,7 @@ export function NewServiceForm() {
       locationId: values.locationId!,
       priceFrom: values.priceFrom!,
       availability: values.availability,
-      imageId: uploadedImageId || undefined,
+      imageId: uploadedImageId,
       providerId: currentUser.id,
       isActive: isDraft ? false : (values.isActive ?? true),
     };
@@ -196,227 +194,212 @@ export function NewServiceForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={handleSubmit()}>
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Plus className="w-5 h-5" />
-              Crear Nuevo Servicio
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Imagen del Servicio */}
-            <div className="space-y-4">
-              <Label>Imagen del Servicio</Label>
-              {previewImage ? (
-                <div className="relative w-full h-48 rounded-lg overflow-hidden bg-muted">
-                  <img src={previewImage} alt="Preview" className="w-full h-full object-cover" />
-                  <button
-                    type="button"
-                    onClick={removeImage}
-                    className="absolute top-2 right-2 bg-destructive text-destructive-foreground rounded-full p-1 hover:bg-destructive/90 transition-colors"
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold text-foreground">Crear Nuevo Servicio</h1>
+        <p className="text-muted-foreground">Completa la información para crear tu servicio</p>
+      </div>
+
+      <Form {...form}>
+        <form onSubmit={handleSubmit()}>
+          <Card>
+            <CardContent className="p-6 space-y-6">
+              {/* Imagen del Servicio */}
+              <div className="space-y-4">
+                <Label>Imagen del servicio *</Label>
+                {previewImage ? (
+                  <div className="relative w-full h-48 rounded-lg overflow-hidden bg-muted">
+                    <img src={previewImage} alt="Preview" className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="w-full h-48 border-2 border-dashed border-border rounded-lg flex items-center justify-center bg-muted/50">
+                    <div className="text-center">
+                      <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                      <p className="text-sm text-muted-foreground">Sube una imagen para tu servicio (obligatorio)</p>
+                    </div>
+                  </div>
+                )}
+                <div className="flex justify-center">
+                  <Label htmlFor="serviceImage" className="cursor-pointer">
+                    <div className="flex items-center space-x-2 px-4 py-2 bg-primary/10 text-primary rounded-md hover:bg-primary/20 transition-colors">
+                      {isUploadingImage ? (
+                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <Upload className="w-4 h-4" />
+                      )}
+                      <span className="text-sm font-medium">
+                        {isUploadingImage ? 'Subiendo...' : previewImage ? 'Cambiar imagen' : 'Subir imagen'}
+                      </span>
+                    </div>
+                  </Label>
+                  <Input
+                    id="serviceImage"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
                     disabled={isUploadingImage}
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
+                  />
                 </div>
-              ) : (
-                <div className="w-full h-48 border-2 border-dashed border-border rounded-lg flex items-center justify-center bg-muted/50">
-                  <div className="text-center">
-                    <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground">Sube una imagen para tu servicio</p>
-                  </div>
-                </div>
-              )}
-              <div className="flex justify-center">
-                <Label htmlFor="serviceImage" className="cursor-pointer">
-                  <div className="flex items-center space-x-2 px-4 py-2 bg-primary/10 text-primary rounded-md hover:bg-primary/20 transition-colors">
-                    {isUploadingImage ? (
-                      <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <Upload className="w-4 h-4" />
-                    )}
-                    <span className="text-sm font-medium">
-                      {isUploadingImage ? 'Subiendo...' : previewImage ? 'Cambiar imagen' : 'Subir imagen'}
-                    </span>
-                  </div>
-                </Label>
-                <Input
-                  id="serviceImage"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                  disabled={isUploadingImage}
+                <p className="text-xs text-muted-foreground text-center">JPG, PNG máximo 5MB - Imagen obligatoria</p>
+              </div>
+
+              {/* Título */}
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Título del servicio *</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ej: Reparación de computadoras" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Descripción */}
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Descripción *</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Describe tu servicio en detalle..." rows={4} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Categoría y Ubicación */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="categoryId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Categoría *</FormLabel>
+                      <Select
+                        value={field.value ? field.value.toString() : undefined}
+                        onValueChange={(value) => field.onChange(parseInt(value))}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecciona una categoría" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {categories.map((category) => (
+                            <SelectItem key={category.id} value={category.id.toString()}>
+                              {category.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="locationId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ubicación *</FormLabel>
+                      <Select
+                        value={field.value ? field.value.toString() : undefined}
+                        onValueChange={(value) => field.onChange(parseInt(value))}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecciona una ubicación" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {locations.map((location) => (
+                            <SelectItem key={location.id} value={location.id.toString()}>
+                              {location.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
-              <p className="text-xs text-muted-foreground text-center">JPG, PNG máximo 5MB</p>
-            </div>
 
-            {/* Título */}
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Título del Servicio *</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Ej: Reparación de computadoras" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Descripción */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Descripción *</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Describe tu servicio en detalle..." rows={4} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Categoría y Ubicación */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="categoryId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Categoría *</FormLabel>
-                    <Select
-                      value={field.value ? field.value.toString() : undefined}
-                      onValueChange={(value) => field.onChange(parseInt(value))}
-                    >
+              {/* Precio y Disponibilidad */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="priceFrom"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Precio desde (ARS) *</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecciona una categoría" />
-                        </SelectTrigger>
+                        <Input placeholder="Ej: 2500" {...field} />
                       </FormControl>
-                      <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem key={category.id} value={category.id.toString()}>
-                            {category.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-              <FormField
-                control={form.control}
-                name="locationId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Ubicación *</FormLabel>
-                    <Select
-                      value={field.value ? field.value.toString() : undefined}
-                      onValueChange={(value) => field.onChange(parseInt(value))}
-                    >
+                <FormField
+                  control={form.control}
+                  name="availability"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Disponibilidad</FormLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecciona una ubicación" />
-                        </SelectTrigger>
+                        <Input placeholder="Ej: Lunes a Viernes 9-18hs" {...field} />
                       </FormControl>
-                      <SelectContent>
-                        {locations.map((location) => (
-                          <SelectItem key={location.id} value={location.id.toString()}>
-                            {location.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-            {/* Precio y Disponibilidad */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="priceFrom"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Precio desde (ARS) *</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Ej: 2500"
-                        value={field.value || ''}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          field.onChange(value === '' ? undefined : parseInt(value) || undefined);
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {/* Botones */}
+              <div className="flex flex-col sm:flex-row gap-4 pt-6">
+                <Link href={`/profile/${profileId}/my-services`} className="flex-1">
+                  <Button type="button" variant="secondary" className="w-full">
+                    Cancelar
+                  </Button>
+                </Link>
 
-              <FormField
-                control={form.control}
-                name="availability"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Disponibilidad</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Ej: Lunes a Viernes 9-18hs" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            {/* Botones */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-6">
-              <Link href={`/profile/${profileId}/my-services`} className="flex-1">
-                <Button type="button" variant="secondary" className="w-full">
-                  Cancelar
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  disabled={isCreatingService}
+                  onClick={handleSubmit(true)}
+                >
+                  Guardar como Borrador
                 </Button>
-              </Link>
 
-              <Button
-                type="button"
-                variant="outline"
-                className="flex-1"
-                disabled={isCreatingService}
-                onClick={handleSubmit(true)}
-              >
-                Guardar como Borrador
-              </Button>
-
-              <Button type="submit" className="flex-1" disabled={isCreatingService}>
-                {isCreatingService ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
-                    Publicando...
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-4 h-4 mr-2" />
-                    Publicar Servicio
-                  </>
-                )}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </form>
-    </Form>
+                <Button type="submit" className="flex-1" disabled={isCreatingService}>
+                  {isCreatingService ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
+                      Publicando...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Publicar Servicio
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </form>
+      </Form>
+    </div>
   );
 }

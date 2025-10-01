@@ -193,79 +193,84 @@ export function MyServicesList() {
           {filteredServices.map((service) => (
             <Card key={service.id} className="hover:shadow-lg transition-shadow border-border">
               <CardContent className="pt-6">
-                <div className="flex flex-col md:flex-row md:items-start space-y-4 md:space-y-0 md:space-x-6">
+                <div className="flex flex-col md:flex-row md:items-stretch space-y-4 md:space-y-0 md:space-x-6">
                   {/* Imagen del Servicio */}
-                  <div className="w-full md:w-48 h-32 bg-muted rounded-lg flex items-center justify-center">
+                  <div className="w-full md:w-48 h-48 md:h-48 bg-muted rounded-lg overflow-hidden flex-shrink-0">
                     {getImageUrl(service.image) ? (
                       <img
                         src={getImageUrl(service.image)!}
                         alt={service.title}
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-cover object-center"
                       />
                     ) : (
-                      <div className="text-muted-foreground">Sin imagen</div>
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                        Sin imagen
+                      </div>
                     )}
                   </div>
 
                   {/* Información del Servicio */}
-                  <div className="flex-1 space-y-3">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <div className="flex items-center space-x-2 mb-1">
-                          <h4 className="text-lg font-semibold text-foreground">{service.title}</h4>
-                          {getStatusBadge(service.isActive)}
-                        </div>
-                        <p className="text-muted-foreground text-sm mb-2">{service.description}</p>
-                        <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                          <span className="bg-blue-50 text-blue-600 px-2 py-1 rounded border border-blue-200">
-                            {getCategoryName(service.category)}
-                          </span>
-                          <div className="flex items-center">
-                            <MapPin className="w-4 h-4 mr-1" />
-                            {getLocationName(service.location)}
+                  <div className="flex-1 flex flex-col justify-between">
+                    {/* Información Principal */}
+                    <div>
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <h4 className="text-lg font-semibold text-foreground">{service.title}</h4>
+                            {getStatusBadge(service.isActive)}
                           </div>
-                          <div className="flex items-center">
-                            <Clock className="w-4 h-4 mr-1" />
-                            {service.availability || 'No especificado'}
+                          <p className="text-muted-foreground text-sm mb-2">{service.description}</p>
+                          <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                            <span className="bg-blue-50 text-blue-600 px-2 py-1 rounded border border-blue-200">
+                              {getCategoryName(service.category)}
+                            </span>
+                            <div className="flex items-center">
+                              <MapPin className="w-4 h-4 mr-1" />
+                              {getLocationName(service.location)}
+                            </div>
+                            <div className="flex items-center">
+                              <Clock className="w-4 h-4 mr-1" />
+                              {service.availability || 'No especificado'}
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Menú de Acciones */}
-                      {canEdit && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            <DropdownMenuItem asChild>
-                              <Link href={`/services/${service.id}`}>
-                                <Eye className="h-4 w-4 mr-2" />
-                                Ver detalles
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                              <Link href={`/profile/${profileId}/my-services/${service.id}/edit`}>
-                                <Edit className="h-4 w-4 mr-2" />
-                                Editar
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleDeleteService(service.id)}
-                              className="text-destructive"
-                            >
-                              <Trash2 className="h-4 w-4 mr-2" />
-                              Eliminar
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
+                        {/* Menú de Acciones */}
+                        {canEdit && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuItem asChild className="cursor-pointer">
+                                <Link href={`/services/${service.id}`}>
+                                  <Eye className="h-4 w-4 mr-2" />
+                                  Ver detalles
+                                </Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem asChild className="cursor-pointer">
+                                <Link href={`/profile/${profileId}/my-services/${service.id}/edit`}>
+                                  <Edit className="h-4 w-4 mr-2" />
+                                  Editar
+                                </Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleDeleteService(service.id)}
+                                className="text-destructive cursor-pointer"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Eliminar
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Precio y Rating */}
-                    <div className="flex items-center justify-between pt-2 border-t border-border">
+                    {/* Precio, Rating y Fecha */}
+                    <div className="flex items-center justify-between pt-3 border-t border-border">
                       <div className="flex items-center space-x-4">
                         <div className="flex items-center text-lg font-semibold text-green-600">
                           <DollarSign className="w-4 h-4 mr-1" />

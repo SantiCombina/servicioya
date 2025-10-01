@@ -1,47 +1,53 @@
-'use client';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-import { ArrowLeft, Edit } from 'lucide-react';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { getCategories } from '@/app/services/category';
+import { getLocations } from '@/app/services/location';
+import { getServiceById } from '@/app/services/service';
+import { getCurrentUser } from '@/app/services/user';
+import { EditServiceForm } from '@/components/profile/[id]/my-service/edit/edit-service-form';
 
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
+export default async function EditServicePage({ params }: { params: Promise<{ id: string; serviceId: string }> }) {
+  const { id, serviceId } = await params;
+  const cookieStore = await cookies();
+  const token = cookieStore.get('payload-token')?.value || null;
 
-export default function EditServicePage() {
-  const params = useParams();
-  const profileId = params.id as string;
-  const serviceId = params.serviceId as string;
+  const [currentUser, service, categories, locations] = await Promise.all([
+    getCurrentUser(token),
+    getServiceById(serviceId),
+    getCategories(),
+    getLocations(),
+  ]);
+
+  if (!currentUser) {
+    redirect('/login');
+  }
+
+  if (!service) {
+    return (
+      <div className="min-h-main flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-2">Servicio no encontrado</h1>
+          <p className="text-muted-foreground">El servicio que buscas no existe o ha sido eliminado.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Verificar que el usuario puede editar este servicio
+  const canEdit =
+    currentUser.id === service.provider ||
+    (typeof service.provider === 'object' && currentUser.id === service.provider.id) ||
+    currentUser.role === 'admin';
+
+  if (!canEdit) {
+    redirect(`/profile/${id}/my-services`);
+  }
 
   return (
     <div className="min-h-main">
       <main className="container py-12">
-        {/* Header */}
-        <div className="flex items-center space-x-4 mb-6">
-          <Link href={`/profile/${profileId}/my-services`}>
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Volver a Mis Servicios
-            </Button>
-          </Link>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Edit className="h-5 w-5" />
-              <span>Editar Servicio</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                <Edit className="w-8 h-8 text-muted-foreground" />
-              </div>
-              <h3 className="text-lg font-medium text-foreground mb-2">Edición en desarrollo</h3>
-              <p className="text-muted-foreground mb-4">Próximamente podrás editar servicios desde aquí.</p>
-              <p className="text-sm text-muted-foreground">ID del servicio: {serviceId}</p>
-            </div>
-          </CardContent>
-        </Card>
+        <EditServiceForm service={service} categories={categories} locations={locations} profileId={id} />
       </main>
     </div>
   );

@@ -41,7 +41,7 @@ const actionConfig = {
     description:
       'Esta acción marcará el trabajo como completado y notificará al cliente. Una vez completado, el cliente podrá calificar el servicio.',
     confirmText: 'Confirmar Completado',
-    confirmVariant: 'default' as const,
+    confirmVariant: 'success' as const,
   },
 };
 
@@ -74,7 +74,9 @@ export function ContractActionDialog({
             className={
               config.confirmVariant === 'destructive'
                 ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
-                : ''
+                : config.confirmVariant === 'success'
+                  ? 'bg-green-600 text-white hover:bg-green-700'
+                  : ''
             }
           >
             {isLoading ? 'Procesando...' : config.confirmText}

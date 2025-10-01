@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const serviceCreateSchema = z.object({
+export const serviceUpdateSchema = z.object({
   title: z
     .string({
       required_error: 'El título es requerido.',
@@ -81,4 +81,4 @@ export const serviceCreateSchema = z.object({
     .default(true),
 });
 
-export type ServiceCreateValues = z.infer<typeof serviceCreateSchema>;
+export type ServiceUpdateValues = z.infer<typeof serviceUpdateSchema>;

@@ -1,4 +1,5 @@
 import { Award, Calendar, MessageCircle, Shield, Star } from 'lucide-react';
+import Link from 'next/link';
 
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle, UserAvatar } from '@/components/ui';
 import { User, Service } from '@/payload-types';
@@ -25,9 +26,19 @@ export function ProviderSidebar({ service, currentUser, completedJobs }: Props) 
         <Card>
           <CardHeader>
             <div className="flex items-center space-x-4">
-              <UserAvatar name={provider.name} avatar={provider.avatar} className="w-16 h-16" />
+              <Link href={`/profile/${provider.id}`}>
+                <UserAvatar
+                  name={provider.name}
+                  avatar={provider.avatar}
+                  className="w-16 h-16 cursor-pointer hover:opacity-80 transition-opacity"
+                />
+              </Link>
               <div>
-                <CardTitle className="text-lg">{provider.name}</CardTitle>
+                <Link href={`/profile/${provider.id}`}>
+                  <CardTitle className="text-lg hover:text-primary transition-colors cursor-pointer inline-block">
+                    {provider.name}
+                  </CardTitle>
+                </Link>
                 <div className="flex items-center">
                   <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
                   <span className="font-semibold">{rating}</span>
