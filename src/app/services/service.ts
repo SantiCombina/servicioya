@@ -14,7 +14,25 @@ export const getServices = async (): Promise<Service[]> => {
       depth: 2,
     });
 
-    return result.docs;
+    const servicesWithCompletedJobs = await Promise.all(
+      result.docs.map(async (service) => {
+        const completedBookings = await payload.find({
+          collection: 'bookings',
+          where: {
+            service: { equals: service.id },
+            status: { equals: 'completed' },
+          },
+          limit: 1000, // Límite alto para contar todos
+        });
+
+        return {
+          ...service,
+          completedJobs: completedBookings.totalDocs,
+        } as Service;
+      }),
+    );
+
+    return servicesWithCompletedJobs;
   } catch (error) {
     console.error('Error fetching services:', error);
     return [];

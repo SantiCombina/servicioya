@@ -2,7 +2,6 @@ import { Clock, MapPin } from 'lucide-react';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-import { getProviderCompletedJobs } from '@/app/services/booking';
 import { getServiceById } from '@/app/services/service';
 import { getCurrentUser } from '@/app/services/user';
 import { ProviderSidebar } from '@/components/services/[id]/provider-sidebar';
@@ -22,6 +21,8 @@ import {
 } from '@/components/ui';
 import { Location, Media, Review, User } from '@/payload-types';
 
+import { getProviderCompletedJobs } from './actions';
+
 export default async function ServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
@@ -35,7 +36,6 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
     notFound();
   }
 
-  // Obtener trabajos completados del proveedor
   const provider = service.provider as User;
   const completedJobs = await getProviderCompletedJobs(provider.id);
 
