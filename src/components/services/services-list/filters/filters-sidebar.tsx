@@ -2,21 +2,23 @@ import { Filter } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
   Accordion,
+  AccordionContent,
   AccordionItem,
   AccordionTrigger,
-  AccordionContent,
-  Checkbox,
-  Label,
-  Slider,
   Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui';
 
-interface Props {
+import { CategoryFilter } from './category-filter';
+import { LocationFilter } from './location-filter';
+import { PriceFilter } from './price-filter';
+import { VerifiedFilter } from './verified-filter';
+
+interface FiltersSidebarProps {
   selectedCategory: string[];
   setSelectedCategory: (value: string[]) => void;
   selectedLocation: string[];
@@ -40,7 +42,7 @@ export function FiltersSidebar({
   setShowVerifiedOnly,
   categories,
   locations,
-}: Props) {
+}: FiltersSidebarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -120,78 +122,37 @@ export function FiltersSidebar({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {/* Verified Only */}
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="verified"
-            checked={showVerifiedOnly}
-            onCheckedChange={(checked) => handleVerifiedChange(Boolean(checked))}
-          />
-          <Label htmlFor="verified" className="text-sm">
-            Solo verificados
-          </Label>
-        </div>
+        <VerifiedFilter showVerifiedOnly={showVerifiedOnly} onVerifiedChange={handleVerifiedChange} size="sm" />
 
-        {/* Categories */}
         <Accordion type="single" collapsible defaultValue="categories">
           <AccordionItem value="categories">
             <AccordionTrigger className="text-sm font-medium">Categoría</AccordionTrigger>
             <AccordionContent>
-              <div className="space-y-1.5">
-                {categories.map((category) => (
-                  <div key={category} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={category}
-                      checked={selectedCategory.includes(category)}
-                      onCheckedChange={(checked) => handleCategoryChange(category, checked as boolean)}
-                    />
-                    <Label htmlFor={category} className="text-sm">
-                      {category}
-                    </Label>
-                  </div>
-                ))}
-              </div>
+              <CategoryFilter
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onCategoryChange={handleCategoryChange}
+                layout="vertical"
+              />
             </AccordionContent>
           </AccordionItem>
         </Accordion>
 
-        {/* Locations */}
         <Accordion type="single" collapsible defaultValue="locations">
           <AccordionItem value="locations">
             <AccordionTrigger className="text-sm font-medium">Ubicación</AccordionTrigger>
             <AccordionContent>
-              <div className="space-y-1.5">
-                {locations.map((location) => (
-                  <div key={location} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={location}
-                      checked={selectedLocation.includes(location)}
-                      onCheckedChange={(checked) => handleLocationChange(location, checked as boolean)}
-                    />
-                    <Label htmlFor={location} className="text-sm">
-                      {location}
-                    </Label>
-                  </div>
-                ))}
-              </div>
+              <LocationFilter
+                locations={locations}
+                selectedLocation={selectedLocation}
+                onLocationChange={handleLocationChange}
+                layout="vertical"
+              />
             </AccordionContent>
           </AccordionItem>
         </Accordion>
 
-        {/* Price Range */}
-        <>
-          <Label className="text-sm font-medium mb-2 block">
-            Precio: ${priceRange[0]} - ${priceRange[1]}
-          </Label>
-          <Slider
-            value={priceRange}
-            onValueChange={handlePriceChange}
-            max={100000}
-            min={0}
-            step={5000}
-            className="w-full"
-          />
-        </>
+        <PriceFilter priceRange={priceRange} onPriceChange={handlePriceChange} variant="detailed" />
       </CardContent>
     </Card>
   );

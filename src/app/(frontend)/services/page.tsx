@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { ServicesInteractive } from '@/components/services/services-interactive';
+import { ServicesInteractive } from '@/components/services/services-list/services-interactive';
 
 import { getServicesWithCompletedJobs } from './actions';
 

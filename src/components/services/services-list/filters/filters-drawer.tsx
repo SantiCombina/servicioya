@@ -3,9 +3,14 @@
 import { Filter } from 'lucide-react';
 import { useState } from 'react';
 
-import { Button, Checkbox, Drawer, DrawerContent, DrawerTitle, DrawerTrigger, Label, Slider } from '@/components/ui';
+import { Button, Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@/components/ui';
 
-interface Props {
+import { CategoryFilter } from './category-filter';
+import { LocationFilter } from './location-filter';
+import { PriceFilter } from './price-filter';
+import { VerifiedFilter } from './verified-filter';
+
+interface FiltersDrawerProps {
   selectedCategory: string[];
   setSelectedCategory: (value: string[]) => void;
   selectedLocation: string[];
@@ -31,7 +36,7 @@ export function FiltersDrawer({
   categories,
   locations,
   resultsCount,
-}: Props) {
+}: FiltersDrawerProps) {
   const [open, setOpen] = useState(false);
 
   const handleCategoryChange = (category: string, checked: boolean) => {
@@ -76,81 +81,36 @@ export function FiltersDrawer({
       <DrawerContent className="max-h-[85vh]">
         <DrawerTitle className="sr-only">Filtros de búsqueda</DrawerTitle>
         <div className="px-4 py-6 overflow-y-auto space-y-6">
-          {/* Solo verificados */}
           <div className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <Checkbox id="verified" checked={showVerifiedOnly} onCheckedChange={setShowVerifiedOnly} />
-              <Label htmlFor="verified" className="text-base font-medium">
-                Solo verificados
-              </Label>
-            </div>
+            <VerifiedFilter showVerifiedOnly={showVerifiedOnly} onVerifiedChange={setShowVerifiedOnly} />
           </div>
 
-          {/* Categorías */}
           <div className="space-y-3">
             <h3 className="text-lg font-semibold">Categoría</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {categories.map((category) => (
-                <div key={category} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`category-${category}`}
-                    checked={selectedCategory.includes(category)}
-                    onCheckedChange={(checked) => handleCategoryChange(category, checked as boolean)}
-                  />
-                  <Label
-                    htmlFor={`category-${category}`}
-                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {category}
-                  </Label>
-                </div>
-              ))}
-            </div>
+            <CategoryFilter
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onCategoryChange={handleCategoryChange}
+              layout="grid"
+            />
           </div>
 
-          {/* Ubicaciones */}
           <div className="space-y-3">
             <h3 className="text-lg font-semibold">Ubicación</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {locations.map((location) => (
-                <div key={location} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`location-${location}`}
-                    checked={selectedLocation.includes(location)}
-                    onCheckedChange={(checked) => handleLocationChange(location, checked as boolean)}
-                  />
-                  <Label
-                    htmlFor={`location-${location}`}
-                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {location}
-                  </Label>
-                </div>
-              ))}
-            </div>
+            <LocationFilter
+              locations={locations}
+              selectedLocation={selectedLocation}
+              onLocationChange={handleLocationChange}
+              layout="grid"
+            />
           </div>
 
-          {/* Rango de precio */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Rango de precio</h3>
-            <div className="px-2">
-              <Slider
-                value={priceRange}
-                onValueChange={setPriceRange}
-                max={100000}
-                min={0}
-                step={5000}
-                className="w-full"
-              />
-              <div className="flex justify-between text-sm text-muted-foreground mt-2">
-                <span>${priceRange[0].toLocaleString()}</span>
-                <span>${priceRange[1].toLocaleString()}</span>
-              </div>
-            </div>
+            <PriceFilter priceRange={priceRange} onPriceChange={setPriceRange} variant="compact" />
           </div>
         </div>
 
-        {/* Footer con botones */}
         <div className="border-t p-4">
           <div className="flex gap-3">
             {hasActiveFilters && (
