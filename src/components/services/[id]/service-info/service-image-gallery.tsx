@@ -32,7 +32,7 @@ function getImageSize(img: GalleryImage, fallback: { width: number; height: numb
 
 export function ServiceImageGallery({ images, title }: ServiceImageGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const maxThumbnails = 6; // Máximo número de miniaturas visibles
+  const maxThumbnails = 6;
 
   if (!images || images.length === 0) return null;
 
@@ -40,14 +40,12 @@ export function ServiceImageGallery({ images, title }: ServiceImageGalleryProps)
   const mainUrl = getImageUrl(main);
   const mainAlt = getImageAlt(main, title);
 
-  // Solo mostrar thumbnails si hay más de una imagen
   const showThumbnails = images.length > 1;
   const visibleThumbs = images.slice(0, maxThumbnails);
   const hiddenCount = Math.max(0, images.length - maxThumbnails);
 
   return (
     <div className="flex gap-4">
-      {/* Thumbnails Column - Solo mostrar si hay más de una imagen */}
       {showThumbnails && (
         <div className="flex flex-col justify-between w-16 h-[500px] flex-shrink-0">
           {visibleThumbs.map((img, index) => {
@@ -93,7 +91,6 @@ export function ServiceImageGallery({ images, title }: ServiceImageGalleryProps)
         </div>
       )}
 
-      {/* Main Image */}
       <div className="flex-1 flex justify-center">
         <div className="relative w-full h-[500px] overflow-hidden">
           <Image src={mainUrl} alt={mainAlt} fill className="object-contain transition-all duration-200" priority />

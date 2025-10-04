@@ -1,7 +1,8 @@
-import { StarRating } from '@/components/services/[id]/star-rating';
 import { Badge, UserAvatar } from '@/components/ui';
 import { formatDate } from '@/lib/helpers/format-date';
 import { Review, User } from '@/payload-types';
+
+import { StarRating } from './service-star-rating';
 
 interface ReviewItemProps {
   review: Review;

@@ -76,14 +76,11 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
       return;
     }
 
-    // Crear un objeto Date válido con la fecha y hora seleccionadas
     const [year, month, day] = values.requestedDate.split('-').map(Number);
     const [hours, minutes] = values.requestedTime.split(':').map(Number);
 
-    // Crear fecha en zona horaria local
     const localDate = new Date(year, month - 1, day, hours, minutes);
 
-    // Convertir a ISO string que Payload CMS puede entender
     const isoString = localDate.toISOString();
 
     await createBookingAction({
@@ -148,7 +145,6 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Información del servicio */}
             <Card className="border-primary/20">
               <CardContent className="pt-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">

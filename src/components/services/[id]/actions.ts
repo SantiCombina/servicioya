@@ -10,7 +10,6 @@ import { bookingCreateSchema } from '@/lib/schemas/booking-create-schema';
 
 export const bookingCreate = actionClient.schema(bookingCreateSchema).action(async ({ parsedInput }) => {
   try {
-    // Verificar que el usuario esté autenticado
     const cookieStore = await cookies();
     const token = cookieStore.get('payload-token')?.value || null;
     const currentUser = await getCurrentUser(token);
@@ -19,12 +18,10 @@ export const bookingCreate = actionClient.schema(bookingCreateSchema).action(asy
       throw new Error('Debes iniciar sesión para contratar un servicio');
     }
 
-    // Verificar que el clientId coincida con el usuario actual
     if (currentUser.id !== parsedInput.clientId) {
       throw new Error('No tienes autorización para realizar esta acción');
     }
 
-    // Verificar que el cliente no sea el mismo que el proveedor
     if (parsedInput.clientId === parsedInput.providerId) {
       throw new Error('No puedes contratar tu propio servicio');
     }
@@ -42,7 +39,6 @@ export const bookingCreate = actionClient.schema(bookingCreateSchema).action(asy
       throw new Error(response.message || 'Error al crear la contratación');
     }
 
-    // Revalidar las rutas relacionadas
     revalidatePath(`/services/${parsedInput.serviceId}`);
     revalidatePath(`/profile/${parsedInput.clientId}/bookings`);
     revalidatePath(`/profile/${parsedInput.providerId}/bookings`);
