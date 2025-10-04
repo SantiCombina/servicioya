@@ -59,13 +59,15 @@ export const getServiceById = async (id: string): Promise<Service | null> => {
   }
 };
 
-export const getUserServices = async (userId: string): Promise<Service[]> => {
+export const getUserServices = async (userId: string, isOwner: boolean = false): Promise<Service[]> => {
   try {
     const payload = await getPayloadClient();
     const result = await payload.find({
       collection: 'services',
       where: {
         provider: { equals: userId },
+        // Si no es el dueño, solo mostrar servicios activos
+        ...(isOwner ? {} : { isActive: { equals: true } }),
       },
       sort: '-createdAt',
       depth: 2,

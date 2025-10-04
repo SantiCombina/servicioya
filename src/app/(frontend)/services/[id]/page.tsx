@@ -1,4 +1,4 @@
-import { Clock, MapPin } from 'lucide-react';
+import { Clock, MapPin, AlertTriangle } from 'lucide-react';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
@@ -26,7 +26,6 @@ import { getProviderCompletedJobs } from './actions';
 export default async function ServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  // Obtener el servicio y el usuario actual en paralelo
   const [service, currentUser] = await Promise.all([
     getServiceById(id),
     getCurrentUser((await cookies()).get('payload-token')?.value || null),
@@ -39,16 +38,43 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   const provider = service.provider as User;
   const completedJobs = await getProviderCompletedJobs(provider.id);
 
+  const isOwner = currentUser && (currentUser.id === provider.id || currentUser.role === 'admin');
+
+  if (!service.isActive && !isOwner) {
+    return (
+      <div className="min-h-main">
+        <div className="container py-16">
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-2xl shadow-xl border border-yellow-200 p-12">
+              <div className="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-8">
+                <AlertTriangle className="h-12 w-12 text-orange-600" />
+              </div>
+
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">Servicio no disponible</h1>
+
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto">
+                Este servicio actualmente se encuentra inactivo y no está disponible para contratación.
+              </p>
+
+              <div className="bg-orange-50 rounded-lg p-6 border border-orange-200">
+                <p className="text-orange-800 font-medium">
+                  💡 El proveedor de este servicio podrá reactivarlo cuando esté disponible nuevamente.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const reviews = Array.isArray(service.reviews)
     ? service.reviews.filter((review): review is Review => typeof review === 'object')
     : [];
-  // Acceso directo con type assertions
   const location = service.location as Location;
 
-  // Manejar imágenes directamente
   const images: string[] = [];
 
-  // Imagen principal
   if (service.image && typeof service.image === 'object') {
     const media = service.image as Media;
     if (media.url) {
@@ -56,7 +82,6 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
     }
   }
 
-  // Fotos adicionales
   if (service.photos) {
     service.photos.forEach((photo) => {
       if (typeof photo === 'object') {
@@ -71,12 +96,29 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   return (
     <div className="min-h-main">
       <div className="container py-12">
+        {!service.isActive && isOwner && (
+          <div className="bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 rounded-xl p-6 mb-6 shadow-sm">
+            <div className="flex items-start space-x-4">
+              <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="h-5 w-5 text-yellow-600" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-yellow-900 font-semibold text-lg">Tu servicio está inactivo</h3>
+                <p className="text-yellow-800">
+                  Este servicio no aparece en las búsquedas públicas. Solo tú puedes verlo.
+                </p>
+                <p className="text-yellow-700 text-sm">
+                  Puedes activarlo desde la sección &ldquo;Mis Servicios&rdquo; en tu perfil.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Main Content */}
           <div className="lg:col-span-3 space-y-6">
             <ServiceImageGallery images={images} title={service.title} />
 
-            {/* Service Details */}
             <Card>
               <CardHeader>
                 <div className="flex justify-between items-start">
@@ -116,7 +158,6 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               </CardContent>
             </Card>
 
-            {/* Reviews */}
             <Card>
               <CardHeader>
                 <CardTitle>Calificaciones y Reseñas</CardTitle>
@@ -150,7 +191,6 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             </Card>
           </div>
 
-          {/* Sidebar */}
           {typeof service.provider === 'object' && (
             <ProviderSidebar service={service} currentUser={currentUser} completedJobs={completedJobs} />
           )}

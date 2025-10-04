@@ -42,14 +42,21 @@ export const serviceCreateSchema = z.object({
       message: 'Debe seleccionar una ubicación válida.',
     }),
   priceFrom: z
-    .number({
-      required_error: 'El precio es requerido.',
-      invalid_type_error: 'El precio debe ser un número.',
+    .union([
+      z.number(),
+      z.string().transform((val) => {
+        if (val === '' || val === undefined) return undefined;
+        const num = parseInt(val, 10);
+        return isNaN(num) ? undefined : num;
+      }),
+    ])
+    .refine((val) => val !== undefined && val !== null, {
+      message: 'El precio es requerido.',
     })
-    .min(1, {
+    .refine((val) => typeof val === 'number' && val >= 1, {
       message: 'El precio debe ser mayor a 0.',
     })
-    .max(999999, {
+    .refine((val) => typeof val === 'number' && val <= 999999, {
       message: 'El precio debe ser menor a $999,999.',
     }),
   availability: z

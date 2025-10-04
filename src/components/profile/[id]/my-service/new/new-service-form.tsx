@@ -37,19 +37,16 @@ export function NewServiceForm() {
   const params = useParams();
   const profileId = params.id as string;
 
-  // Estados para el manejo de imagen
   const [uploadedImageId, setUploadedImageId] = useState<number | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
 
-  // Actions con next-safe-action
   const {
     execute: loadData,
     result: loadDataResult,
     isExecuting: isLoadingData,
   } = useAction(loadNewServiceDataAction, {
     onSuccess: (result) => {
-      // Verificar permisos
       if (!result.data?.user || (result.data.user.id.toString() !== profileId && result.data.user.role !== 'admin')) {
         router.push('/login');
         return;
@@ -63,6 +60,7 @@ export function NewServiceForm() {
 
   const { executeAsync: createService, isExecuting: isCreatingService } = useAction(serviceCreate, {
     onSuccess: (result) => {
+      console.log('Service created successfully:', result);
       if (result.data?.success) {
         toast.success(result.data.message);
         router.push(`/profile/${profileId}/my-services`);
@@ -80,7 +78,7 @@ export function NewServiceForm() {
     onSuccess: (result) => {
       if (result.data?.imageId) {
         setUploadedImageId(result.data.imageId);
-        toast.success('Imagen subida correctamente');
+        methods.setValue('imageId', result.data.imageId);
       }
     },
     onError: (error) => {
@@ -90,17 +88,15 @@ export function NewServiceForm() {
     },
   });
 
-  // Cargar datos al montar el componente
   useEffect(() => {
     loadData({});
   }, [loadData]);
 
-  // Extraer datos del resultado del action
   const currentUser = loadDataResult?.data?.user || null;
   const categories = loadDataResult?.data?.categories || [];
   const locations = loadDataResult?.data?.locations || [];
 
-  const form = useForm<ServiceCreateValues>({
+  const methods = useForm<ServiceCreateValues>({
     resolver: zodResolver(serviceCreateSchema),
     defaultValues: {
       title: '',
@@ -109,6 +105,7 @@ export function NewServiceForm() {
       locationId: undefined,
       priceFrom: undefined,
       availability: '',
+      imageId: undefined,
       isActive: true,
     },
   });
@@ -117,7 +114,6 @@ export function NewServiceForm() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Verificar tipo y tamaño
     if (!file.type.startsWith('image/')) {
       toast.error('El archivo debe ser una imagen');
       return;
@@ -131,14 +127,12 @@ export function NewServiceForm() {
     try {
       setIsUploadingImage(true);
 
-      // Crear preview
       const reader = new FileReader();
       reader.onload = (e) => {
         setPreviewImage(e.target?.result as string);
       };
       reader.readAsDataURL(file);
 
-      // Subir imagen usando la action
       const formData = new FormData();
       formData.append('file', file);
 
@@ -152,37 +146,20 @@ export function NewServiceForm() {
     }
   };
 
-  const onSubmit = async (values: ServiceCreateValues, isDraft = false) => {
-    if (!currentUser) {
-      toast.error('Debes estar autenticado para crear un servicio');
-      return;
-    }
-
-    if (!uploadedImageId) {
-      toast.error('Debes subir una imagen para el servicio');
-      return;
-    }
-
+  const onSubmit = async (values: ServiceCreateValues) => {
     const serviceData = {
-      title: values.title,
-      description: values.description,
+      ...values,
+      imageId: uploadedImageId!,
+      providerId: currentUser!.id,
       categoryId: values.categoryId!,
       locationId: values.locationId!,
       priceFrom: values.priceFrom!,
-      availability: values.availability,
-      imageId: uploadedImageId,
-      providerId: currentUser.id,
-      isActive: isDraft ? false : (values.isActive ?? true),
+      availability: values.availability || '',
     };
 
-    await createService(serviceData);
+    createService(serviceData);
   };
 
-  const handleSubmit = (isDraft = false) => {
-    return form.handleSubmit((values) => onSubmit(values, isDraft));
-  };
-
-  // Mostrar loading si aún está cargando datos
   if (isLoadingData) {
     return (
       <Card>
@@ -200,19 +177,33 @@ export function NewServiceForm() {
         <p className="text-muted-foreground">Completa la información para crear tu servicio</p>
       </div>
 
-      <Form {...form}>
-        <form onSubmit={handleSubmit()}>
+      <Form {...methods}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            methods.handleSubmit(
+              (values) => {
+                if (uploadedImageId) {
+                  methods.setValue('imageId', uploadedImageId);
+                }
+                onSubmit(values);
+              },
+              (errors) => {
+                console.log('Validation errors:', errors);
+              },
+            )(e);
+          }}
+        >
           <Card>
             <CardContent className="p-6 space-y-6">
-              {/* Imagen del Servicio */}
               <div className="space-y-4">
                 <Label>Imagen del servicio *</Label>
                 {previewImage ? (
-                  <div className="relative w-full h-48 rounded-lg overflow-hidden bg-muted">
-                    <img src={previewImage} alt="Preview" className="w-full h-full object-cover" />
+                  <div className="relative max-w-sm mx-auto aspect-[5/4] rounded-lg overflow-hidden bg-muted">
+                    <img src={previewImage} alt="Preview" className="w-full h-full object-cover object-center" />
                   </div>
                 ) : (
-                  <div className="w-full h-48 border-2 border-dashed border-border rounded-lg flex items-center justify-center bg-muted/50">
+                  <div className="max-w-sm mx-auto aspect-[5/4] border-2 border-dashed border-border rounded-lg flex items-center justify-center bg-muted/50">
                     <div className="text-center">
                       <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
                       <p className="text-sm text-muted-foreground">Sube una imagen para tu servicio (obligatorio)</p>
@@ -244,9 +235,8 @@ export function NewServiceForm() {
                 <p className="text-xs text-muted-foreground text-center">JPG, PNG máximo 5MB - Imagen obligatoria</p>
               </div>
 
-              {/* Título */}
               <FormField
-                control={form.control}
+                control={methods.control}
                 name="title"
                 render={({ field }) => (
                   <FormItem>
@@ -259,35 +249,37 @@ export function NewServiceForm() {
                 )}
               />
 
-              {/* Descripción */}
               <FormField
-                control={form.control}
+                control={methods.control}
                 name="description"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Descripción *</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Describe tu servicio en detalle..." rows={4} {...field} />
+                      <Textarea
+                        placeholder="Describe tu servicio en detalle..."
+                        className="min-h-[120px] max-h-[300px] resize-y"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {/* Categoría y Ubicación */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
-                  control={form.control}
+                  control={methods.control}
                   name="categoryId"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Categoría *</FormLabel>
                       <Select
-                        value={field.value ? field.value.toString() : undefined}
-                        onValueChange={(value) => field.onChange(parseInt(value))}
+                        value={field.value ? field.value.toString() : ''}
+                        onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)}
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="w-full">
                             <SelectValue placeholder="Selecciona una categoría" />
                           </SelectTrigger>
                         </FormControl>
@@ -305,17 +297,17 @@ export function NewServiceForm() {
                 />
 
                 <FormField
-                  control={form.control}
+                  control={methods.control}
                   name="locationId"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Ubicación *</FormLabel>
                       <Select
-                        value={field.value ? field.value.toString() : undefined}
-                        onValueChange={(value) => field.onChange(parseInt(value))}
+                        value={field.value ? field.value.toString() : ''}
+                        onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)}
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="w-full">
                             <SelectValue placeholder="Selecciona una ubicación" />
                           </SelectTrigger>
                         </FormControl>
@@ -323,6 +315,7 @@ export function NewServiceForm() {
                           {locations.map((location) => (
                             <SelectItem key={location.id} value={location.id.toString()}>
                               {location.name}
+                              {location.province && `, ${location.province}`}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -333,16 +326,32 @@ export function NewServiceForm() {
                 />
               </div>
 
-              {/* Precio y Disponibilidad */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
-                  control={form.control}
+                  control={methods.control}
                   name="priceFrom"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Precio desde (ARS) *</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ej: 2500" {...field} />
+                        <Input
+                          type="number"
+                          placeholder="Ej: 5000"
+                          min="1"
+                          max="999999"
+                          onFocus={(event) => event.target.select()}
+                          {...field}
+                          value={field.value === undefined || field.value === null ? '' : field.value}
+                          onChange={(event) => {
+                            const value = event.target.valueAsNumber;
+
+                            if (event.target.value === '') {
+                              field.onChange(undefined);
+                            } else if (!isNaN(value)) {
+                              field.onChange(value);
+                            }
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -350,7 +359,7 @@ export function NewServiceForm() {
                 />
 
                 <FormField
-                  control={form.control}
+                  control={methods.control}
                   name="availability"
                   render={({ field }) => (
                     <FormItem>
@@ -364,34 +373,28 @@ export function NewServiceForm() {
                 />
               </div>
 
-              {/* Botones */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-6">
+              <div className="flex flex-col-reverse sm:flex-row gap-4 pt-6">
                 <Link href={`/profile/${profileId}/my-services`} className="flex-1">
                   <Button type="button" variant="secondary" className="w-full">
                     Cancelar
                   </Button>
                 </Link>
 
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="flex-1"
-                  disabled={isCreatingService}
-                  onClick={handleSubmit(true)}
-                >
-                  Guardar como Borrador
-                </Button>
-
-                <Button type="submit" className="flex-1" disabled={isCreatingService}>
+                <Button type="submit" className="flex-1" disabled={isCreatingService || isUploadingImage}>
                   {isCreatingService ? (
                     <>
                       <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
                       Publicando...
                     </>
+                  ) : isUploadingImage ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
+                      Subiendo imagen...
+                    </>
                   ) : (
                     <>
                       <Save className="w-4 h-4 mr-2" />
-                      Publicar Servicio
+                      Publicar servicio
                     </>
                   )}
                 </Button>

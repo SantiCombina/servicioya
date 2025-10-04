@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Upload } from 'lucide-react';
+import { Upload, Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
 import { useEffect, useState } from 'react';
@@ -25,6 +25,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  Switch,
   Textarea,
 } from '@/components/ui';
 import { serviceUpdateSchema, type ServiceUpdateValues } from '@/lib/schemas/service-update-schema';
@@ -122,13 +123,11 @@ export function EditServiceForm({ service, categories, locations, profileId }: P
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card>
             <CardContent className="p-6 space-y-6">
-              {/* Imagen Section */}
               <div className="space-y-4">
                 <Label>Imagen del servicio *</Label>
 
-                {/* Image Preview */}
                 {(imagePreview || service.image) && (
-                  <div className="relative w-full h-48 bg-muted rounded-lg overflow-hidden">
+                  <div className="relative max-w-sm mx-auto aspect-[5/4] bg-muted rounded-lg overflow-hidden">
                     <img
                       src={
                         imagePreview ||
@@ -136,7 +135,7 @@ export function EditServiceForm({ service, categories, locations, profileId }: P
                         ''
                       }
                       alt="Preview"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover object-center"
                     />
                   </div>
                 )}
@@ -198,7 +197,7 @@ export function EditServiceForm({ service, categories, locations, profileId }: P
                       <FormControl>
                         <Textarea
                           placeholder="Describe tu servicio en detalle..."
-                          className="min-h-[120px]"
+                          className="min-h-[120px] max-h-[300px] resize-y"
                           {...field}
                         />
                       </FormControl>
@@ -220,7 +219,7 @@ export function EditServiceForm({ service, categories, locations, profileId }: P
                           value={field.value?.toString()}
                         >
                           <FormControl>
-                            <SelectTrigger>
+                            <SelectTrigger className="w-full">
                               <SelectValue placeholder="Selecciona una categoría" />
                             </SelectTrigger>
                           </FormControl>
@@ -248,7 +247,7 @@ export function EditServiceForm({ service, categories, locations, profileId }: P
                           value={field.value?.toString()}
                         >
                           <FormControl>
-                            <SelectTrigger>
+                            <SelectTrigger className="w-full">
                               <SelectValue placeholder="Selecciona una ubicación" />
                             </SelectTrigger>
                           </FormControl>
@@ -276,7 +275,24 @@ export function EditServiceForm({ service, categories, locations, profileId }: P
                       <FormItem>
                         <FormLabel>Precio desde (ARS) *</FormLabel>
                         <FormControl>
-                          <Input placeholder="Ej: 2500" {...field} />
+                          <Input
+                            type="number"
+                            placeholder={service.priceFrom?.toString() || 'Ej: 5000'}
+                            min="1"
+                            max="999999"
+                            onFocus={(event) => event.target.select()}
+                            {...field}
+                            value={field.value === undefined || field.value === null ? '' : field.value}
+                            onChange={(event) => {
+                              const value = event.target.valueAsNumber;
+
+                              if (event.target.value === '') {
+                                field.onChange(undefined);
+                              } else if (!isNaN(value)) {
+                                field.onChange(value);
+                              }
+                            }}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -305,18 +321,13 @@ export function EditServiceForm({ service, categories, locations, profileId }: P
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                       <div className="space-y-0.5">
-                        <FormLabel className="text-base">Servicio activo</FormLabel>
+                        <FormLabel className="text-base">Publicar en búsquedas</FormLabel>
                         <div className="text-sm text-muted-foreground">
-                          Los servicios activos aparecen en las búsquedas públicas
+                          Cuando está activado, tu servicio aparece en las búsquedas públicas
                         </div>
                       </div>
                       <FormControl>
-                        <input
-                          type="checkbox"
-                          checked={field.value}
-                          onChange={(e) => field.onChange(e.target.checked)}
-                          className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-                        />
+                        <Switch checked={field.value} onCheckedChange={field.onChange} />
                       </FormControl>
                     </FormItem>
                   )}
@@ -324,16 +335,26 @@ export function EditServiceForm({ service, categories, locations, profileId }: P
               </div>
 
               {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-end">
+              <div className="flex flex-col-reverse sm:flex-row gap-4 pt-6">
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="secondary"
+                  className="flex-1"
                   onClick={() => router.push(`/profile/${profileId}/my-services`)}
                 >
                   Cancelar
                 </Button>
-                <Button type="submit" disabled={isExecuting || isUploadingImage}>
-                  {isExecuting ? 'Guardando...' : isUploadingImage ? 'Subiendo imagen...' : 'Guardar cambios'}
+                <Button type="submit" className="flex-1" disabled={isExecuting || isUploadingImage}>
+                  {isExecuting ? (
+                    'Guardando...'
+                  ) : isUploadingImage ? (
+                    'Subiendo imagen...'
+                  ) : (
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      Guardar cambios
+                    </>
+                  )}
                 </Button>
               </div>
             </CardContent>

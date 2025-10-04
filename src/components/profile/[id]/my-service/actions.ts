@@ -37,12 +37,18 @@ export const loadMyServicesAction = actionClient
       const cookieStore = await cookies();
       const token = cookieStore.get('payload-token')?.value || null;
 
-      const [user, userServices] = await Promise.all([getCurrentUser(token), getUserServices(profileId)]);
+      const user = await getCurrentUser(token);
+
+      // Determinar si el usuario actual es el dueño del perfil
+      const isOwner = user ? user.id.toString() === profileId || user.role === 'admin' : false;
+
+      const userServices = await getUserServices(profileId, isOwner);
 
       return {
         success: true,
         user,
         services: userServices,
+        isOwner,
       };
     } catch (error) {
       console.error('Error loading my services data:', error);

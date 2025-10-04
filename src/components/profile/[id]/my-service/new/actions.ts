@@ -12,15 +12,12 @@ import { getCurrentUser } from '@/app/services/user';
 import { actionClient } from '@/lib/safe-action-client';
 import { serviceCreateSchema } from '@/lib/schemas/service-create-schema';
 
-// Schema para cargar datos iniciales
 const loadDataSchema = z.object({});
 
-// Schema para subir imagen
 const uploadImageSchema = z.object({
   formData: z.instanceof(FormData),
 });
 
-// Schema para crear servicio
 const createServiceActionSchema = serviceCreateSchema.extend({
   providerId: z.number(),
 });
@@ -62,7 +59,6 @@ export const uploadImageActionSafe = actionClient.schema(uploadImageSchema).acti
 
 export const serviceCreate = actionClient.schema(createServiceActionSchema).action(async ({ parsedInput }) => {
   try {
-    // Mapear los datos al formato esperado por createService
     const serviceData = {
       title: parsedInput.title,
       description: parsedInput.description,
@@ -81,7 +77,6 @@ export const serviceCreate = actionClient.schema(createServiceActionSchema).acti
       throw new Error(response.message || 'Error al crear el servicio');
     }
 
-    // Revalidar las rutas relacionadas
     revalidatePath('/services');
     revalidatePath(`/profile/${parsedInput.providerId}/my-services`);
 

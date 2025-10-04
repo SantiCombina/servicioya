@@ -1,5 +1,6 @@
 export * from './accordion';
 export * from './alert-dialog';
+export * from './alert';
 export * from './avatar';
 export * from './badge';
 export * from './button';
@@ -28,6 +29,7 @@ export * from './skeleton';
 export * from './slider';
 export * from './sonner';
 export * from './stats-card';
+export * from './switch';
 export * from './table';
 export * from './tabs';
 export * from './textarea';
