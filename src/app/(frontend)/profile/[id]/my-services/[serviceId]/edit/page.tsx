@@ -5,7 +5,7 @@ import { getCategories } from '@/app/services/category';
 import { getLocations } from '@/app/services/location';
 import { getServiceById } from '@/app/services/service';
 import { getCurrentUser } from '@/app/services/user';
-import { EditServiceForm } from '@/components/profile/[id]/my-service/edit/edit-service-form';
+import { EditServiceForm } from '@/components/profile/[id]/my-services/[serviceId]/edit/edit-service-form';
 
 export default async function EditServicePage({ params }: { params: Promise<{ id: string; serviceId: string }> }) {
   const { id, serviceId } = await params;

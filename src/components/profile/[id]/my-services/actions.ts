@@ -4,17 +4,14 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
 
-import { deleteService } from '@/app/services/service';
-import { getUserServices } from '@/app/services/service';
+import { deleteService, getUserServices } from '@/app/services/service';
 import { getCurrentUser } from '@/app/services/user';
 import { actionClient } from '@/lib/safe-action-client';
 
-// Schema para cargar datos de mis servicios
 const loadMyServicesSchema = z.object({
   profileId: z.string().min(1, 'ID de perfil requerido'),
 });
 
-// Schema para eliminar servicio
 const serviceDeleteSchema = z.object({
   serviceId: z
     .string({
@@ -24,9 +21,6 @@ const serviceDeleteSchema = z.object({
     .min(1, {
       message: 'El ID del servicio es requerido.',
     }),
-});
-
-const deleteServiceActionSchema = serviceDeleteSchema.extend({
   userId: z.union([z.string(), z.number()]).optional(),
 });
 
@@ -56,7 +50,7 @@ export const loadMyServicesAction = actionClient
     }
   });
 
-export const serviceDelete = actionClient.schema(deleteServiceActionSchema).action(async ({ parsedInput }) => {
+export const serviceDeleteAction = actionClient.schema(serviceDeleteSchema).action(async ({ parsedInput }) => {
   try {
     const response = await deleteService(parsedInput.serviceId);
 

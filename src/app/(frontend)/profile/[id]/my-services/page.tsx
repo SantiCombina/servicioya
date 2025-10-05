@@ -4,7 +4,7 @@ import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-import { MyServicesList } from '@/components/profile/[id]/my-service/my-services-list';
+import { MyServicesList } from '@/components/profile/[id]/my-services/my-services-list';
 import { Button } from '@/components/ui';
 
 export default function MyServicesPage() {
