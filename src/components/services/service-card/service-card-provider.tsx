@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 
-import { CardDescription } from '@/components/ui';
+import { CardDescription } from '@/components/ui/card';
 import { User } from '@/payload-types';
 
 interface ServiceCardProviderProps {

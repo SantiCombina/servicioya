@@ -1,4 +1,5 @@
-import { Checkbox, Label } from '@/components/ui';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 interface VerifiedFilterProps {
   showVerifiedOnly: boolean;

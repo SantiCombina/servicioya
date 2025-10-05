@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload';
 
-export const ReviewReplies: CollectionConfig = {
+const ReviewReplies: CollectionConfig = {
   slug: 'reviewreplies',
   admin: {
     useAsTitle: 'id',
@@ -34,3 +34,5 @@ export const ReviewReplies: CollectionConfig = {
     },
   ],
 };
+
+export default ReviewReplies;

@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload';
 
-export const Locations: CollectionConfig = {
+const Locations: CollectionConfig = {
   slug: 'locations',
   admin: {
     useAsTitle: 'name',
@@ -25,3 +25,5 @@ export const Locations: CollectionConfig = {
     },
   ],
 };
+
+export default Locations;

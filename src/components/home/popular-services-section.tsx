@@ -1,6 +1,6 @@
 import { Wrench, Zap, Home, Users, Search, Shield } from 'lucide-react';
 
-import { Card } from '@/components/ui';
+import { Card } from '@/components/ui/card';
 
 export function PopularServicesSection() {
   return (

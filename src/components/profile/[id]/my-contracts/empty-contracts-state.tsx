@@ -1,8 +1,10 @@
 'use client';
 
+import { Calendar } from 'lucide-react';
 import Link from 'next/link';
 
-import { Calendar, Button, Card, CardContent } from '@/components/ui';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface EmptyContractsStateProps {
   activeFilter: string;

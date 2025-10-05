@@ -1,6 +1,7 @@
 import { Clock } from 'lucide-react';
 
-import { CardContent, Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui';
+import { CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Service } from '@/payload-types';
 
 interface ServiceDescriptionProps {

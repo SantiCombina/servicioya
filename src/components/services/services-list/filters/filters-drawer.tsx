@@ -3,7 +3,8 @@
 import { Filter } from 'lucide-react';
 import { useState } from 'react';
 
-import { Button, Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@/components/ui';
+import { Button } from '@/components/ui/button';
+import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
 
 import { CategoryFilter } from './category-filter';
 import { LocationFilter } from './location-filter';

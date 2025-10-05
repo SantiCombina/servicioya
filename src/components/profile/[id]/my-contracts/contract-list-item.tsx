@@ -2,7 +2,10 @@
 
 import { Star, Calendar, MapPin, Clock, DollarSign, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
-import { Button, Card, CardContent, Badge, UserAvatar } from '@/components/ui';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { UserAvatar } from '@/components/ui/user-avatar';
 import { Booking, Service, User as UserType, Category, Location, Media } from '@/payload-types';
 
 interface ContractListItemProps {

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 import { MyServicesList } from '@/components/profile/[id]/my-services/my-services-list';
-import { Button } from '@/components/ui';
+import { Button } from '@/components/ui/button';
 
 export default function MyServicesPage() {
   const params = useParams();

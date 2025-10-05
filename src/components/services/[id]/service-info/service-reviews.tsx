@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Review, Service, User } from '@/payload-types';
 
 import { ReviewItem } from './service-review-card';

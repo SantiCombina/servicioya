@@ -7,6 +7,9 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { DatePicker } from '@/components/ui/date-picker';
 import {
   Dialog,
   DialogContent,
@@ -14,19 +17,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  Button,
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-  Textarea,
-  Card,
-  CardContent,
-  DatePicker,
-} from '@/components/ui';
+} from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { bookingCreateSchema, BookingCreateValues } from '@/lib/schemas/booking-create-schema';
 import { Service, User } from '@/payload-types';
 

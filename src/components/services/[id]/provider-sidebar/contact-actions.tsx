@@ -1,7 +1,8 @@
 import { Calendar, MessageCircle } from 'lucide-react';
 
 import { BookServiceDialog } from '@/components/services/[id]/book-service-dialog';
-import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Service, User } from '@/payload-types';
 
 interface ContactActionsProps {

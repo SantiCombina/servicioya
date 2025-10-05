@@ -1,7 +1,8 @@
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 
-import { Button, Card, CardContent } from '@/components/ui';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface EmptyServicesStateProps {
   profileId: string;

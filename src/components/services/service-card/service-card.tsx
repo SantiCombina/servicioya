@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Service, User } from '@/payload-types';
 
 import { ServiceCardImage } from './service-card-image';

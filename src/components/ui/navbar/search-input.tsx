@@ -4,7 +4,7 @@ import { Search } from 'lucide-react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
-import { Input } from '@/components/ui';
+import { Input } from '@/components/ui/input';
 
 function SearchInput() {
   const [value, setValue] = useState('');

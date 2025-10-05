@@ -1,6 +1,6 @@
 import { MapPin } from 'lucide-react';
 
-import { CardDescription, CardHeader, CardTitle } from '@/components/ui';
+import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Location, Service } from '@/payload-types';
 
 interface ServiceHeaderProps {

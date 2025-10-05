@@ -1,16 +1,15 @@
 import { Star, MapPin, Clock, MoreVertical, Eye, Edit, Trash2, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
-  Badge,
-  Button,
-  Card,
-  CardContent,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui';
+} from '@/components/ui/dropdown-menu';
 import { getCategoryName, getImageUrl, getLocationName, getReviewCount } from '@/lib/hooks/use-my-services-filters';
 
 interface ServiceListItemProps {

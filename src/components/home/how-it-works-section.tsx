@@ -1,6 +1,6 @@
 import { Search, Users, Shield } from 'lucide-react';
 
-import { Card } from '@/components/ui';
+import { Card } from '@/components/ui/card';
 
 export function HowItWorksSection() {
   return (

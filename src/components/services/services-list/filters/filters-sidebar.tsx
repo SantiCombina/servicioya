@@ -1,17 +1,9 @@
 import { Filter } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 import { CategoryFilter } from './category-filter';
 import { LocationFilter } from './location-filter';

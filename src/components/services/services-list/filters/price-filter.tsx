@@ -1,4 +1,5 @@
-import { Label, Slider } from '@/components/ui';
+import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
 
 interface PriceFilterProps {
   priceRange: number[];

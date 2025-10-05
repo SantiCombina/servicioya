@@ -1,7 +1,9 @@
 import { Award, Shield, Star } from 'lucide-react';
 import Link from 'next/link';
 
-import { Badge, Card, CardContent, CardHeader, CardTitle, UserAvatar } from '@/components/ui';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { UserAvatar } from '@/components/ui/user-avatar';
 import { Service, User } from '@/payload-types';
 
 interface ProviderInfoProps {

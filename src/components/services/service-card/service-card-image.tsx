@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import { Badge } from '@/components/ui';
+import { Badge } from '@/components/ui/badge';
 import { Service, Category } from '@/payload-types';
 
 function getServiceImageUrl(service: Service): string {

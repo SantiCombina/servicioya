@@ -1,4 +1,4 @@
-import { StatsCard } from '@/components/ui';
+import { StatsCard } from '@/components/ui/stats-card';
 import { ServiceFilterType } from '@/lib/hooks/use-my-services-filters';
 
 interface ServicesStatsProps {

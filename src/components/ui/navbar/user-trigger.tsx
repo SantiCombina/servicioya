@@ -5,16 +5,16 @@ import { useRouter } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
 import { useEffect } from 'react';
 
+import { Button } from '@/components/ui/button';
 import {
-  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  Skeleton,
-  UserAvatar,
-} from '@/components/ui';
+} from '@/components/ui/dropdown-menu';
+import { Skeleton } from '@/components/ui/skeleton';
+import { UserAvatar } from '@/components/ui/user-avatar';
 
 import { getCurrentUserAction, userLogout } from './actions';
 

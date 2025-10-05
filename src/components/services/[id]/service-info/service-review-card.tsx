@@ -1,4 +1,5 @@
-import { Badge, UserAvatar } from '@/components/ui';
+import { Badge } from '@/components/ui/badge';
+import { UserAvatar } from '@/components/ui/user-avatar';
 import { formatDate } from '@/lib/helpers/format-date';
 import { Review, User } from '@/payload-types';
 

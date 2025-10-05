@@ -1,7 +1,9 @@
 import { Edit, Mail } from 'lucide-react';
 import Link from 'next/link';
 
-import { Button, Card, CardContent, UserAvatar } from '@/components/ui';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { UserAvatar } from '@/components/ui/user-avatar';
 import { User } from '@/payload-types';
 
 import { UserStars } from './user-stars';

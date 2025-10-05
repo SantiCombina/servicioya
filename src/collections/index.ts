@@ -1,8 +1,8 @@
-export * from './Bookings';
-export * from './Categories';
-export * from './Locations';
-export * from './Media';
-export * from './ReviewReplies';
-export * from './Reviews';
-export * from './Services';
-export * from './Users';
+export { default as Bookings } from './Bookings';
+export { default as Categories } from './Categories';
+export { default as Locations } from './Locations';
+export { default as Media } from './Media';
+export { default as ReviewReplies } from './ReviewReplies';
+export { default as Reviews } from './Reviews';
+export { default as Services } from './Services';
+export { default as Users } from './Users';

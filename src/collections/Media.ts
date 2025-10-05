@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload';
 
-export const Media: CollectionConfig = {
+const Media: CollectionConfig = {
   slug: 'media',
   access: {
     read: () => true,
@@ -125,3 +125,5 @@ export const Media: CollectionConfig = {
     description: 'Imágenes del sistema. Para mejor calidad, usa imágenes de al menos 800x600 píxeles.',
   },
 };
+
+export default Media;

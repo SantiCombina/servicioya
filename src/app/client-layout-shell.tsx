@@ -2,8 +2,9 @@
 
 import { usePathname } from 'next/navigation';
 
-import { Navbar, Toaster } from '@/components/ui';
 import { Footer } from '@/components/ui/footer/footer';
+import { Navbar } from '@/components/ui/navbar/navbar';
+import { Toaster } from '@/components/ui/sonner';
 
 import { ThemeProvider } from './theme-provider';
 

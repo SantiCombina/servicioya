@@ -10,7 +10,7 @@ import { ServiceImages } from '@/components/services/[id]/service-info/service-i
 import { ServiceReviews } from '@/components/services/[id]/service-info/service-reviews';
 import { InactiveServiceMessage } from '@/components/services/[id]/service-status/inactive-service-message';
 import { OwnerInactiveBanner } from '@/components/services/[id]/service-status/owner-inactive-banner';
-import { Card } from '@/components/ui';
+import { Card } from '@/components/ui/card';
 import { Location, Review, User } from '@/payload-types';
 
 import { getProviderCompletedJobs } from './actions';

@@ -2,7 +2,16 @@ import { withPayload } from '@payloadcms/next/withPayload';
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // Your Next.js config here
+  experimental: {
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
+  },
 };
 
 export default withPayload(nextConfig, { devBundleServerPackages: false });

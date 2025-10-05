@@ -1,6 +1,8 @@
 'use client';
 
-import { Badge, Button, StatsCard } from '@/components/ui';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { StatsCard } from '@/components/ui/stats-card';
 import { Booking } from '@/payload-types';
 
 interface ContractsStatsProps {
