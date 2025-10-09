@@ -1,5 +1,6 @@
 'use client';
 
+import { LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
@@ -84,6 +85,7 @@ export function UserTrigger() {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem variant="destructive" onClick={handleLogout} className="cursor-pointer">
+          <LogOut />
           Cerrar sesión
         </DropdownMenuItem>
       </DropdownMenuContent>

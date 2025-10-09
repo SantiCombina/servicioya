@@ -34,16 +34,7 @@ export function EditProfileForm({ user, locations }: Props) {
     onSuccess: (result) => {
       if (result.data?.success) {
         toast.success(result.data.message);
-
-        window.dispatchEvent(
-          new CustomEvent('user-updated', {
-            detail: result.data.user,
-          }),
-        );
-
-        setTimeout(() => {
-          router.push(`/profile/${result.data.userId}`);
-        }, 100);
+        router.push(`/profile/${result.data.userId}`);
       }
     },
     onError: (error) => {
@@ -115,6 +106,21 @@ export function EditProfileForm({ user, locations }: Props) {
       ...values,
       userId: user.id,
     });
+  }
+
+  if (isExecuting) {
+    return (
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold text-foreground">Editar Perfil</h1>
+          <p className="text-muted-foreground">Actualiza tu información personal y preferencias</p>
+        </div>
+
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -232,7 +238,7 @@ export function EditProfileForm({ user, locations }: Props) {
                         <FormLabel>Ciudad/Localidad</FormLabel>
                         <Select onValueChange={field.onChange} value={field.value?.toString()}>
                           <FormControl>
-                            <SelectTrigger>
+                            <SelectTrigger className="w-full">
                               <SelectValue placeholder="Selecciona tu ubicación" />
                             </SelectTrigger>
                           </FormControl>
@@ -267,7 +273,7 @@ export function EditProfileForm({ user, locations }: Props) {
               </div>
 
               {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-3 justify-end">
+              <div className="flex flex-col-reverse sm:flex-row gap-3 justify-end">
                 <Button type="button" variant="outline" onClick={() => router.push(`/profile/${user.id}`)}>
                   Cancelar
                 </Button>

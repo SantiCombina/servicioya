@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Upload, Save } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useParams } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
@@ -150,11 +150,16 @@ export function NewServiceForm() {
 
   if (isLoadingData) {
     return (
-      <Card>
-        <CardContent className="flex items-center justify-center py-12">
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold text-foreground">Crear Nuevo Servicio</h1>
+          <p className="text-muted-foreground">Completa la información para crear tu servicio</p>
+        </div>
+
+        <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
@@ -361,14 +366,14 @@ export function NewServiceForm() {
                 />
               </div>
 
-              <div className="flex flex-col-reverse sm:flex-row gap-4 pt-6">
-                <Link href={`/profile/${profileId}/my-services`} className="flex-1">
-                  <Button type="button" variant="secondary" className="w-full">
+              <div className="flex flex-col-reverse sm:flex-row gap-4 pt-6 justify-end">
+                <Link href={`/profile/${profileId}/my-services`}>
+                  <Button type="button" variant="secondary">
                     Cancelar
                   </Button>
                 </Link>
 
-                <Button type="submit" className="flex-1" disabled={isCreatingService || isUploadingImage}>
+                <Button type="submit" disabled={isCreatingService || isUploadingImage}>
                   {isCreatingService ? (
                     <>
                       <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin mr-2" />
@@ -380,10 +385,7 @@ export function NewServiceForm() {
                       Subiendo imagen...
                     </>
                   ) : (
-                    <>
-                      <Save className="w-4 h-4 mr-2" />
-                      Publicar servicio
-                    </>
+                    'Publicar servicio'
                   )}
                 </Button>
               </div>

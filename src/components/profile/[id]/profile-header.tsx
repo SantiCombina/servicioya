@@ -16,11 +16,11 @@ export function ProfileHeader({ user }: Props) {
   return (
     <Card className="mb-8 relative bg-card border-border">
       <div className="absolute top-4 right-4">
-        <Link href={`/profile/${user.id}/edit`}>
-          <Button variant="outline" size="sm" className="text-xs bg-transparent">
+        <Button variant="outline" size="sm" className="text-xs bg-transparent" asChild>
+          <Link href={`/profile/${user.id}/edit`}>
             <Edit className="w-3 h-3 mr-1" />
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
 
       <CardContent className="pt-8">
