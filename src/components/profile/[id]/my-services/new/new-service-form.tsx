@@ -84,6 +84,8 @@ export function NewServiceForm() {
   const categories = loadDataResult?.data?.categories || [];
   const locations = loadDataResult?.data?.locations || [];
 
+  const isAdminCreatingForOther = currentUser?.role === 'admin' && currentUser.id.toString() !== profileId;
+
   const methods = useForm<ServiceCreateValues>({
     resolver: zodResolver(serviceCreateSchema),
     defaultValues: {
@@ -138,7 +140,7 @@ export function NewServiceForm() {
     const serviceData = {
       ...values,
       imageId: uploadedImageId!,
-      providerId: currentUser!.id,
+      providerId: parseInt(profileId),
       categoryId: values.categoryId!,
       locationId: values.locationId!,
       priceFrom: values.priceFrom!,
@@ -153,7 +155,7 @@ export function NewServiceForm() {
       <div className="space-y-6">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold text-foreground">Crear Nuevo Servicio</h1>
-          <p className="text-muted-foreground">Completa la información para crear tu servicio</p>
+          <p className="text-muted-foreground">Completa la información para crear el servicio</p>
         </div>
 
         <div className="flex items-center justify-center py-12">
@@ -167,7 +169,11 @@ export function NewServiceForm() {
     <div className="space-y-6">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold text-foreground">Crear Nuevo Servicio</h1>
-        <p className="text-muted-foreground">Completa la información para crear tu servicio</p>
+        <p className="text-muted-foreground">
+          {isAdminCreatingForOther
+            ? 'Completa la información para crear un servicio para este proveedor'
+            : 'Completa la información para crear tu servicio'}
+        </p>
       </div>
 
       <Form {...methods}>
@@ -368,7 +374,7 @@ export function NewServiceForm() {
 
               <div className="flex flex-col-reverse sm:flex-row gap-4 pt-6 justify-end">
                 <Link href={`/profile/${profileId}/my-services`}>
-                  <Button type="button" variant="secondary">
+                  <Button type="button" variant="ghost">
                     Cancelar
                   </Button>
                 </Link>

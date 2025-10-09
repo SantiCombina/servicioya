@@ -58,7 +58,6 @@ export const serviceDeleteAction = actionClient.schema(serviceDeleteSchema).acti
       throw new Error(response.message || 'Error al eliminar el servicio');
     }
 
-    // Revalidar las rutas relacionadas
     revalidatePath('/services');
     if (parsedInput.userId) {
       revalidatePath(`/profile/${parsedInput.userId}/my-services`);

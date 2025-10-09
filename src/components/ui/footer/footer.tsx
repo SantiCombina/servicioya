@@ -1,4 +1,5 @@
 import { Mail, MessageSquare } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { Separator } from '@/components/ui/separator';
@@ -10,9 +11,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-4">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">SY</span>
-              </div>
+              <Image src="/icon.png" alt="ServicioYa" width={32} height={32} className="h-8 w-8" />
               <span className="font-bold text-xl text-foreground flex">ServicioYa</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">

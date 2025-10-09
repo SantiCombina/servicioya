@@ -31,7 +31,7 @@ export function ProviderInfo({ service, completedJobs }: ProviderInfoProps) {
           </Link>
           <div>
             <Link href={`/profile/${provider.id}`}>
-              <CardTitle className="text-lg hover:text-primary transition-colors cursor-pointer inline-block">
+              <CardTitle className="text-lg hover:text-blue-600 transition-colors cursor-pointer inline-block">
                 {provider.name}
               </CardTitle>
             </Link>

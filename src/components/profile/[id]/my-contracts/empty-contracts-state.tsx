@@ -20,7 +20,7 @@ export function EmptyContractsState({ activeFilter, onShowAll }: EmptyContractsS
           <h3 className="text-xl font-semibold text-foreground mb-2">No tienes contratos aún</h3>
           <p className="text-muted-foreground mb-6">Explora los servicios disponibles y contrata el que necesites.</p>
           <Link href="/services">
-            <Button>Explorar Servicios</Button>
+            <Button>Explorar servicios</Button>
           </Link>
         </CardContent>
       </Card>

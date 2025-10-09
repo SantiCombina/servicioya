@@ -10,18 +10,23 @@ import { UserStars } from './user-stars';
 
 interface Props {
   user: User;
+  currentUser?: User | null;
 }
 
-export function ProfileHeader({ user }: Props) {
+export function ProfileHeader({ user, currentUser }: Props) {
+  const canEdit = currentUser && (currentUser.id === user.id || currentUser.role === 'admin');
+
   return (
     <Card className="mb-8 relative bg-card border-border">
-      <div className="absolute top-4 right-4">
-        <Button variant="outline" size="sm" className="text-xs bg-transparent" asChild>
-          <Link href={`/profile/${user.id}/edit`}>
-            <Edit className="w-3 h-3 mr-1" />
-          </Link>
-        </Button>
-      </div>
+      {canEdit && (
+        <div className="absolute top-4 right-4">
+          <Button variant="outline" size="sm" className="text-xs bg-transparent" asChild>
+            <Link href={`/profile/${user.id}/edit`}>
+              <Edit className="w-3 h-3 mr-1" />
+            </Link>
+          </Button>
+        </div>
+      )}
 
       <CardContent className="pt-8">
         <div className="flex flex-col items-center text-center space-y-1">

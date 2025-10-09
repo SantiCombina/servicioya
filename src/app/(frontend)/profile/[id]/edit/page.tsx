@@ -1,20 +1,20 @@
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { getLocations } from '@/app/services/location';
-import { getCurrentUser, getUserById } from '@/app/services/user';
+import { getUserById } from '@/app/services/user';
 import { EditProfileForm } from '@/components/profile/[id]/edit/edit-profile-form';
+import { getCurrentUserAction } from '@/components/ui/navbar/actions';
 
 export default async function EditProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const cookieStore = await cookies();
-  const token = cookieStore.get('payload-token')?.value || null;
 
-  const [currentUser, userToEdit, locations] = await Promise.all([
-    getCurrentUser(token),
+  const [currentUserResult, userToEdit, locations] = await Promise.all([
+    getCurrentUserAction({}),
     getUserById(id),
     getLocations(),
   ]);
+
+  const currentUser = currentUserResult.data?.user || null;
 
   if (!currentUser) {
     redirect('/login');
@@ -31,9 +31,7 @@ export default async function EditProfilePage({ params }: { params: Promise<{ id
     );
   }
 
-  const canEdit = currentUser.id === userToEdit.id || currentUser.role === 'admin';
-
-  if (!canEdit) {
+  if (!currentUser || (currentUser.id.toString() !== id && currentUser.role !== 'admin')) {
     redirect(`/profile/${id}`);
   }
 

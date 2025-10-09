@@ -16,7 +16,6 @@ export function MyServicesList() {
   const params = useParams();
   const profileId = params.id as string;
 
-  // Actions para operaciones del servidor
   const {
     execute: loadData,
     result: loadResult,
@@ -41,7 +40,6 @@ export function MyServicesList() {
     },
   });
 
-  // Hook para lógica de filtros del cliente
   const services = loadResult.data?.services || [];
   const { serviceFilter, setServiceFilter, activeServices, inactiveServices, filteredServices } = useMyServicesFilters({
     services,
@@ -56,12 +54,10 @@ export function MyServicesList() {
   }, [profileId]);
 
   const handleDeleteService = async (serviceId: number) => {
-    if (confirm('¿Estás seguro de que quieres eliminar este servicio?')) {
-      await deleteService({
-        serviceId: serviceId.toString(),
-        userId: profileId,
-      });
-    }
+    await deleteService({
+      serviceId: serviceId.toString(),
+      userId: profileId,
+    });
   };
 
   if (isLoadingData) {

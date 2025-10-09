@@ -109,7 +109,7 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>No Disponible</DialogTitle>
+            <DialogTitle>No disponible</DialogTitle>
             <DialogDescription>No puedes contratar tu propio servicio.</DialogDescription>
           </DialogHeader>
           <div className="flex justify-end">
@@ -152,7 +152,7 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
                   </div>
                   <div className="flex flex-col space-y-1">
                     <span className="font-medium text-muted-foreground">Precio base</span>
-                    <span className="font-semibold text-primary">
+                    <span className="font-semibold text-blue-600">
                       ${service.priceFrom?.toLocaleString() || 'Consultar'}
                     </span>
                   </div>
@@ -267,11 +267,11 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
 
             {/* Botones */}
             <div className="flex justify-end space-x-3">
-              <Button type="button" variant="outline" onClick={() => setOpen(false)} className="min-w-[120px]">
+              <Button type="button" variant="ghost" onClick={() => setOpen(false)} className="min-w-[120px]">
                 Cancelar
               </Button>
               <Button type="submit" disabled={isExecuting} className="min-w-[140px]">
-                {isExecuting ? 'Enviando...' : 'Enviar Solicitud'}
+                {isExecuting ? 'Enviando...' : 'Enviar solicitud'}
               </Button>
             </div>
           </form>

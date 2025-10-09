@@ -1,5 +1,6 @@
 import { Star, MapPin, Clock, MoreVertical, Eye, Edit, Trash2, DollarSign } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -12,15 +13,27 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { getCategoryName, getImageUrl, getLocationName, getReviewCount } from '@/lib/hooks/use-my-services-filters';
 
+import { DeleteServiceDialog } from './delete-service-dialog';
+
 interface ServiceListItemProps {
   service: any;
   profileId: string;
   isOwner: boolean;
   canEdit: boolean;
   onDelete: (serviceId: number) => void;
+  isDeletingService?: boolean;
 }
 
-export function ServiceListItem({ service, profileId, isOwner, canEdit, onDelete }: ServiceListItemProps) {
+export function ServiceListItem({
+  service,
+  profileId,
+  isOwner,
+  canEdit,
+  onDelete,
+  isDeletingService = false,
+}: ServiceListItemProps) {
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
   const isInactive = !service.isActive;
   const showAsDisabled = isOwner && isInactive;
 
@@ -122,7 +135,7 @@ export function ServiceListItem({ service, profileId, isOwner, canEdit, onDelete
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => onDelete(service.id)}
+                        onClick={() => setIsDeleteDialogOpen(true)}
                         className="text-destructive cursor-pointer"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
@@ -155,6 +168,14 @@ export function ServiceListItem({ service, profileId, isOwner, canEdit, onDelete
           </div>
         </div>
       </CardContent>
+
+      <DeleteServiceDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onConfirm={() => onDelete(service.id)}
+        isLoading={isDeletingService}
+        serviceName={service.title}
+      />
     </Card>
   );
 }

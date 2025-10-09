@@ -274,7 +274,7 @@ export function EditProfileForm({ user, locations }: Props) {
 
               {/* Actions */}
               <div className="flex flex-col-reverse sm:flex-row gap-3 justify-end">
-                <Button type="button" variant="outline" onClick={() => router.push(`/profile/${user.id}`)}>
+                <Button type="button" variant="ghost" onClick={() => router.push(`/profile/${user.id}`)}>
                   Cancelar
                 </Button>
                 <Button type="submit" disabled={isExecuting || isUploadingAvatar}>
