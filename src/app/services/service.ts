@@ -150,7 +150,7 @@ export const deleteService = async (serviceId: string) => {
   }
 };
 
-export const updateService = async (serviceId: number, serviceData: any) => {
+export const updateService = async (serviceId: number, serviceData: Partial<Service>) => {
   try {
     const payload = await getPayloadClient();
 

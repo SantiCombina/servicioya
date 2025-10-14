@@ -12,11 +12,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { getCategoryName, getImageUrl, getLocationName, getReviewCount } from '@/lib/hooks/use-my-services-filters';
+import type { Service } from '@/payload-types';
 
 import { DeleteServiceDialog } from './delete-service-dialog';
 
 interface ServiceListItemProps {
-  service: any;
+  service: Service;
   profileId: string;
   isOwner: boolean;
   canEdit: boolean;

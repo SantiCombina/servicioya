@@ -1,11 +1,11 @@
 import { useState, useMemo } from 'react';
 
-import { Category, Location, Media, Review } from '@/payload-types';
+import { Category, Location, Media, Review, Service } from '@/payload-types';
 
 export type ServiceFilterType = 'all' | 'active' | 'inactive';
 
 interface UseMyServicesFiltersProps {
-  services: any[];
+  services: Service[];
 }
 
 export function useMyServicesFilters({ services }: UseMyServicesFiltersProps) {

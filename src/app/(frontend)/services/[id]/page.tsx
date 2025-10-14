@@ -36,7 +36,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   }
 
   const reviews = Array.isArray(service.reviews)
-    ? service.reviews.filter((review: any): review is Review => typeof review === 'object')
+    ? service.reviews.filter(
+        (review): review is Review => typeof review === 'object' && review !== null && 'id' in review,
+      )
     : [];
   const location = service.location as Location;
 
