@@ -83,16 +83,21 @@ Plataforma web que conecta a proveedores de servicios profesionales (plomeros, e
 ```
 src/
 ├── app/                    # App Router de Next.js
-│   ├── (my-app)/           # Rutas de la aplicación
-│   │   ├── login/          # Página de login
-│   │   └── users/          # Gestión de usuarios (Sprint 0)
+│   ├── (frontend)/         # Rutas de la aplicación
+│   │   └── login/          # Ruta de login
+│   │       └── page.tsx    # Página de login
 │   ├── (payload)/          # Rutas de Payload CMS
-│   └── actions/            # Server Actions
+│   └── services/           # Lógica de negocio
 ├── collections/            # Colecciones de Payload
 │   └── Users.ts            # Modelo de usuarios
-├── components/             # Componentes UI
+├── components/             # Componentes reutilizables
+│   └── login/              # Componentes con alcance login
+│   │   ├── login-form.tsx  # Formulario de login
+│   │   └── actions.ts      # Actions del formulario
+│   └── ui/                 # Componentes de alcance general
+│       └── button.tsx      # Componente botón
 ├── lib/                    # Utilidades y configuración
-└── payload.config.ts       # Configuración de Payload (PostgreSQL)
+└── payload.config.ts       # Configuración de Payload
 ```
 
 ### Panel de Administración
