@@ -21,10 +21,10 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { bookingCreateSchema, BookingCreateValues } from '@/lib/schemas/booking-create-schema';
 import { Service, User } from '@/payload-types';
 
 import { bookingCreate } from './actions';
+import { bookingCreateSchema, BookingCreateValues } from './booking-create-schema';
 
 interface Props {
   service: Service;

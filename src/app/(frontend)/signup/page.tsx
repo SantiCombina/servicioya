@@ -1,9 +1,15 @@
 import { SignupCard } from '@/components/signup/signup-card';
 
-export default async function SignUpPage() {
+type SignUpPageProps = {
+  searchParams: Promise<{ redirect?: string }>;
+};
+
+export default async function SignUpPage({ searchParams }: SignUpPageProps) {
+  const { redirect } = await searchParams;
+  
   return (
     <div className="relative flex items-center justify-center min-h-dvh p-6 md:p-12 overflow-hidden">
-      <SignupCard />
+      <SignupCard redirectTo={redirect} />
       <svg
         className="absolute bottom-0 left-0 w-full z-[-1] pointer-events-none"
         xmlns="http://www.w3.org/2000/svg"

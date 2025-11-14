@@ -2,7 +2,7 @@
 
 import { LogOut } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
 import { useEffect } from 'react';
 
@@ -21,12 +21,13 @@ import { getCurrentUserAction, userLogout } from './actions';
 
 export function UserTrigger() {
   const router = useRouter();
+  const pathname = usePathname();
   const { execute: loadCurrentUser, result: userResult, isExecuting: isLoadingUser } = useAction(getCurrentUserAction);
 
   const { executeAsync: executeLogout } = useAction(userLogout, {
     onSuccess: () => {
       loadCurrentUser({});
-      router.push('/');
+      router.refresh();
     },
     onError: (error) => {
       console.error('Error during logout:', error);
@@ -59,12 +60,14 @@ export function UserTrigger() {
     return <Skeleton className="w-8 h-8 rounded-full" />;
   }
 
-  if (!user)
+  if (!user) {
+    const loginUrl = `/login?redirect=${encodeURIComponent(pathname)}`;
     return (
       <Button asChild variant="default" size="sm">
-        <Link href="/login">Iniciar Sesión</Link>
+        <Link href={loginUrl}>Iniciar Sesión</Link>
       </Button>
     );
+  }
 
   return (
     <DropdownMenu>

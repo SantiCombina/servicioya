@@ -6,11 +6,33 @@ import { es } from '@payloadcms/translations/languages/es';
 import { buildConfig } from 'payload';
 import sharp from 'sharp';
 
-import { Bookings, Categories, Locations, Media, ReviewReplies, Reviews, Services, Users } from './collections';
+import {
+  Bookings,
+  Categories,
+  CommentReplies,
+  Comments,
+  Locations,
+  Media,
+  ReviewReplies,
+  Reviews,
+  Services,
+  Users,
+} from './collections';
 
 export default buildConfig({
   editor: lexicalEditor(),
-  collections: [Users, Media, Categories, Locations, Services, Bookings, Reviews, ReviewReplies],
+  collections: [
+    Users,
+    Media,
+    Categories,
+    Locations,
+    Services,
+    Bookings,
+    Reviews,
+    ReviewReplies,
+    Comments,
+    CommentReplies,
+  ],
   secret: process.env.PAYLOAD_SECRET || '',
   db: postgresAdapter({
     pool: {

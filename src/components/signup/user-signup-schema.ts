@@ -38,6 +38,7 @@ export const userSignupSchema = z
       required_error: 'La confirmación de contraseña es requerida.',
       invalid_type_error: 'La confirmación de contraseña debe ser una cadena de texto.',
     }),
+    redirectTo: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Las contraseñas no coinciden.',

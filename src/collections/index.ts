@@ -1,5 +1,7 @@
 export { default as Bookings } from './Bookings';
 export { default as Categories } from './Categories';
+export { default as Comments } from './Comments';
+export { default as CommentReplies } from './CommentReplies';
 export { default as Locations } from './Locations';
 export { default as Media } from './Media';
 export { default as ReviewReplies } from './ReviewReplies';

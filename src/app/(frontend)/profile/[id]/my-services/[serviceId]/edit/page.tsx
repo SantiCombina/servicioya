@@ -19,7 +19,8 @@ export default async function EditServicePage({ params }: { params: Promise<{ id
   const currentUser = currentUserResult.data?.user || null;
 
   if (!currentUser) {
-    redirect('/login');
+    const currentPath = `/profile/${id}/my-services/${serviceId}/edit`;
+    redirect(`/login?redirect=${encodeURIComponent(currentPath)}`);
   }
 
   if (!service) {

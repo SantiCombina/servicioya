@@ -75,6 +75,8 @@ export interface Config {
     bookings: Booking;
     reviews: Review;
     reviewreplies: Reviewreply;
+    comments: Comment;
+    commentreplies: Commentreply;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -89,6 +91,8 @@ export interface Config {
     bookings: BookingsSelect<false> | BookingsSelect<true>;
     reviews: ReviewsSelect<false> | ReviewsSelect<true>;
     reviewreplies: ReviewrepliesSelect<false> | ReviewrepliesSelect<true>;
+    comments: CommentsSelect<false> | CommentsSelect<true>;
+    commentreplies: CommentrepliesSelect<false> | CommentrepliesSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -320,6 +324,31 @@ export interface Reviewreply {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "comments".
+ */
+export interface Comment {
+  id: number;
+  service: number | Service;
+  author: number | User;
+  content: string;
+  hasReply?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "commentreplies".
+ */
+export interface Commentreply {
+  id: number;
+  comment: number | Comment;
+  author: number | User;
+  content: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -356,6 +385,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'reviewreplies';
         value: number | Reviewreply;
+      } | null)
+    | ({
+        relationTo: 'comments';
+        value: number | Comment;
+      } | null)
+    | ({
+        relationTo: 'commentreplies';
+        value: number | Commentreply;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -579,6 +616,29 @@ export interface ReviewrepliesSelect<T extends boolean = true> {
   comment?: T;
   createdAt?: T;
   updatedAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "comments_select".
+ */
+export interface CommentsSelect<T extends boolean = true> {
+  service?: T;
+  author?: T;
+  content?: T;
+  hasReply?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "commentreplies_select".
+ */
+export interface CommentrepliesSelect<T extends boolean = true> {
+  comment?: T;
+  author?: T;
+  content?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -17,7 +17,8 @@ export default async function EditProfilePage({ params }: { params: Promise<{ id
   const currentUser = currentUserResult.data?.user || null;
 
   if (!currentUser) {
-    redirect('/login');
+    const currentPath = `/profile/${id}/edit`;
+    redirect(`/login?redirect=${encodeURIComponent(currentPath)}`);
   }
 
   if (!userToEdit) {

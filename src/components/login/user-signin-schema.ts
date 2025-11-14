@@ -24,6 +24,7 @@ export const userSignInSchema = z.object({
     .refine((val) => !val.includes(' '), {
       message: 'La contraseña no puede contener espacios.',
     }),
+  redirectTo: z.string().optional(),
 });
 
 export type UserSignInValues = z.infer<typeof userSignInSchema>;

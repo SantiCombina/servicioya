@@ -6,7 +6,8 @@ import { cookies } from 'next/headers';
 import { createBooking } from '@/app/services/booking';
 import { getCurrentUser } from '@/app/services/user';
 import { actionClient } from '@/lib/safe-action-client';
-import { bookingCreateSchema } from '@/lib/schemas/booking-create-schema';
+
+import { bookingCreateSchema } from './booking-create-schema';
 
 export const bookingCreate = actionClient.schema(bookingCreateSchema).action(async ({ parsedInput }) => {
   try {

@@ -1,9 +1,15 @@
 import { LoginCard } from '@/components/login/login-card';
 
-export default async function LoginPage() {
+type LoginPageProps = {
+  searchParams: Promise<{ redirect?: string }>;
+};
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const { redirect } = await searchParams;
+  
   return (
     <div className="relative flex items-center justify-center min-h-dvh p-6 md:p-12 overflow-hidden">
-      <LoginCard />
+      <LoginCard redirectTo={redirect} />
       <svg
         className="absolute bottom-0 left-0 w-full z-[-1] pointer-events-none"
         xmlns="http://www.w3.org/2000/svg"

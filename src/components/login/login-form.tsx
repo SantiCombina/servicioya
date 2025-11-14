@@ -1,24 +1,37 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
 
+import { userSignInSchema, UserSignInValues } from '@/components/login/user-signin-schema';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { userSignInSchema, UserSignInValues } from '@/lib/schemas/user-signin-schema';
 
 import { userSignIn } from './actions';
 
-export function LoginForm() {
-  const { executeAsync, isExecuting } = useAction(userSignIn);
+type LoginFormProps = {
+  redirectTo?: string;
+};
+
+export function LoginForm({ redirectTo }: LoginFormProps) {
+  const router = useRouter();
+  const { executeAsync, isExecuting } = useAction(userSignIn, {
+    onSuccess: ({ data }) => {
+      if (data?.redirectUrl) {
+        router.push(data.redirectUrl);
+      }
+    },
+  });
 
   const methods = useForm<UserSignInValues>({
     resolver: zodResolver(userSignInSchema),
     defaultValues: {
       email: '',
       password: '',
+      redirectTo: redirectTo,
     },
   });
 

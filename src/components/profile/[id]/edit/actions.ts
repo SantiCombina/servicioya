@@ -5,8 +5,8 @@ import { z } from 'zod';
 
 import { uploadImage } from '@/app/services/media';
 import { updateUser } from '@/app/services/user';
+import { userUpdateSchema } from '@/components/profile/[id]/edit/user-update-schema';
 import { actionClient } from '@/lib/safe-action-client';
-import { userUpdateSchema } from '@/lib/schemas/user-update-schema';
 
 const updateUserActionSchema = userUpdateSchema.extend({
   userId: z.union([z.string(), z.number()]),

@@ -5,8 +5,8 @@ import { z } from 'zod';
 
 import { uploadImage } from '@/app/services/media';
 import { updateService } from '@/app/services/service';
+import { serviceUpdateSchema } from '@/components/profile/[id]/my-services/[serviceId]/edit/service-update-schema';
 import { actionClient } from '@/lib/safe-action-client';
-import { serviceUpdateSchema } from '@/lib/schemas/service-update-schema';
 
 const updateServiceActionSchema = serviceUpdateSchema.extend({
   serviceId: z.number(),

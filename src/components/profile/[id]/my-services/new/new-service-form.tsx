@@ -9,6 +9,10 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import {
+  serviceCreateSchema,
+  ServiceCreateValues,
+} from '@/components/profile/[id]/my-services/new/service-create-schema';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -16,7 +20,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { serviceCreateSchema, ServiceCreateValues } from '@/lib/schemas/service-create-schema';
 
 import { loadNewServiceDataAction, serviceCreate, uploadImageActionSafe } from './actions';
 
@@ -36,7 +39,8 @@ export function NewServiceForm() {
   } = useAction(loadNewServiceDataAction, {
     onSuccess: (result) => {
       if (!result.data?.user || (result.data.user.id.toString() !== profileId && result.data.user.role !== 'admin')) {
-        router.push('/login');
+        const currentPath = `/profile/${profileId}/my-services/new`;
+        router.push(`/login?redirect=${encodeURIComponent(currentPath)}`);
         return;
       }
     },

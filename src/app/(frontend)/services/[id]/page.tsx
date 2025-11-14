@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 
 import { getServiceById } from '@/app/services/service';
 import { ProviderSidebar } from '@/components/services/[id]/provider-sidebar/provider-sidebar';
+import { ServiceComments } from '@/components/services/[id]/service-comments/service-comments';
 import { ServiceDescription } from '@/components/services/[id]/service-info/service-description';
 import { ServiceHeader } from '@/components/services/[id]/service-info/service-header';
 import { ServiceImages } from '@/components/services/[id]/service-info/service-images';
@@ -12,12 +13,16 @@ import { Card } from '@/components/ui/card';
 import { getCurrentUserAction } from '@/components/ui/navbar/actions';
 import { Location, Review, User } from '@/payload-types';
 
-import { getProviderCompletedJobs } from './actions';
+import { getCommentsByServiceAction, getProviderCompletedJobsAction } from './actions';
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const [service, currentUserResult] = await Promise.all([getServiceById(id), getCurrentUserAction({})]);
+  const [service, currentUserResult, comments] = await Promise.all([
+    getServiceById(id),
+    getCurrentUserAction({}),
+    getCommentsByServiceAction(id),
+  ]);
 
   const currentUser = currentUserResult.data?.user || null;
 
@@ -26,7 +31,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   }
 
   const provider = service.provider as User;
-  const completedJobs = await getProviderCompletedJobs(provider.id);
+  const completedJobs = await getProviderCompletedJobsAction(provider.id);
 
   const providerId = typeof service.provider === 'object' ? service.provider.id : service.provider;
   const isOwner = currentUser && (currentUser.id.toString() === providerId.toString() || currentUser.role === 'admin');
@@ -57,6 +62,14 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             </Card>
 
             <ServiceReviews service={service} reviews={reviews} completedJobs={completedJobs} />
+
+            <ServiceComments
+              serviceId={service.id.toString()}
+              comments={comments}
+              currentUserId={currentUser?.id.toString() || null}
+              currentUserRole={currentUser?.role || null}
+              serviceProviderId={providerId.toString()}
+            />
           </div>
 
           {typeof service.provider === 'object' && (

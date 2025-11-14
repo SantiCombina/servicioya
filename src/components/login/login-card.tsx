@@ -4,7 +4,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 import { LoginForm } from './login-form';
 
-export function LoginCard() {
+type LoginCardProps = {
+  redirectTo?: string;
+};
+
+export function LoginCard({ redirectTo }: LoginCardProps) {
+  const signupUrl = redirectTo ? `/signup?redirect=${encodeURIComponent(redirectTo)}` : '/signup';
+  
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
@@ -14,10 +20,10 @@ export function LoginCard() {
         <CardDescription className="text-lg">Iniciar Sesión</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <LoginForm />
+        <LoginForm redirectTo={redirectTo} />
         <div className="text-center text-sm text-muted-foreground">
           ¿Es tu primera vez?{' '}
-          <Link href="/signup" className="underline hover:text-foreground">
+          <Link href={signupUrl} className="underline hover:text-foreground">
             Regístrate
           </Link>
         </div>

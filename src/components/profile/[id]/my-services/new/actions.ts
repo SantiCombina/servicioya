@@ -9,8 +9,8 @@ import { getLocations } from '@/app/services/location';
 import { uploadImage } from '@/app/services/media';
 import { createService } from '@/app/services/service';
 import { getCurrentUser } from '@/app/services/user';
+import { serviceCreateSchema } from '@/components/profile/[id]/my-services/new/service-create-schema';
 import { actionClient } from '@/lib/safe-action-client';
-import { serviceCreateSchema } from '@/lib/schemas/service-create-schema';
 
 const loadDataSchema = z.object({});
 

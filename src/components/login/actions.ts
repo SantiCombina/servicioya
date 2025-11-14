@@ -1,11 +1,10 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 
 import { loginUser } from '@/app/services/user';
+import { userSignInSchema } from '@/components/login/user-signin-schema';
 import { actionClient } from '@/lib/safe-action-client';
-import { userSignInSchema } from '@/lib/schemas/user-signin-schema';
 
 export const userSignIn = actionClient.schema(userSignInSchema).action(async ({ parsedInput }) => {
   try {
@@ -17,9 +16,14 @@ export const userSignIn = actionClient.schema(userSignInSchema).action(async ({ 
 
     const cookieStore = await cookies();
     cookieStore.set('payload-token', response.token);
+
+    const redirectUrl = parsedInput.redirectTo || '/services';
+    
+    return {
+      success: true,
+      redirectUrl,
+    };
   } catch {
     throw new Error('Invalid email or password');
   }
-
-  redirect('/services');
 });
