@@ -8,11 +8,12 @@ import { toast } from 'sonner';
 import { useContractsFilters } from '@/lib/hooks/use-contracts-filters';
 import { Booking } from '@/payload-types';
 
-import { loadMyContractsAction, updateContractStatusAction } from './actions';
+import { loadMyContractsAction, updateContractStatusAction, createReviewAction } from './actions';
 import { ContractActionDialog } from './contract-action-dialog';
 import { ContractListItem } from './contract-list-item';
 import { ContractsStats } from './contracts-stats';
 import { EmptyContractsState } from './empty-contracts-state';
+import { ReviewDialog } from './review-dialog';
 
 export function MyContractsList() {
   const params = useParams();
@@ -25,6 +26,10 @@ export function MyContractsList() {
     type: 'accept' | 'reject' | 'complete' | null;
     contractId: number | null;
   }>({ open: false, type: null, contractId: null });
+  const [reviewDialogState, setReviewDialogState] = useState<{
+    open: boolean;
+    bookingId: string | null;
+  }>({ open: false, bookingId: null });
 
   const {
     execute: loadData,
@@ -47,6 +52,20 @@ export function MyContractsList() {
     onError: (error) => {
       console.error('Error updating contract status:', error);
       toast.error('Error al actualizar el estado del contrato');
+    },
+  });
+
+  const { executeAsync: createReview, isExecuting: isSubmittingReview } = useAction(createReviewAction, {
+    onSuccess: (result) => {
+      if (result.data?.success) {
+        toast.success(result.data.message);
+        setReviewDialogState({ open: false, bookingId: null });
+        loadData({ profileId });
+      }
+    },
+    onError: ({ error }) => {
+      console.error('Error creating review:', error);
+      toast.error('Error al crear la reseña');
     },
   });
 
@@ -83,8 +102,12 @@ export function MyContractsList() {
     }
   };
 
-  const handleRateContract = () => {
-    toast.info('Funcionalidad de calificación próximamente');
+  const handleRateContract = (bookingId: number) => {
+    setReviewDialogState({ open: true, bookingId: bookingId.toString() });
+  };
+
+  const handleReviewSubmit = async (data: Parameters<typeof createReview>[0]) => {
+    await createReview(data);
   };
 
   const currentUser = loadResult.data?.user || null;
@@ -132,6 +155,16 @@ export function MyContractsList() {
         actionType={dialogState.type || 'accept'}
         onConfirm={handleDialogConfirm}
       />
+
+      {reviewDialogState.bookingId && (
+        <ReviewDialog
+          open={reviewDialogState.open}
+          onOpenChange={(open) => setReviewDialogState({ open, bookingId: null })}
+          bookingId={reviewDialogState.bookingId}
+          onSubmit={handleReviewSubmit}
+          isSubmitting={isSubmittingReview}
+        />
+      )}
     </div>
   );
 }

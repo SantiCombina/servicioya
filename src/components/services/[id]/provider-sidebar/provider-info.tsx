@@ -9,13 +9,13 @@ import { Service, User } from '@/payload-types';
 interface ProviderInfoProps {
   service: Service;
   completedJobs: number;
+  providerRating: number;
+  providerReviewsCount: number;
 }
 
-export function ProviderInfo({ service, completedJobs }: ProviderInfoProps) {
+export function ProviderInfo({ service, completedJobs, providerRating, providerReviewsCount }: ProviderInfoProps) {
   const provider = service.provider as User;
-  const rating = service.rating || 0;
   const isVerified = service.verified || false;
-  const reviewsCount = Array.isArray(service.reviews) ? service.reviews.length : 0;
   const memberSince = new Date(provider.createdAt).getFullYear().toString();
 
   return (
@@ -37,8 +37,8 @@ export function ProviderInfo({ service, completedJobs }: ProviderInfoProps) {
             </Link>
             <div className="flex items-center">
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
-              <span className="font-semibold">{rating}</span>
-              <span className="text-gray-500 ml-1">({reviewsCount})</span>
+              <span className="font-semibold">{providerRating.toFixed(2)}</span>
+              <span className="text-gray-500 ml-1">({providerReviewsCount})</span>
             </div>
           </div>
         </div>

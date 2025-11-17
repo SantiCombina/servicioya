@@ -5,7 +5,9 @@ import { cookies } from 'next/headers';
 import { z } from 'zod';
 
 import { getUserBookings, updateBookingStatus } from '@/app/services/booking';
+import { createReview } from '@/app/services/reviews';
 import { getCurrentUser } from '@/app/services/user';
+import { reviewCreateSchema } from '@/components/profile/[id]/my-contracts/review-create-schema';
 import { actionClient } from '@/lib/safe-action-client';
 
 // Schema para cargar datos de contratos
@@ -71,3 +73,39 @@ export const updateContractStatusAction = actionClient
       throw new Error(error instanceof Error ? error.message : 'Error al actualizar el estado del contrato');
     }
   });
+
+export const createReviewAction = actionClient.schema(reviewCreateSchema).action(async ({ parsedInput }) => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('payload-token')?.value || null;
+    const currentUser = await getCurrentUser(token);
+
+    if (!currentUser) {
+      throw new Error('Debes iniciar sesión para calificar');
+    }
+
+    const response = await createReview(
+      parsedInput.bookingId,
+      currentUser.id,
+      parsedInput.scoreService,
+      parsedInput.scoreTrato,
+      parsedInput.scoreCosto,
+      parsedInput.comment,
+    );
+
+    if (!response.success) {
+      throw new Error(response.message || 'Error al crear la reseña');
+    }
+
+    // Revalidar las rutas relacionadas
+    revalidatePath(`/profile/${currentUser.id}/my-contracts`);
+
+    return {
+      success: true,
+      message: 'Reseña creada exitosamente',
+      review: response.review,
+    };
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : 'Error al crear la reseña');
+  }
+});

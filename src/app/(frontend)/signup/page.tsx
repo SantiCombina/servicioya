@@ -6,7 +6,7 @@ type SignUpPageProps = {
 
 export default async function SignUpPage({ searchParams }: SignUpPageProps) {
   const { redirect } = await searchParams;
-  
+
   return (
     <div className="relative flex items-center justify-center min-h-dvh p-6 md:p-12 overflow-hidden">
       <SignupCard redirectTo={redirect} />

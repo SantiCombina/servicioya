@@ -6,7 +6,7 @@ type LoginPageProps = {
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const { redirect } = await searchParams;
-  
+
   return (
     <div className="relative flex items-center justify-center min-h-dvh p-6 md:p-12 overflow-hidden">
       <LoginCard redirectTo={redirect} />

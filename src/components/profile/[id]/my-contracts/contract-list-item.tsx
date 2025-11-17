@@ -14,7 +14,7 @@ interface ContractListItemProps {
   canEdit: boolean;
   loadingContractId: number | null;
   onOpenDialog: (type: 'accept' | 'reject' | 'complete', contractId: number) => void;
-  onRateContract: () => void;
+  onRateContract: (bookingId: number) => void;
 }
 
 export function ContractListItem({
@@ -187,7 +187,7 @@ export function ContractListItem({
                 {/* Botones para contratos completados - Cliente puede calificar */}
                 {canEdit && contract.status === 'completed' && isClient && !contract.reviewed && (
                   <>
-                    <Button variant="secondary" size="sm" onClick={onRateContract}>
+                    <Button variant="secondary" size="sm" onClick={() => onRateContract(contract.id)}>
                       Calificar
                     </Button>
                     <Button variant="outline" size="sm">

@@ -1,19 +1,18 @@
 import { notFound } from 'next/navigation';
 
 import { getServiceById } from '@/app/services/service';
+import { getUserRating } from '@/app/services/user';
 import { ProviderSidebar } from '@/components/services/[id]/provider-sidebar/provider-sidebar';
 import { ServiceComments } from '@/components/services/[id]/service-comments/service-comments';
-import { ServiceDescription } from '@/components/services/[id]/service-info/service-description';
-import { ServiceHeader } from '@/components/services/[id]/service-info/service-header';
+import { ServiceCompleteInfo } from '@/components/services/[id]/service-info/service-complete-info';
 import { ServiceImages } from '@/components/services/[id]/service-info/service-images';
-import { ServiceReviews } from '@/components/services/[id]/service-info/service-reviews';
+import { ServiceReviewsTabs } from '@/components/services/[id]/service-info/service-reviews-tabs';
 import { InactiveServiceMessage } from '@/components/services/[id]/service-status/inactive-service-message';
 import { OwnerInactiveBanner } from '@/components/services/[id]/service-status/owner-inactive-banner';
-import { Card } from '@/components/ui/card';
 import { getCurrentUserAction } from '@/components/ui/navbar/actions';
 import { Location, Review, User } from '@/payload-types';
 
-import { getCommentsByServiceAction, getProviderCompletedJobsAction } from './actions';
+import { getCommentsByServiceAction, getProviderCompletedJobsAction, getServiceCompletedJobsAction } from './actions';
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -32,6 +31,8 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
   const provider = service.provider as User;
   const completedJobs = await getProviderCompletedJobsAction(provider.id);
+  const serviceCompletedJobs = await getServiceCompletedJobsAction(service.id);
+  const providerRatingData = await getUserRating(provider.id.toString());
 
   const providerId = typeof service.provider === 'object' ? service.provider.id : service.provider;
   const isOwner = currentUser && (currentUser.id.toString() === providerId.toString() || currentUser.role === 'admin');
@@ -56,12 +57,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           <div className="lg:col-span-3 space-y-6">
             <ServiceImages service={service} />
 
-            <Card>
-              <ServiceHeader service={service} location={location} />
-              <ServiceDescription service={service} />
-            </Card>
+            <ServiceCompleteInfo service={service} location={location} serviceCompletedJobs={serviceCompletedJobs} />
 
-            <ServiceReviews service={service} reviews={reviews} completedJobs={completedJobs} />
+            <ServiceReviewsTabs service={service} reviews={reviews} />
 
             <ServiceComments
               serviceId={service.id.toString()}
@@ -73,7 +71,13 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           </div>
 
           {typeof service.provider === 'object' && (
-            <ProviderSidebar service={service} currentUser={currentUser} completedJobs={completedJobs} />
+            <ProviderSidebar
+              service={service}
+              currentUser={currentUser}
+              completedJobs={completedJobs}
+              providerRating={providerRatingData?.avgRating || 0}
+              providerReviewsCount={providerRatingData?.totalReviews || 0}
+            />
           )}
         </div>
       </div>

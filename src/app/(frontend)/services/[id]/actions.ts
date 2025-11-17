@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 import { commentCreateSchema } from '@/app/(frontend)/services/[id]/comment-create-schema';
 import { commentDeleteSchema } from '@/app/(frontend)/services/[id]/comment-delete-schema';
 import { commentReplyCreateSchema } from '@/app/(frontend)/services/[id]/comment-reply-create-schema';
-import { getProviderCompletedJobs } from '@/app/services/booking';
+import { getProviderCompletedJobs, getServiceCompletedJobs } from '@/app/services/booking';
 import {
   createComment,
   createCommentReply,
@@ -22,6 +22,15 @@ export const getProviderCompletedJobsAction = async (providerId: string | number
     return await getProviderCompletedJobs(providerId);
   } catch (error) {
     console.error('Error getting provider completed jobs:', error);
+    return 0;
+  }
+};
+
+export const getServiceCompletedJobsAction = async (serviceId: string | number) => {
+  try {
+    return await getServiceCompletedJobs(serviceId);
+  } catch (error) {
+    console.error('Error getting service completed jobs:', error);
     return 0;
   }
 };

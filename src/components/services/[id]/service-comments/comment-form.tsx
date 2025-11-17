@@ -43,7 +43,7 @@ export function CommentForm({ serviceId }: CommentFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
         <FormField
           control={form.control}
           name="content"
@@ -51,8 +51,8 @@ export function CommentForm({ serviceId }: CommentFormProps) {
             <FormItem>
               <FormControl>
                 <Textarea
-                  placeholder="Escribe tu pregunta sobre este servicio..."
-                  className="min-h-[100px] resize-none"
+                  placeholder="¿Tienes dudas sobre el servicio? Escribe tu pregunta aquí..."
+                  className="min-h-[120px] resize-none border-blue-200 focus-visible:ring-blue-500 bg-white dark:bg-slate-950"
                   {...field}
                 />
               </FormControl>
@@ -61,15 +61,15 @@ export function CommentForm({ serviceId }: CommentFormProps) {
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit" disabled={isExecuting}>
+          <Button type="submit" disabled={isExecuting} size="lg" className="gap-2">
             {isExecuting ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" />
                 Publicando...
               </>
             ) : (
               <>
-                <Send className="mr-2 h-4 w-4" />
+                <Send className="h-4 w-4" />
                 Publicar pregunta
               </>
             )}

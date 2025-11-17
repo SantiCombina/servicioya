@@ -37,7 +37,7 @@ export async function UserStars({ userId }: Props) {
         ))}
       </div>
       <span className="text-sm text-gray-500">
-        {totalReviews > 0 ? `${avgRating.toFixed(1)} (${totalReviews} reseñas)` : 'Sin reseñas'}
+        {totalReviews > 0 ? `${avgRating.toFixed(2)} (${totalReviews})` : 'Sin reseñas'}
       </span>
     </div>
   );

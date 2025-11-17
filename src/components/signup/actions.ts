@@ -19,7 +19,7 @@ export const userSignUp = actionClient.schema(userSignupSchema).action(async ({ 
     cookieStore.set('payload-token', response.token);
 
     const redirectUrl = parsedInput.redirectTo || '/services';
-    
+
     return {
       success: true,
       redirectUrl,

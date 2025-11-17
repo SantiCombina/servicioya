@@ -1,10 +1,8 @@
 'use client';
 
-import { formatDistanceToNow } from 'date-fns';
-import { es } from 'date-fns/locale';
 import { MessageCircle, Trash2 } from 'lucide-react';
 import { useAction } from 'next-safe-action/hooks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { deleteCommentAction, getCommentReplyAction } from '@/app/(frontend)/services/[id]/actions';
@@ -18,9 +16,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { UserAvatar } from '@/components/ui/user-avatar';
 import { Comment as CommentType, Commentreply, User } from '@/payload-types';
 
 import { CommentReplyForm } from './comment-reply-form';
@@ -36,10 +32,8 @@ interface CommentItemProps {
 export function CommentItem({ comment, currentUserId, currentUserRole, serviceProviderId }: CommentItemProps) {
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [reply, setReply] = useState<Commentreply | null>(null);
-  const [isLoadingReply, setIsLoadingReply] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  const author = comment.author as User;
   const authorId =
     typeof comment.author === 'number' ? comment.author.toString() : (comment.author as User).id.toString();
   const isAuthor = currentUserId !== null && currentUserId === authorId;
@@ -58,17 +52,20 @@ export function CommentItem({ comment, currentUserId, currentUserRole, servicePr
 
   const loadReply = async () => {
     if (comment.hasReply && !reply) {
-      setIsLoadingReply(true);
       try {
         const replyData = await getCommentReplyAction(comment.id.toString());
         setReply(replyData);
       } catch (error) {
         console.error('Error loading reply:', error);
-      } finally {
-        setIsLoadingReply(false);
       }
     }
   };
+
+  useEffect(() => {
+    if (comment.hasReply) {
+      loadReply();
+    }
+  }, [comment.hasReply]);
 
   const handleDelete = () => {
     executeDelete({ commentId: comment.id.toString() });
@@ -81,66 +78,49 @@ export function CommentItem({ comment, currentUserId, currentUserRole, servicePr
   };
 
   return (
-    <div className="border-b pb-4 last:border-b-0 last:pb-0">
-      <div className="flex gap-3">
-        <UserAvatar name={author.name} avatar={author.avatar} className="h-8 w-8" />
+    <div className="group hover:bg-muted/30 -mx-2 px-2 py-3 rounded-lg transition-colors">
+      <div className="space-y-3">
+        <div className="flex items-start justify-between gap-2">
+          <p className="text-sm leading-relaxed flex-1">{comment.content}</p>
 
-        <div className="flex-1 space-y-2">
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-sm">{author.name || 'Usuario'}</span>
-                <span className="text-xs text-muted-foreground">
-                  {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true, locale: es })}
-                </span>
-              </div>
-            </div>
-
-            {canDelete && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={() => setShowDeleteDialog(true)}
-                disabled={isDeleting}
-              >
-                <Trash2 className="h-4 w-4 text-destructive" />
-              </Button>
-            )}
-          </div>
-
-          <p className="text-sm">{comment.content}</p>
-
-          <div className="flex items-center gap-2">
-            {comment.hasReply && !reply && (
-              <Button variant="ghost" size="sm" className="h-8 text-xs" onClick={loadReply} disabled={isLoadingReply}>
-                <MessageCircle className="mr-1 h-3 w-3" />
-                {isLoadingReply ? 'Cargando...' : 'Ver respuesta'}
-              </Button>
-            )}
-
-            {!comment.hasReply && isServiceProvider && !showReplyForm && (
-              <Button variant="ghost" size="sm" className="h-8 text-xs" onClick={() => setShowReplyForm(true)}>
-                <MessageCircle className="mr-1 h-3 w-3" />
-                Responder
-              </Button>
-            )}
-
-            {comment.hasReply && <Badge variant="secondary">Respondida</Badge>}
-          </div>
-
-          {showReplyForm && (
-            <div className="mt-3">
-              <CommentReplyForm
-                commentId={comment.id.toString()}
-                onSuccess={handleReplySuccess}
-                onCancel={() => setShowReplyForm(false)}
-              />
-            </div>
+          {canDelete && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+              onClick={() => setShowDeleteDialog(true)}
+              disabled={isDeleting}
+            >
+              <Trash2 className="h-4 w-4 text-destructive" />
+            </Button>
           )}
-
-          {reply && <CommentReplyItem reply={reply} />}
         </div>
+
+        {reply && <CommentReplyItem reply={reply} />}
+
+        {!comment.hasReply && isServiceProvider && !showReplyForm && (
+          <div className="-ml-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 text-xs gap-1.5 text-primary hover:bg-primary/10"
+              onClick={() => setShowReplyForm(true)}
+            >
+              <MessageCircle className="h-3.5 w-3.5" />
+              Responder
+            </Button>
+          </div>
+        )}
+
+        {showReplyForm && (
+          <div className="mt-3">
+            <CommentReplyForm
+              commentId={comment.id.toString()}
+              onSuccess={handleReplySuccess}
+              onCancel={() => setShowReplyForm(false)}
+            />
+          </div>
+        )}
       </div>
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>

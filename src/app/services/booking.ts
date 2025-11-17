@@ -140,3 +140,33 @@ export async function getProviderCompletedJobs(providerId: string | number) {
     return 0;
   }
 }
+
+export async function getServiceCompletedJobs(serviceId: string | number) {
+  try {
+    const payload = await getPayloadClient();
+
+    const completedBookings = await payload.find({
+      collection: 'bookings',
+      where: {
+        and: [
+          {
+            service: {
+              equals: serviceId,
+            },
+          },
+          {
+            status: {
+              equals: 'completed',
+            },
+          },
+        ],
+      },
+      limit: 0, // Solo queremos el count, no los documentos
+    });
+
+    return completedBookings.totalDocs;
+  } catch (error) {
+    console.error('Error fetching service completed jobs:', error);
+    return 0;
+  }
+}

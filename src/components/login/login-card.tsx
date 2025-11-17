@@ -10,7 +10,7 @@ type LoginCardProps = {
 
 export function LoginCard({ redirectTo }: LoginCardProps) {
   const signupUrl = redirectTo ? `/signup?redirect=${encodeURIComponent(redirectTo)}` : '/signup';
-  
+
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
