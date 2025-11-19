@@ -129,7 +129,7 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
         <DialogHeader>
           <DialogTitle className="flex items-center text-xl">
             <CalendarIcon className="w-6 h-6 mr-3 text-primary" />
-            Contratar Servicio
+            Contratar servicio
           </DialogTitle>
           <DialogDescription className="text-base mt-2">
             Completa los detalles para solicitar la contratación de &ldquo;
@@ -172,7 +172,7 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
                   name="requestedDate"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Fecha Solicitada</FormLabel>
+                      <FormLabel>Fecha solicitada</FormLabel>
                       <DatePicker
                         value={selectedDate}
                         onChange={(date) => {
@@ -197,7 +197,7 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
                   name="requestedTime"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Hora Solicitada</FormLabel>
+                      <FormLabel>Hora solicitada</FormLabel>
                       <FormControl>
                         <Input
                           type="time"
@@ -222,7 +222,7 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
                   <FormItem>
                     <FormLabel className="flex items-center">
                       <MapPin className="w-4 h-4 mr-2" />
-                      Ubicación del Servicio
+                      Ubicación del servicio
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -246,7 +246,7 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
                   <FormItem>
                     <FormLabel className="flex items-center">
                       <MessageSquare className="w-4 h-4 mr-2" />
-                      Mensaje Adicional (Opcional)
+                      Mensaje adicional (opcional)
                     </FormLabel>
                     <FormControl>
                       <Textarea

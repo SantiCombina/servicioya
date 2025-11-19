@@ -59,6 +59,19 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
             <ServiceCompleteInfo service={service} location={location} serviceCompletedJobs={serviceCompletedJobs} />
 
+            {/* Contact section - shows after ServiceCompleteInfo on mobile, sidebar on desktop */}
+            <div className="lg:hidden space-y-6">
+              {typeof service.provider === 'object' && (
+                <ProviderSidebar
+                  service={service}
+                  currentUser={currentUser}
+                  completedJobs={completedJobs}
+                  providerRating={providerRatingData?.avgRating || 0}
+                  providerReviewsCount={providerRatingData?.totalReviews || 0}
+                />
+              )}
+            </div>
+
             <ServiceReviewsTabs service={service} reviews={reviews} />
 
             <ServiceComments
@@ -70,14 +83,17 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             />
           </div>
 
+          {/* Desktop sidebar */}
           {typeof service.provider === 'object' && (
-            <ProviderSidebar
-              service={service}
-              currentUser={currentUser}
-              completedJobs={completedJobs}
-              providerRating={providerRatingData?.avgRating || 0}
-              providerReviewsCount={providerRatingData?.totalReviews || 0}
-            />
+            <div className="hidden lg:block">
+              <ProviderSidebar
+                service={service}
+                currentUser={currentUser}
+                completedJobs={completedJobs}
+                providerRating={providerRatingData?.avgRating || 0}
+                providerReviewsCount={providerRatingData?.totalReviews || 0}
+              />
+            </div>
           )}
         </div>
       </div>

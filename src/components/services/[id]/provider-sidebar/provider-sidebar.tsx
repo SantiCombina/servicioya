@@ -17,21 +17,23 @@ interface Props {
 
 export function ProviderSidebar({ service, currentUser, completedJobs, providerRating, providerReviewsCount }: Props) {
   return (
-    <div className="lg:col-span-1">
-      <motion.div
-        className="space-y-6"
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
+    <motion.div
+      className="flex flex-col gap-6"
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+    >
+      <div className="order-2 lg:order-1">
         <ProviderInfo
           service={service}
           completedJobs={completedJobs}
           providerRating={providerRating}
           providerReviewsCount={providerReviewsCount}
         />
+      </div>
+      <div className="order-1 lg:order-2">
         <ContactActions service={service} currentUser={currentUser} />
-      </motion.div>
-    </div>
+      </div>
+    </motion.div>
   );
 }
