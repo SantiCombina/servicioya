@@ -1,3 +1,6 @@
+'use client';
+
+import { motion } from 'framer-motion';
 import { Calendar, MessageCircle } from 'lucide-react';
 
 import { BookServiceDialog } from '@/components/services/[id]/book-service-dialog';
@@ -12,22 +15,28 @@ interface ContactActionsProps {
 
 export function ContactActions({ service, currentUser }: ContactActionsProps) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Contactar</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <BookServiceDialog service={service} currentUser={currentUser}>
-          <Button className="w-full" size="lg">
-            <Calendar className="w-4 h-4 mr-2" />
-            Contratar servicio
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, delay: 0.4 }}
+    >
+      <Card>
+        <CardHeader>
+          <CardTitle>Contactar</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <BookServiceDialog service={service} currentUser={currentUser}>
+            <Button className="w-full" size="lg">
+              <Calendar className="w-4 h-4 mr-2" />
+              Contratar servicio
+            </Button>
+          </BookServiceDialog>
+          <Button variant="outline" className="w-full bg-transparent">
+            <MessageCircle className="w-4 h-4 mr-2" />
+            Enviar Mensaje
           </Button>
-        </BookServiceDialog>
-        <Button variant="outline" className="w-full bg-transparent">
-          <MessageCircle className="w-4 h-4 mr-2" />
-          Enviar Mensaje
-        </Button>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

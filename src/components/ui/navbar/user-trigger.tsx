@@ -64,7 +64,7 @@ export function UserTrigger() {
     const loginUrl = `/login?redirect=${encodeURIComponent(pathname)}`;
     return (
       <Button asChild variant="default" size="sm">
-        <Link href={loginUrl}>Iniciar Sesión</Link>
+        <Link href={loginUrl}>Iniciar sesión</Link>
       </Button>
     );
   }

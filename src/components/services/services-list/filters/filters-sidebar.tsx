@@ -1,3 +1,6 @@
+'use client';
+
+import { motion } from 'framer-motion';
 import { Filter } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -101,51 +104,53 @@ export function FiltersSidebar({
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span className="flex items-center">
-            <Filter className="w-5 h-5 mr-2" />
-            Filtros
-          </span>
-          <Button variant={'link'} size="sm" className="text-blue-400 pr-0" onClick={handleClearFilters}>
-            Remover filtros
-          </Button>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <VerifiedFilter showVerifiedOnly={showVerifiedOnly} onVerifiedChange={handleVerifiedChange} size="sm" />
+    <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span className="flex items-center">
+              <Filter className="w-5 h-5 mr-2" />
+              Filtros
+            </span>
+            <Button variant={'link'} size="sm" className="text-blue-400 pr-0" onClick={handleClearFilters}>
+              Remover filtros
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <VerifiedFilter showVerifiedOnly={showVerifiedOnly} onVerifiedChange={handleVerifiedChange} size="sm" />
 
-        <Accordion type="single" collapsible defaultValue="categories">
-          <AccordionItem value="categories">
-            <AccordionTrigger className="text-sm font-medium">Categoría</AccordionTrigger>
-            <AccordionContent>
-              <CategoryFilter
-                categories={categories}
-                selectedCategory={selectedCategory}
-                onCategoryChange={handleCategoryChange}
-                layout="vertical"
-              />
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+          <Accordion type="single" collapsible defaultValue="categories">
+            <AccordionItem value="categories">
+              <AccordionTrigger className="text-sm font-medium">Categoría</AccordionTrigger>
+              <AccordionContent>
+                <CategoryFilter
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  onCategoryChange={handleCategoryChange}
+                  layout="vertical"
+                />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
 
-        <Accordion type="single" collapsible defaultValue="locations">
-          <AccordionItem value="locations">
-            <AccordionTrigger className="text-sm font-medium">Ubicación</AccordionTrigger>
-            <AccordionContent>
-              <LocationFilter
-                locations={locations}
-                selectedLocation={selectedLocation}
-                onLocationChange={handleLocationChange}
-                layout="vertical"
-              />
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+          <Accordion type="single" collapsible defaultValue="locations">
+            <AccordionItem value="locations">
+              <AccordionTrigger className="text-sm font-medium">Ubicación</AccordionTrigger>
+              <AccordionContent>
+                <LocationFilter
+                  locations={locations}
+                  selectedLocation={selectedLocation}
+                  onLocationChange={handleLocationChange}
+                  layout="vertical"
+                />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
 
-        <PriceFilter priceRange={priceRange} onPriceChange={handlePriceChange} variant="detailed" />
-      </CardContent>
-    </Card>
+          <PriceFilter priceRange={priceRange} onPriceChange={handlePriceChange} variant="detailed" />
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

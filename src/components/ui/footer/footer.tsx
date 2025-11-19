@@ -2,8 +2,6 @@ import { Mail, MessageSquare } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { Separator } from '@/components/ui/separator';
-
 export function Footer() {
   return (
     <footer className="border-t bg-background">
@@ -112,7 +110,7 @@ export function Footer() {
           </div>
         </div>
 
-        <Separator className="my-6" />
+        <div className="my-6 border-t border-border" />
 
         <p className="text-center text-sm text-muted-foreground">
           &copy; {new Date().getFullYear()} ServicioYa. Todos los derechos reservados.

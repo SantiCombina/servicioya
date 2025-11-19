@@ -1,5 +1,7 @@
 'use client';
 
+import { motion } from 'framer-motion';
+
 import { Card, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Review, Service, User } from '@/payload-types';
@@ -17,21 +19,27 @@ export function ServiceReviewsTabs({ service, reviews }: ServiceReviewsTabsProps
   const provider = service.provider as User;
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <Tabs defaultValue="rating" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="rating">Calificación</TabsTrigger>
-            <TabsTrigger value="reviews">Reseñas ({reviewsWithComments.length})</TabsTrigger>
-          </TabsList>
-          <TabsContent value="rating" className="mt-6">
-            <ServiceRatingTab service={service} reviews={reviews} />
-          </TabsContent>
-          <TabsContent value="reviews" className="mt-6">
-            <ServiceReviewsTab reviews={reviewsWithComments} provider={provider} />
-          </TabsContent>
-        </Tabs>
-      </CardHeader>
-    </Card>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+    >
+      <Card>
+        <CardHeader className="pb-3">
+          <Tabs defaultValue="rating" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="rating">Calificación</TabsTrigger>
+              <TabsTrigger value="reviews">Reseñas ({reviewsWithComments.length})</TabsTrigger>
+            </TabsList>
+            <TabsContent value="rating" className="mt-6">
+              <ServiceRatingTab service={service} reviews={reviews} />
+            </TabsContent>
+            <TabsContent value="reviews" className="mt-6">
+              <ServiceReviewsTab reviews={reviewsWithComments} provider={provider} />
+            </TabsContent>
+          </Tabs>
+        </CardHeader>
+      </Card>
+    </motion.div>
   );
 }

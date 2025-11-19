@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -17,7 +19,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
 
   return (
     <Link href={`/services/${service.id}`} className="block">
-      <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+      <Card className="overflow-hidden hover:shadow-xl transition-shadow cursor-pointer h-full">
         <ServiceCardImage service={service} />
         <CardHeader>
           <CardTitle>{service.title}</CardTitle>

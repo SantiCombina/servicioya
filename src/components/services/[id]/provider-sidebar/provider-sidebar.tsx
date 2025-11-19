@@ -1,3 +1,7 @@
+'use client';
+
+import { motion } from 'framer-motion';
+
 import { Service, User } from '@/payload-types';
 
 import { ContactActions } from './contact-actions';
@@ -14,7 +18,12 @@ interface Props {
 export function ProviderSidebar({ service, currentUser, completedJobs, providerRating, providerReviewsCount }: Props) {
   return (
     <div className="lg:col-span-1">
-      <div className="space-y-6">
+      <motion.div
+        className="space-y-6"
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         <ProviderInfo
           service={service}
           completedJobs={completedJobs}
@@ -22,7 +31,7 @@ export function ProviderSidebar({ service, currentUser, completedJobs, providerR
           providerReviewsCount={providerReviewsCount}
         />
         <ContactActions service={service} currentUser={currentUser} />
-      </div>
+      </motion.div>
     </div>
   );
 }

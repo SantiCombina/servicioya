@@ -1,3 +1,6 @@
+'use client';
+
+import { motion } from 'framer-motion';
 import { Award, Shield, Star } from 'lucide-react';
 import Link from 'next/link';
 
@@ -19,55 +22,57 @@ export function ProviderInfo({ service, completedJobs, providerRating, providerR
   const memberSince = new Date(provider.createdAt).getFullYear().toString();
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center space-x-4">
-          <Link href={`/profile/${provider.id}`}>
-            <UserAvatar
-              name={provider.name}
-              avatar={provider.avatar}
-              className="w-16 h-16 cursor-pointer hover:opacity-80 transition-opacity"
-            />
-          </Link>
-          <div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, delay: 0.3 }}
+    >
+      <Card>
+        <CardHeader>
+          <div className="flex items-center space-x-4 group">
             <Link href={`/profile/${provider.id}`}>
-              <CardTitle className="text-lg hover:text-blue-600 transition-colors cursor-pointer inline-block">
-                {provider.name}
-              </CardTitle>
+              <UserAvatar name={provider.name} avatar={provider.avatar} className="w-16 h-16 cursor-pointer" />
             </Link>
-            <div className="flex items-center">
-              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
-              <span className="font-semibold">{providerRating.toFixed(2)}</span>
-              <span className="text-gray-500 ml-1">({providerReviewsCount})</span>
+            <div>
+              <Link href={`/profile/${provider.id}`}>
+                <CardTitle className="text-lg group-hover:text-blue-600 transition-colors cursor-pointer inline-block">
+                  {provider.name}
+                </CardTitle>
+              </Link>
+              <div className="flex items-center">
+                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
+                <span className="font-semibold">{providerRating.toFixed(2)}</span>
+                <span className="text-gray-500 ml-1">({providerReviewsCount})</span>
+              </div>
             </div>
           </div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-2 gap-4 text-center">
-          <div>
-            <div className="text-2xl font-bold text-blue-600">{completedJobs}</div>
-            <div className="text-xs text-muted-foreground">Trabajos realizados</div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-2 gap-4 text-center">
+            <div>
+              <div className="text-2xl font-bold text-blue-600">{completedJobs}</div>
+              <div className="text-xs text-muted-foreground">Trabajos realizados</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-green-600">{memberSince}</div>
+              <div className="text-xs text-muted-foreground">Miembro desde</div>
+            </div>
           </div>
-          <div>
-            <div className="text-2xl font-bold text-green-600">{memberSince}</div>
-            <div className="text-xs text-muted-foreground">Miembro desde</div>
-          </div>
-        </div>
 
-        <div className="flex items-center justify-center space-x-2">
-          {isVerified && (
-            <Badge variant="secondary" className="bg-green-100 text-green-800">
-              <Shield className="w-3 h-3 mr-1" />
-              Verificado
+          <div className="flex items-center justify-center space-x-2">
+            {isVerified && (
+              <Badge variant="secondary" className="bg-green-100 text-green-800">
+                <Shield className="w-3 h-3 mr-1" />
+                Verificado
+              </Badge>
+            )}
+            <Badge variant="secondary">
+              <Award className="w-3 h-3 mr-1" />
+              Pro
             </Badge>
-          )}
-          <Badge variant="secondary">
-            <Award className="w-3 h-3 mr-1" />
-            Pro
-          </Badge>
-        </div>
-      </CardContent>
-    </Card>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }

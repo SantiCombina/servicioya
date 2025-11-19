@@ -202,11 +202,11 @@ export function NewServiceForm() {
               <div className="space-y-4">
                 <Label>Imagen del servicio *</Label>
                 {previewImage ? (
-                  <div className="relative max-w-sm mx-auto aspect-[5/4] rounded-lg overflow-hidden bg-muted">
+                  <div className="relative max-w-sm mx-auto aspect-5/4 rounded-lg overflow-hidden bg-muted">
                     <img src={previewImage} alt="Preview" className="w-full h-full object-cover object-center" />
                   </div>
                 ) : (
-                  <div className="max-w-sm mx-auto aspect-[5/4] border-2 border-dashed border-border rounded-lg flex items-center justify-center bg-muted/50">
+                  <div className="max-w-sm mx-auto aspect-5/4 border-2 border-dashed border-border rounded-lg flex items-center justify-center bg-muted/50">
                     <div className="text-center">
                       <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
                       <p className="text-sm text-muted-foreground">Sube una imagen para tu servicio (obligatorio)</p>

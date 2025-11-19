@@ -1,3 +1,7 @@
+'use client';
+
+import { motion } from 'framer-motion';
+
 import { Review, Service } from '@/payload-types';
 
 import { StarRating } from './service-star-rating';
@@ -38,26 +42,51 @@ export function ServiceRatingTab({ service, reviews }: ServiceRatingTabProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-start gap-8">
-        <div className="text-center">
+        <motion.div
+          className="text-center"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+        >
           <div className="text-5xl font-bold mb-2">{avgRating.toFixed(1)}</div>
           <StarRating rating={avgRating} size="lg" />
           <div className="text-sm text-muted-foreground mt-2">{totalReviews} calificaciones</div>
-        </div>
+        </motion.div>
 
-        <div className="flex-1 space-y-2">
-          {ratingCounts.map(({ star, count, percentage }) => (
-            <div key={star} className="flex items-center gap-3">
+        <motion.div
+          className="flex-1 space-y-2"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+        >
+          {ratingCounts.map(({ star, count, percentage }, index) => (
+            <motion.div
+              key={star}
+              className="flex items-center gap-3"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 + index * 0.05 }}
+            >
               <span className="text-sm w-8">{star} ★</span>
               <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-                <div className="h-full bg-yellow-400 transition-all" style={{ width: `${percentage}%` }} />
+                <motion.div
+                  className="h-full bg-yellow-400"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${percentage}%` }}
+                  transition={{ duration: 0.8, delay: 0.2 + index * 0.05, ease: 'easeOut' as const }}
+                />
               </div>
               <span className="text-sm text-muted-foreground w-8 text-right">{count}</span>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.4 }}
+      >
         <h4 className="font-semibold mb-3">Calificación de características</h4>
         <div className="space-y-3">
           {categoryRatings.map((category) => (
@@ -70,7 +99,7 @@ export function ServiceRatingTab({ service, reviews }: ServiceRatingTabProps) {
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

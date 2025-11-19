@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
@@ -14,6 +15,11 @@ import { userSignupSchema, UserSignupValues } from './user-signup-schema';
 
 type SignupFormProps = {
   redirectTo?: string;
+};
+
+const fieldVariants = {
+  initial: { opacity: 0, x: -10 },
+  animate: { opacity: 1, x: 0 },
 };
 
 export function SignupForm({ redirectTo }: SignupFormProps) {
@@ -44,65 +50,79 @@ export function SignupForm({ redirectTo }: SignupFormProps) {
   return (
     <Form {...methods}>
       <form className="space-y-1" onSubmit={methods.handleSubmit(onSubmit)}>
-        <FormField
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nombre</FormLabel>
-              <FormControl>
-                <Input type="text" placeholder="Ingresa tu nombre" {...field} />
-              </FormControl>
-              <div className="min-h-[1.25rem] -mt-2.5">
-                <FormMessage />
-              </div>
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type="email" placeholder="Ingresa tu email" {...field} />
-              </FormControl>
-              <div className="min-h-[1.25rem] -mt-2.5">
-                <FormMessage />
-              </div>
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Contraseña</FormLabel>
-              <FormControl>
-                <Input type="password" placeholder="Crea una contraseña" {...field} />
-              </FormControl>
-              <div className="min-h-[1.25rem] -mt-2.5">
-                <FormMessage />
-              </div>
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirmar Contraseña</FormLabel>
-              <FormControl>
-                <Input type="password" placeholder="Confirma tu contraseña" {...field} />
-              </FormControl>
-              <div className="min-h-[1.25rem] -mt-2.5">
-                <FormMessage />
-              </div>
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="w-full" disabled={isExecuting}>
-          {isExecuting ? 'Creando...' : 'Crear Cuenta'}
-        </Button>
+        <motion.div {...fieldVariants} transition={{ duration: 0.3, delay: 0.1 }}>
+          <FormField
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nombre</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="Ingresa tu nombre" {...field} />
+                </FormControl>
+                <div className="min-h-5 -mt-2">
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+        </motion.div>
+        <motion.div {...fieldVariants} transition={{ duration: 0.3, delay: 0.2 }}>
+          <FormField
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="Ingresa tu email" {...field} />
+                </FormControl>
+                <div className="min-h-5 -mt-2">
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+        </motion.div>
+        <motion.div {...fieldVariants} transition={{ duration: 0.3, delay: 0.3 }}>
+          <FormField
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Contraseña</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="Crea una contraseña" {...field} />
+                </FormControl>
+                <div className="min-h-5 -mt-2">
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+        </motion.div>
+        <motion.div {...fieldVariants} transition={{ duration: 0.3, delay: 0.4 }}>
+          <FormField
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirmar contraseña</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="Confirma tu contraseña" {...field} />
+                </FormControl>
+                <div className="min-h-5 -mt-2">
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.5 }}
+        >
+          <Button type="submit" className="w-full" disabled={isExecuting}>
+            {isExecuting ? 'Creando...' : 'Crear cuenta'}
+          </Button>
+        </motion.div>
       </form>
     </Form>
   );

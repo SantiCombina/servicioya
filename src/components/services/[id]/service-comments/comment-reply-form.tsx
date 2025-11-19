@@ -57,7 +57,7 @@ export function CommentReplyForm({ commentId, onSuccess, onCancel }: CommentRepl
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Textarea placeholder="Escribe tu respuesta..." className="min-h-[80px] resize-none" {...field} />
+                <Textarea placeholder="Escribe tu respuesta..." className="min-h-20 resize-none" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

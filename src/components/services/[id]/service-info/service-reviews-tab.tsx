@@ -1,11 +1,32 @@
 'use client';
 
+import { motion } from 'framer-motion';
+
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Review, User } from '@/payload-types';
 
 import { ReviewItem } from './service-review-card';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4 },
+  },
+};
 
 interface ServiceReviewsTabProps {
   reviews: Review[];
@@ -26,9 +47,11 @@ export function ServiceReviewsTab({ reviews, provider }: ServiceReviewsTabProps)
   }
 
   return (
-    <div className="space-y-4">
+    <motion.div className="space-y-4" variants={containerVariants} initial="hidden" animate="visible">
       {visibleReviews.map((review) => (
-        <ReviewItem key={review.id} review={review} provider={provider} />
+        <motion.div key={review.id} variants={itemVariants}>
+          <ReviewItem review={review} provider={provider} />
+        </motion.div>
       ))}
 
       {hasMoreReviews && (
@@ -52,6 +75,6 @@ export function ServiceReviewsTab({ reviews, provider }: ServiceReviewsTabProps)
           </DialogContent>
         </Dialog>
       )}
-    </div>
+    </motion.div>
   );
 }

@@ -89,14 +89,14 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Iniciar Sesión Requerido</DialogTitle>
+            <DialogTitle>Iniciar sesión requerido</DialogTitle>
             <DialogDescription>Debes iniciar sesión para poder contratar servicios.</DialogDescription>
           </DialogHeader>
           <div className="flex justify-end space-x-2">
             <Button variant="outline" onClick={() => setOpen(false)}>
               Cancelar
             </Button>
-            <Button onClick={() => (window.location.href = '/login')}>Iniciar Sesión</Button>
+            <Button onClick={() => (window.location.href = '/login')}>Iniciar sesión</Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -185,7 +185,7 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
                         }}
                         placeholder="Seleccionar fecha"
                       />
-                      <div className="min-h-[1.25rem] -mt-2.5">
+                      <div className="min-h-5 -mt-2">
                         <FormMessage />
                       </div>
                     </FormItem>
@@ -206,7 +206,7 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
                           {...field}
                         />
                       </FormControl>
-                      <div className="min-h-[1.25rem] -mt-2.5">
+                      <div className="min-h-5 -mt-2">
                         <FormMessage />
                       </div>
                     </FormItem>
@@ -231,7 +231,7 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
                         {...field}
                       />
                     </FormControl>
-                    <div className="min-h-[1.25rem] -mt-2.5">
+                    <div className="min-h-5 -mt-2">
                       <FormMessage />
                     </div>
                   </FormItem>
@@ -257,7 +257,7 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
                         {...field}
                       />
                     </FormControl>
-                    <div className="min-h-[1.25rem] -mt-2.5">
+                    <div className="min-h-5 -mt-2">
                       <FormMessage />
                     </div>
                   </FormItem>

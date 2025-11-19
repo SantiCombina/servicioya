@@ -1,5 +1,6 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import React, { useState } from 'react';
 
@@ -45,9 +46,14 @@ export function ServiceImageGallery({ images, title }: ServiceImageGalleryProps)
   const hiddenCount = Math.max(0, images.length - maxThumbnails);
 
   return (
-    <div className="flex gap-4">
+    <motion.div
+      className="flex gap-4"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       {showThumbnails && (
-        <div className="flex flex-col justify-between w-16 h-[500px] flex-shrink-0">
+        <div className="flex flex-col justify-between w-16 h-[500px] shrink-0">
           {visibleThumbs.map((img, index) => {
             const url = getImageUrl(img);
             const alt = getImageAlt(img, `Vista ${index + 1}`);
@@ -68,7 +74,7 @@ export function ServiceImageGallery({ images, title }: ServiceImageGalleryProps)
                     setSelectedIndex(index);
                   }
                 }}
-                className={`relative w-16 h-16 rounded-sm overflow-hidden border flex-shrink-0 focus:outline-none transition-all duration-150 hover:border-primary ${
+                className={`relative w-16 h-16 rounded-sm overflow-hidden border shrink-0 focus:outline-none transition-all duration-150 hover:border-primary ${
                   selectedIndex === index ? 'border-primary ring-1 ring-primary' : 'border-muted'
                 }`}
                 aria-label={isLastVisible ? `Ver ${hiddenCount} imágenes más` : `Ver imagen ${index + 1}`}
@@ -96,6 +102,6 @@ export function ServiceImageGallery({ images, title }: ServiceImageGalleryProps)
           <Image src={mainUrl} alt={mainAlt} fill className="object-contain transition-all duration-200" priority />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
