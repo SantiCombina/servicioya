@@ -334,8 +334,8 @@ export interface ProviderRating {
    * Comentario opcional sobre la experiencia con el cliente
    */
   comment?: string | null;
-  createdAt: string;
   updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -625,8 +625,8 @@ export interface ProviderRatingsSelect<T extends boolean = true> {
   service?: T;
   rating?: T;
   comment?: T;
-  createdAt?: T;
   updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

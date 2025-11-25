@@ -191,11 +191,17 @@ export function ContractListItem({
               <div className="flex flex-col gap-2 ml-4">
                 {canEdit && contract.status === 'completed' && isClient && !contract.reviewed && (
                   <>
-                    <Button variant="secondary" size="sm" onClick={() => onRateContract(contract.id)}>
-                      Calificar
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onRateContract(contract.id)}
+                      className="border-amber-300 text-amber-700 hover:bg-amber-50"
+                    >
+                      <Star className="w-4 h-4 mr-2 fill-amber-400 text-amber-400" />
+                      Calificar servicio
                     </Button>
                     <Button variant="outline" size="sm">
-                      Contratar Nuevamente
+                      Contratar nuevamente
                     </Button>
                   </>
                 )}
@@ -208,7 +214,7 @@ export function ContractListItem({
                     className="border-amber-300 text-amber-700 hover:bg-amber-50"
                   >
                     <Star className="w-4 h-4 mr-2 fill-amber-400 text-amber-400" />
-                    Calificar Cliente
+                    Calificar cliente
                   </Button>
                 )}
 
@@ -221,13 +227,13 @@ export function ContractListItem({
                   >
                     {loadingContractId === contract.id ? (
                       <>
-                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-600 mr-2"></div>
+                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-2"></div>
                         Procesando...
                       </>
                     ) : (
                       <>
                         <CheckCircle className="w-4 h-4 mr-2" />
-                        Marcar Completado
+                        Marcar completado
                       </>
                     )}
                   </Button>
@@ -239,6 +245,7 @@ export function ContractListItem({
                       onClick={() => onOpenDialog('accept', contract.id)}
                       disabled={loadingContractId === contract.id}
                       size="sm"
+                      className="bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
                     >
                       {loadingContractId === contract.id ? (
                         <>
@@ -248,7 +255,7 @@ export function ContractListItem({
                       ) : (
                         <>
                           <CheckCircle className="w-4 h-4 mr-2" />
-                          Aceptar Contrato
+                          Aceptar contrato
                         </>
                       )}
                     </Button>
@@ -277,36 +284,25 @@ export function ContractListItem({
 
             {otherUser && (
               <div className="bg-muted/50 rounded-lg p-4">
-                <div className="flex items-center space-x-3 justify-between">
-                  <div className="flex items-center space-x-3">
-                    <UserAvatar name={otherUser.name} avatar={otherUser.avatar} className="w-10 h-10" />
-                    <div>
-                      <p className="font-medium text-foreground">
-                        {otherUser.name} {isClient ? '(Proveedor)' : '(Cliente)'}
-                      </p>
-                      {isClient && (
-                        <div className="flex items-center space-x-1">
-                          <div className="flex items-center space-x-1">{renderStars(serviceData.rating)}</div>
-                          <span className="text-sm text-muted-foreground">({serviceData.rating || 0})</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {!isClient && contract.status === 'pending' && contract.clientRating && (
-                    <div className="flex items-center space-x-2 bg-blue-50 px-3 py-2 rounded-md">
-                      <div className="flex items-center space-x-1"> {renderStars(contract.clientRating.avgRating)}</div>
-                      <div className="text-right">
-                        <p className="text-sm font-semibold text-foreground">
-                          {contract.clientRating.avgRating.toFixed(1)}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          ({contract.clientRating.totalRatings} calificación
-                          {contract.clientRating.totalRatings !== 1 ? 'es' : ''})
-                        </p>
+                <div className="flex items-center space-x-3">
+                  <UserAvatar name={otherUser.name} avatar={otherUser.avatar} className="w-10 h-10" />
+                  <div>
+                    <p className="font-medium text-foreground">
+                      {otherUser.name} {isClient ? '(Proveedor)' : '(Cliente)'}
+                    </p>
+                    {isClient && (
+                      <div className="flex items-center space-x-1">
+                        <div className="flex items-center">{renderStars(serviceData.rating)}</div>
+                        <span className="text-xs text-muted-foreground">({serviceData.rating ? '1' : '0'})</span>
                       </div>
-                    </div>
-                  )}
+                    )}
+                    {!isClient && contract.clientRating && (
+                      <div className="flex items-center space-x-1">
+                        <div className="flex items-center">{renderStars(contract.clientRating.avgRating)}</div>
+                        <span className="text-xs text-muted-foreground">({contract.clientRating.totalRatings})</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )}

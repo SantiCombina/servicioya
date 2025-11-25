@@ -5,11 +5,10 @@ import { useAction } from 'next-safe-action/hooks';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
-import { rateClient as rateClientAction } from '@/components/services/[id]/rate-client-actions';
 import { useContractsFilters } from '@/lib/hooks/use-contracts-filters';
 import { Booking } from '@/payload-types';
 
-import { loadMyContractsAction, updateContractStatusAction, createReviewAction } from './actions';
+import { loadMyContractsAction, updateContractStatusAction, createReviewAction, rateClientAction } from './actions';
 import { ContractActionDialog } from './contract-action-dialog';
 import { ContractListItem } from './contract-list-item';
 import { ContractsStats } from './contracts-stats';
@@ -149,10 +148,10 @@ export function MyContractsList() {
     await createReview(data);
   };
 
-  const handleProviderRatingSubmit = async (data: { rating: number; comment?: string }) => {
+  const handleProviderRatingSubmit = async (data: { rating: number }) => {
     if (!providerReviewDialogState.bookingId) return;
 
-    await rateClient({ bookingId: providerReviewDialogState.bookingId, rating: data.rating, comment: data.comment });
+    await rateClient({ bookingId: providerReviewDialogState.bookingId, rating: data.rating });
   };
 
   const currentUser = loadResult.data?.user || null;

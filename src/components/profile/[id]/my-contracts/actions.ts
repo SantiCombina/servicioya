@@ -4,8 +4,8 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
 
-import { getClientRating } from '@/app/services/provider-ratings';
 import { getUserBookings, updateBookingStatus } from '@/app/services/booking';
+import { createProviderRating, getClientRating } from '@/app/services/provider-rating';
 import { createReview } from '@/app/services/reviews';
 import { getCurrentUser } from '@/app/services/user';
 import { reviewCreateSchema } from '@/components/profile/[id]/my-contracts/review-create-schema';
@@ -121,4 +121,46 @@ export const createReviewAction = actionClient.schema(reviewCreateSchema).action
   } catch (error) {
     throw new Error(error instanceof Error ? error.message : 'Error al crear la reseña');
   }
+});
+
+// Schema para calificar cliente
+const rateClientSchema = z.object({
+  bookingId: z.string().min(1, 'ID de reserva requerido'),
+  rating: z.number().min(1, 'Calificación mínima: 1').max(5, 'Calificación máxima: 5'),
+});
+
+export const rateClientAction = actionClient.schema(rateClientSchema).action(async ({ parsedInput }) => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('payload-token')?.value;
+
+  if (!token) {
+    throw new Error('Debes iniciar sesión para calificar');
+  }
+
+  const user = await getCurrentUser(token);
+
+  if (!user) {
+    throw new Error('Debes iniciar sesión para calificar');
+  }
+
+  const bookingId = parseInt(parsedInput.bookingId, 10);
+
+  if (isNaN(bookingId)) {
+    throw new Error('ID de reserva inválido');
+  }
+
+  const rating = await createProviderRating({
+    bookingId,
+    rating: parsedInput.rating,
+    currentUserId: user.id,
+  });
+
+  // Revalidar las páginas relevantes
+  revalidatePath(`/profile/${user.id}/my-contracts`);
+
+  return {
+    success: true,
+    rating,
+    message: 'Calificación registrada correctamente',
+  };
 });

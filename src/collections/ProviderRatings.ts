@@ -56,13 +56,8 @@ const ProviderRatings: CollectionConfig = {
         description: 'Comentario opcional sobre la experiencia con el cliente',
       },
     },
-    {
-      name: 'createdAt',
-      label: 'Fecha de creación',
-      type: 'date',
-      required: true,
-    },
   ],
+  timestamps: true,
 };
 
 export default ProviderRatings;
