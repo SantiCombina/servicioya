@@ -4,6 +4,7 @@ export { default as Comments } from './Comments';
 export { default as CommentReplies } from './CommentReplies';
 export { default as Locations } from './Locations';
 export { default as Media } from './Media';
+export { default as ProviderRatings } from './ProviderRatings';
 export { default as ReviewReplies } from './ReviewReplies';
 export { default as Reviews } from './Reviews';
 export { default as Services } from './Services';

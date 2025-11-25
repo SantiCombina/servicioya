@@ -9,12 +9,18 @@ import { UserAvatar } from '@/components/ui/user-avatar';
 import { Booking, Service, User as UserType, Category, Location, Media } from '@/payload-types';
 
 interface ContractListItemProps {
-  contract: Booking;
+  contract: Booking & {
+    clientRating?: {
+      avgRating: number;
+      totalRatings: number;
+    };
+  };
   currentUser: UserType | null;
   canEdit: boolean;
   loadingContractId: number | null;
   onOpenDialog: (type: 'accept' | 'reject' | 'complete', contractId: number) => void;
   onRateContract: (bookingId: number) => void;
+  onRateClient?: (bookingId: number) => void;
 }
 
 export function ContractListItem({
@@ -24,6 +30,7 @@ export function ContractListItem({
   loadingContractId,
   onOpenDialog,
   onRateContract,
+  onRateClient,
 }: ContractListItemProps) {
   // Helper functions para obtener datos de las relaciones
   const getServiceData = (service: number | Service) => {
@@ -149,7 +156,6 @@ export function ContractListItem({
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-6">
         <div className="flex flex-col space-y-4">
-          {/* Información Principal */}
           <div className="flex-1 space-y-3">
             <div className="flex items-start justify-between">
               <div className="flex-1">
@@ -182,9 +188,7 @@ export function ContractListItem({
                 </div>
               </div>
 
-              {/* Botones en la esquina superior derecha */}
               <div className="flex flex-col gap-2 ml-4">
-                {/* Botones para contratos completados - Cliente puede calificar */}
                 {canEdit && contract.status === 'completed' && isClient && !contract.reviewed && (
                   <>
                     <Button variant="secondary" size="sm" onClick={() => onRateContract(contract.id)}>
@@ -196,7 +200,18 @@ export function ContractListItem({
                   </>
                 )}
 
-                {/* Botones para contratos aceptados - Proveedor puede marcar como completado */}
+                {canEdit && contract.status === 'completed' && !isClient && !contract.providerRated && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onRateClient?.(contract.id)}
+                    className="border-amber-300 text-amber-700 hover:bg-amber-50"
+                  >
+                    <Star className="w-4 h-4 mr-2 fill-amber-400 text-amber-400" />
+                    Calificar Cliente
+                  </Button>
+                )}
+
                 {canEdit && contract.status === 'accepted' && !isClient && (
                   <Button
                     onClick={() => onOpenDialog('complete', contract.id)}
@@ -218,7 +233,6 @@ export function ContractListItem({
                   </Button>
                 )}
 
-                {/* Botones de Aceptar/Rechazar para contratos pendientes */}
                 {canEdit && contract.status === 'pending' && !isClient && (
                   <>
                     <Button
@@ -261,27 +275,42 @@ export function ContractListItem({
               </div>
             </div>
 
-            {/* Información del otro usuario (proveedor si eres cliente, cliente si eres proveedor) */}
             {otherUser && (
               <div className="bg-muted/50 rounded-lg p-4">
-                <div className="flex items-center space-x-3">
-                  <UserAvatar name={otherUser.name} avatar={otherUser.avatar} className="w-10 h-10" />
-                  <div>
-                    <p className="font-medium text-foreground">
-                      {otherUser.name} {isClient ? '(Proveedor)' : '(Cliente)'}
-                    </p>
-                    {isClient && (
-                      <div className="flex items-center space-x-1">
-                        <div className="flex items-center space-x-1">{renderStars(serviceData.rating)}</div>
-                        <span className="text-sm text-muted-foreground">({serviceData.rating || 0})</span>
-                      </div>
-                    )}
+                <div className="flex items-center space-x-3 justify-between">
+                  <div className="flex items-center space-x-3">
+                    <UserAvatar name={otherUser.name} avatar={otherUser.avatar} className="w-10 h-10" />
+                    <div>
+                      <p className="font-medium text-foreground">
+                        {otherUser.name} {isClient ? '(Proveedor)' : '(Cliente)'}
+                      </p>
+                      {isClient && (
+                        <div className="flex items-center space-x-1">
+                          <div className="flex items-center space-x-1">{renderStars(serviceData.rating)}</div>
+                          <span className="text-sm text-muted-foreground">({serviceData.rating || 0})</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
+
+                  {!isClient && contract.status === 'pending' && contract.clientRating && (
+                    <div className="flex items-center space-x-2 bg-blue-50 px-3 py-2 rounded-md">
+                      <div className="flex items-center space-x-1"> {renderStars(contract.clientRating.avgRating)}</div>
+                      <div className="text-right">
+                        <p className="text-sm font-semibold text-foreground">
+                          {contract.clientRating.avgRating.toFixed(1)}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          ({contract.clientRating.totalRatings} calificación
+                          {contract.clientRating.totalRatings !== 1 ? 'es' : ''})
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
 
-            {/* Fecha y Hora Programada */}
             <div className="bg-primary/5 rounded-lg p-4">
               <div className="flex items-center space-x-2 mb-2">
                 <Calendar className="w-4 h-4 text-primary" />

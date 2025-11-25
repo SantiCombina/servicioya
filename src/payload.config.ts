@@ -16,6 +16,7 @@ import {
   ReviewReplies,
   Reviews,
   Services,
+  ProviderRatings,
   Users,
 } from './collections';
 
@@ -28,6 +29,7 @@ export default buildConfig({
     Locations,
     Services,
     Bookings,
+    ProviderRatings,
     Reviews,
     ReviewReplies,
     Comments,

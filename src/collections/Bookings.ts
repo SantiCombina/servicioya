@@ -58,6 +58,15 @@ const Bookings: CollectionConfig = {
       type: 'checkbox',
       defaultValue: false,
     },
+    {
+      name: 'providerRated',
+      label: 'Calificación del proveedor realizada',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        description: 'Indica si el proveedor ya calificó al cliente',
+      },
+    },
   ],
 };
 
