@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
 
+import { getClientRating } from '@/app/services/provider-ratings';
 import { getUserBookings, updateBookingStatus } from '@/app/services/booking';
 import { createReview } from '@/app/services/reviews';
 import { getCurrentUser } from '@/app/services/user';
@@ -32,10 +33,22 @@ export const loadMyContractsAction = actionClient
 
       const [user, userBookings] = await Promise.all([getCurrentUser(token), getUserBookings(profileId)]);
 
+      // Cargar calificación promedio de cada cliente en los contratos
+      const contractsWithClientRating = await Promise.all(
+        userBookings.map(async (booking) => {
+          const clientId = typeof booking.client === 'object' ? booking.client.id : booking.client;
+          const clientRating = await getClientRating(clientId);
+          return {
+            ...booking,
+            clientRating: clientRating || { avgRating: 0, totalRatings: 0 },
+          };
+        }),
+      );
+
       return {
         success: true,
         user,
-        contracts: userBookings,
+        contracts: contractsWithClientRating,
       };
     } catch (error) {
       console.error('Error loading my contracts data:', error);

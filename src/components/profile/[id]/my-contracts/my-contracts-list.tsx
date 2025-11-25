@@ -5,6 +5,7 @@ import { useAction } from 'next-safe-action/hooks';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
+import { rateClient as rateClientAction } from '@/components/services/[id]/rate-client-actions';
 import { useContractsFilters } from '@/lib/hooks/use-contracts-filters';
 import { Booking } from '@/payload-types';
 
@@ -13,6 +14,7 @@ import { ContractActionDialog } from './contract-action-dialog';
 import { ContractListItem } from './contract-list-item';
 import { ContractsStats } from './contracts-stats';
 import { EmptyContractsState } from './empty-contracts-state';
+import { RateClientDialog } from './rate-client-dialog';
 import { ReviewDialog } from './review-dialog';
 
 export function MyContractsList() {
@@ -27,6 +29,10 @@ export function MyContractsList() {
     contractId: number | null;
   }>({ open: false, type: null, contractId: null });
   const [reviewDialogState, setReviewDialogState] = useState<{
+    open: boolean;
+    bookingId: string | null;
+  }>({ open: false, bookingId: null });
+  const [providerReviewDialogState, setProviderReviewDialogState] = useState<{
     open: boolean;
     bookingId: string | null;
   }>({ open: false, bookingId: null });
@@ -69,6 +75,31 @@ export function MyContractsList() {
     },
   });
 
+  const { executeAsync: rateClient, isExecuting: isSubmittingProviderRating } = useAction(rateClientAction, {
+    onSuccess: (result) => {
+      if (result.data?.success) {
+        toast.success(result.data.message || 'Calificación del cliente registrada');
+        setProviderReviewDialogState({ open: false, bookingId: null });
+        loadData({ profileId });
+      }
+    },
+    onError: (error) => {
+      try {
+        const serialized = typeof error === 'object' ? JSON.stringify(error) : String(error);
+        console.error('Error rating client (action error):', error, serialized);
+      } catch {
+        console.error('Error rating client (logging failed):', error);
+      }
+
+      let message: string | undefined;
+      if (error && typeof error === 'object' && 'message' in (error as Record<string, unknown>)) {
+        const maybe = (error as Record<string, unknown>).message;
+        if (typeof maybe === 'string') message = maybe;
+      }
+      toast.error(message || 'Error al calificar al cliente');
+    },
+  });
+
   useEffect(() => {
     loadData({ profileId });
   }, [profileId]);
@@ -93,10 +124,14 @@ export function MyContractsList() {
     setLoadingContractId(dialogState.contractId);
 
     try {
-      await updateContractStatus({
+      const result = await updateContractStatus({
         bookingId: dialogState.contractId.toString(),
         status: statusMap[dialogState.type],
       });
+
+      if (dialogState.type === 'complete' && result?.data?.success) {
+        setProviderReviewDialogState({ open: true, bookingId: dialogState.contractId.toString() });
+      }
     } finally {
       setLoadingContractId(null);
     }
@@ -106,8 +141,18 @@ export function MyContractsList() {
     setReviewDialogState({ open: true, bookingId: bookingId.toString() });
   };
 
+  const handleRateClient = (bookingId: number) => {
+    setProviderReviewDialogState({ open: true, bookingId: bookingId.toString() });
+  };
+
   const handleReviewSubmit = async (data: Parameters<typeof createReview>[0]) => {
     await createReview(data);
+  };
+
+  const handleProviderRatingSubmit = async (data: { rating: number; comment?: string }) => {
+    if (!providerReviewDialogState.bookingId) return;
+
+    await rateClient({ bookingId: providerReviewDialogState.bookingId, rating: data.rating, comment: data.comment });
   };
 
   const currentUser = loadResult.data?.user || null;
@@ -142,6 +187,7 @@ export function MyContractsList() {
               loadingContractId={loadingContractId}
               onOpenDialog={openDialog}
               onRateContract={handleRateContract}
+              onRateClient={handleRateClient}
             />
           ))}
         </div>
@@ -163,6 +209,14 @@ export function MyContractsList() {
           bookingId={reviewDialogState.bookingId}
           onSubmit={handleReviewSubmit}
           isSubmitting={isSubmittingReview}
+        />
+      )}
+      {providerReviewDialogState.bookingId && (
+        <RateClientDialog
+          open={providerReviewDialogState.open}
+          onOpenChange={(open) => setProviderReviewDialogState({ open, bookingId: null })}
+          onSubmit={handleProviderRatingSubmit}
+          isSubmitting={isSubmittingProviderRating}
         />
       )}
     </div>

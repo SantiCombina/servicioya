@@ -73,6 +73,7 @@ export interface Config {
     locations: Location;
     services: Service;
     bookings: Booking;
+    'provider-ratings': ProviderRating;
     reviews: Review;
     reviewreplies: Reviewreply;
     comments: Comment;
@@ -89,6 +90,7 @@ export interface Config {
     locations: LocationsSelect<false> | LocationsSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
     bookings: BookingsSelect<false> | BookingsSelect<true>;
+    'provider-ratings': ProviderRatingsSelect<false> | ProviderRatingsSelect<true>;
     reviews: ReviewsSelect<false> | ReviewsSelect<true>;
     reviewreplies: ReviewrepliesSelect<false> | ReviewrepliesSelect<true>;
     comments: CommentsSelect<false> | CommentsSelect<true>;
@@ -307,8 +309,33 @@ export interface Booking {
   status: 'pending' | 'accepted' | 'completed' | 'cancelled';
   finalPrice?: number | null;
   reviewed?: boolean | null;
+  /**
+   * Indica si el proveedor ya calificó al cliente
+   */
+  providerRated?: boolean | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "provider-ratings".
+ */
+export interface ProviderRating {
+  id: number;
+  booking: number | Booking;
+  provider: number | User;
+  ratedUser: number | User;
+  service: number | Service;
+  /**
+   * Califica al cliente de 1 a 5 estrellas
+   */
+  rating: number;
+  /**
+   * Comentario opcional sobre la experiencia con el cliente
+   */
+  comment?: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -377,6 +404,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'bookings';
         value: number | Booking;
+      } | null)
+    | ({
+        relationTo: 'provider-ratings';
+        value: number | ProviderRating;
       } | null)
     | ({
         relationTo: 'reviews';
@@ -579,8 +610,23 @@ export interface BookingsSelect<T extends boolean = true> {
   status?: T;
   finalPrice?: T;
   reviewed?: T;
+  providerRated?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "provider-ratings_select".
+ */
+export interface ProviderRatingsSelect<T extends boolean = true> {
+  booking?: T;
+  provider?: T;
+  ratedUser?: T;
+  service?: T;
+  rating?: T;
+  comment?: T;
+  createdAt?: T;
+  updatedAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
