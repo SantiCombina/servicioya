@@ -32,7 +32,7 @@ export function RateClientDialog({
   clientName = 'cliente',
 }: RateClientDialogProps) {
   const [hoverValue, setHoverValue] = useState(0);
-  
+
   const form = useForm<RateClientDialogValues>({
     resolver: zodResolver(rateClientDialogSchema),
     defaultValues: {
@@ -79,7 +79,9 @@ export function RateClientDialog({
                         >
                           <Star
                             className={`w-8 h-8 ${
-                              star <= (hoverValue || rating) ? 'fill-yellow-400 text-yellow-400' : 'fill-none text-gray-300'
+                              star <= (hoverValue || rating)
+                                ? 'fill-yellow-400 text-yellow-400'
+                                : 'fill-none text-gray-300'
                             }`}
                           />
                         </button>

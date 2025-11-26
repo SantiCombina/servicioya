@@ -157,9 +157,7 @@ export function ServiceListItem({
                 </div>
                 <div className="flex items-center space-x-1">
                   <div className="flex">{renderStars(service.rating)}</div>
-                  <span className="text-sm text-muted-foreground">
-                    ({getReviewCount(service.reviews)})
-                  </span>
+                  <span className="text-sm text-muted-foreground">({getReviewCount(service.reviews)})</span>
                 </div>
               </div>
               <div className="text-sm text-muted-foreground">

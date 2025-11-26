@@ -83,7 +83,7 @@ export const updateUser = async (
   userData: {
     name?: string;
     phone?: string;
-    dni?: number;
+    dni?: string;
     location?: number;
     address?: string;
     avatar?: number | null;
