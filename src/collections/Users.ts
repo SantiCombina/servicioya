@@ -25,7 +25,8 @@ const Users: CollectionConfig = {
     {
       name: 'dni',
       label: 'DNI',
-      type: 'number',
+      type: 'text',
+      unique: true,
     },
     {
       name: 'location',

@@ -139,7 +139,7 @@ export interface User {
   id: number;
   name?: string | null;
   phone?: string | null;
-  dni?: number | null;
+  dni?: string | null;
   location?: (number | null) | Location;
   address?: string | null;
   avatar?: (number | null) | Media;

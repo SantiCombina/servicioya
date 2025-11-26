@@ -32,16 +32,23 @@ export const userUpdateSchema = z.object({
     })
     .optional(),
   dni: z
-    .union([
-      z.string().transform((val) => {
-        const num = parseInt(val, 10);
-        return isNaN(num) ? undefined : num;
-      }),
-      z.number(),
-    ])
+    .string({
+      invalid_type_error: 'El DNI debe ser una cadena de texto.',
+    })
     .optional()
-    .refine((val) => val === undefined || (val >= 10000000 && val <= 99999999), {
-      message: 'El DNI debe tener entre 8 dígitos (10.000.000 - 99.999.999).',
+    .superRefine((val, ctx) => {
+      if (!val || val === '') return;
+      if (val.length === 7) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Si tu DNI tiene 7 dígitos, agregá un 0 adelante.',
+        });
+      } else if (!/^\d{8}$/.test(val)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Ingresá un DNI válido de 8 dígitos.',
+        });
+      }
     }),
   location: z.union([z.string(), z.number()]).optional(),
   address: z

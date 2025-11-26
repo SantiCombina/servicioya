@@ -61,7 +61,7 @@ export function EditProfileForm({ user, locations }: Props) {
     defaultValues: {
       name: user.name || '',
       phone: user.phone || '',
-      dni: user.dni || undefined,
+      dni: user.dni?.toString() || '',
       location: user.location ? (typeof user.location === 'object' ? user.location.id : user.location) : undefined,
       address: user.address || '',
       avatar: typeof user.avatar === 'object' ? user.avatar?.id : user.avatar,
@@ -220,7 +220,19 @@ export function EditProfileForm({ user, locations }: Props) {
                       <FormItem>
                         <FormLabel>DNI</FormLabel>
                         <FormControl>
-                          <Input type="number" placeholder="Ej: 12345678" {...field} value={field.value ?? ''} />
+                          <Input
+                            placeholder="Ingresá tu DNI"
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            maxLength={8}
+                            onInput={(e) => {
+                              const target = e.target as HTMLInputElement;
+                              target.value = target.value.replace(/[^0-9]/g, '').slice(0, 8);
+                            }}
+                            {...field}
+                            value={field.value ?? ''}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
