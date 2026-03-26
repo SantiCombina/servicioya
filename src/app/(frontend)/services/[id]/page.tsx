@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { getServiceById } from '@/app/services/service';
@@ -13,6 +14,38 @@ import { getCurrentUserAction } from '@/components/ui/navbar/actions';
 import { Location, Review, User } from '@/payload-types';
 
 import { getCommentsByServiceAction, getProviderCompletedJobsAction, getServiceCompletedJobsAction } from './actions';
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const service = await getServiceById(id);
+
+  if (!service) {
+    return { title: 'Servicio no encontrado | ServicioYa' };
+  }
+
+  const imageUrl = typeof service.image === 'object' && service.image?.url ? service.image.url : undefined;
+  const description = service.description
+    ? service.description.slice(0, 160)
+    : `Contratá a ${typeof service.provider === 'object' ? service.provider.name : ''} en ServicioYa.`;
+
+  return {
+    title: `${service.title} | ServicioYa`,
+    description,
+    openGraph: {
+      title: `${service.title} | ServicioYa`,
+      description,
+      images: imageUrl ? [{ url: imageUrl }] : [],
+      type: 'website',
+      locale: 'es_ES',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${service.title} | ServicioYa`,
+      description,
+      images: imageUrl ? [imageUrl] : [],
+    },
+  };
+}
 
 export default async function ServiceDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -48,8 +81,35 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
     : [];
   const location = service.location as Location;
 
+  const providerName = typeof service.provider === 'object' ? service.provider.name : '';
+  const imageUrl = typeof service.image === 'object' && service.image?.url ? service.image.url : undefined;
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: service.title,
+    description: service.description ?? '',
+    provider: {
+      '@type': 'Person',
+      name: providerName,
+    },
+    areaServed: {
+      '@type': 'Place',
+      name: typeof service.location === 'object' ? service.location.name : '',
+    },
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'ARS',
+      price: service.priceFrom,
+    },
+    ...(imageUrl ? { image: imageUrl } : {}),
+    ...(service.rating
+      ? { aggregateRating: { '@type': 'AggregateRating', ratingValue: service.rating, bestRating: 5 } }
+      : {}),
+  };
+
   return (
     <div className="min-h-main">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="container py-12">
         {!service.isActive && isOwner && <OwnerInactiveBanner />}
 

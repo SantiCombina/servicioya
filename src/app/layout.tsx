@@ -16,19 +16,44 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'ServicioYa',
+  metadataBase: new URL('https://servicioya.vercel.app'),
+  title: {
+    default: 'ServicioYa — Marketplace de Servicios',
+    template: '%s | ServicioYa',
+  },
   description:
-    'Conectamos a quienes ofrecen servicios con quienes los necesitan. Encuentra plomeros, electricistas, modistas y más en tu zona.',
-  keywords: ['servicios', 'plomería', 'electricista', 'modista', 'contratación', 'marketplace'],
+    'Conectamos a quienes ofrecen servicios con quienes los necesitan. Encontrá plomeros, electricistas, modistas y más cerca tuyo.',
+  keywords: [
+    'servicios',
+    'plomería',
+    'electricista',
+    'modista',
+    'carpintería',
+    'jardinería',
+    'contratación',
+    'marketplace',
+    'Argentina',
+    'profesionales',
+  ],
   icons: {
     icon: '/icon.png',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
   },
   openGraph: {
     type: 'website',
     locale: 'es_ES',
-    title: 'ServicioYa - Marketplace de Servicios',
-    description: 'Conectamos a quienes ofrecen servicios con quienes los necesitan',
+    title: 'ServicioYa — Marketplace de Servicios',
+    description: 'Conectamos a quienes ofrecen servicios con quienes los necesitan.',
     siteName: 'ServicioYa',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ServicioYa — Marketplace de Servicios',
+    description: 'Conectamos a quienes ofrecen servicios con quienes los necesitan.',
   },
 };
 
