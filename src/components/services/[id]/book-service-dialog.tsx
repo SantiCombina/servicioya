@@ -152,7 +152,7 @@ export function BookServiceDialog({ service, currentUser, children }: Props) {
                   </div>
                   <div className="flex flex-col space-y-1">
                     <span className="font-medium text-muted-foreground">Precio base</span>
-                    <span className="font-semibold text-blue-600">
+                    <span className="font-semibold text-primary">
                       ${service.priceFrom?.toLocaleString() || 'Consultar'}
                     </span>
                   </div>

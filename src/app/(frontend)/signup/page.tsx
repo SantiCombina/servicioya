@@ -1,3 +1,7 @@
+import { CheckCircle, Star, Users } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+
 import { SignupCard } from '@/components/signup/signup-card';
 
 type SignUpPageProps = {
@@ -8,20 +12,45 @@ export default async function SignUpPage({ searchParams }: SignUpPageProps) {
   const { redirect } = await searchParams;
 
   return (
-    <div className="relative flex items-center justify-center min-h-dvh p-6 md:p-12 overflow-hidden">
-      <SignupCard redirectTo={redirect} />
-      <svg
-        className="absolute bottom-0 left-0 w-full z-[-1] pointer-events-none"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 1440 320"
-        aria-hidden="true"
-      >
-        <path
-          fill="#fb2c36"
-          fillOpacity="1"
-          d="M0,0L48,16C96,32,192,64,288,106.7C384,149,480,203,576,218.7C672,235,768,213,864,186.7C960,160,1056,128,1152,106.7C1248,85,1344,75,1392,69.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-        ></path>
-      </svg>
+    <div className="flex min-h-dvh">
+      <div className="hidden md:flex md:w-1/2 bg-primary flex-col justify-between p-10 lg:p-14">
+        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+          <div className="bg-white/20 rounded-lg p-1">
+            <Image src="/icon.png" alt="ServicioYa" width={32} height={32} className="rounded" />
+          </div>
+          <span className="text-xl font-bold text-primary-foreground">ServicioYa</span>
+        </Link>
+
+        <div className="space-y-6">
+          <div className="space-y-3">
+            <h1 className="text-3xl lg:text-4xl font-bold text-primary-foreground leading-tight">
+              Únete a la comunidad de servicios más grande de Argentina
+            </h1>
+            <p className="text-primary-foreground/80 text-lg leading-relaxed">
+              Ofrece o contrata servicios en minutos. Gratis para empezar.
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {[
+              { icon: CheckCircle, text: 'Crea tu perfil en menos de 2 minutos' },
+              { icon: Star, text: 'Recibe reseñas y construye tu reputación' },
+              { icon: Users, text: 'Accede a miles de clientes potenciales' },
+            ].map(({ icon: Icon, text }) => (
+              <div key={text} className="flex items-center gap-3 text-primary-foreground/90">
+                <Icon className="w-5 h-5 shrink-0" />
+                <span className="text-sm">{text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <p className="text-primary-foreground/60 text-sm">© {new Date().getFullYear()} ServicioYa</p>
+      </div>
+
+      <div className="flex-1 flex items-center justify-center p-6 md:p-10 bg-background">
+        <SignupCard redirectTo={redirect} />
+      </div>
     </div>
   );
 }

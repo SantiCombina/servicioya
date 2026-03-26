@@ -1,4 +1,8 @@
 import { AlertTriangle } from 'lucide-react';
+import Link from 'next/link';
+
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 
 interface InactiveServiceMessageProps {
   className?: string;
@@ -6,25 +10,20 @@ interface InactiveServiceMessageProps {
 
 export function InactiveServiceMessage({ className }: InactiveServiceMessageProps) {
   return (
-    <div className={`min-h-main ${className || ''}`}>
-      <div className="container py-16">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-2xl shadow-xl border border-yellow-200 p-12">
-            <div className="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-8">
-              <AlertTriangle className="h-12 w-12 text-orange-600" />
-            </div>
-
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Servicio no disponible</h1>
-
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto">
-              Este servicio actualmente se encuentra inactivo y no está disponible para contratación.
-            </p>
-
-            <div className="bg-orange-50 rounded-lg p-6 border border-orange-200">
-              <p className="text-orange-800 font-medium">
-                💡 El proveedor de este servicio podrá reactivarlo cuando esté disponible nuevamente.
-              </p>
-            </div>
+    <div className={`min-h-main ${className ?? ''}`}>
+      <div className="container py-20">
+        <div className="max-w-lg mx-auto">
+          <Alert variant="destructive" className="mb-6">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Servicio no disponible</AlertTitle>
+            <AlertDescription>
+              Este servicio se encuentra inactivo y no está disponible para contratación en este momento.
+            </AlertDescription>
+          </Alert>
+          <div className="text-center">
+            <Button asChild variant="outline">
+              <Link href="/services">Ver otros servicios</Link>
+            </Button>
           </div>
         </div>
       </div>

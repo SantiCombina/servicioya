@@ -28,7 +28,7 @@ export function ServicesHeader({ servicesCount, sortBy, setSortBy, children }: S
           transition={{ duration: 0.4, delay: 0.1 }}
         >
           <h1 className="text-2xl font-bold">Servicios Disponibles</h1>
-          <p className="text-gray-600">{servicesCount} servicios encontrados</p>
+          <p className="text-muted-foreground">{servicesCount} servicios encontrados</p>
         </motion.div>
         <motion.div
           className="flex items-center gap-3"
@@ -59,7 +59,7 @@ export function ServicesHeader({ servicesCount, sortBy, setSortBy, children }: S
       >
         <div className="mb-4">
           <h1 className="text-2xl font-bold">Servicios Disponibles</h1>
-          <p className="text-gray-600">{servicesCount} servicios encontrados</p>
+          <p className="text-muted-foreground">{servicesCount} servicios encontrados</p>
         </div>
         <div className="flex items-center justify-end gap-3">
           <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>

@@ -31,7 +31,7 @@ const itemVariants = {
 export function ServicesGrid({ services }: ServicesGridProps) {
   return (
     <motion.div
-      className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
+      className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"
       variants={containerVariants}
       initial="hidden"
       animate="visible"

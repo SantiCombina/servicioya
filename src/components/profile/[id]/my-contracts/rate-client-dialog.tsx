@@ -80,8 +80,8 @@ export function RateClientDialog({
                           <Star
                             className={`w-8 h-8 ${
                               star <= (hoverValue || rating)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'fill-none text-gray-300'
+                                ? 'fill-amber-400 text-amber-400'
+                                : 'fill-none text-muted-foreground/40'
                             }`}
                           />
                         </button>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface Props {
@@ -14,14 +15,16 @@ interface Props {
 export function ProfileSectionCard({ href, icon, bgColor, title, description, count }: Props) {
   return (
     <Link href={href}>
-      <Card className="hover:shadow-lg transition cursor-pointer">
-        <CardContent className="flex flex-col items-center py-4 md:py-6">
-          <div className={`${bgColor} rounded-full p-2`}>{icon}</div>
-          <h3 className="text-lg md:text-xl font-semibold mb-1 md:mb-2">{title}</h3>
-          <p className="text-muted-foreground mb-2 md:mb-3 text-sm md:text-base text-center">{description}</p>
-          <span className="bg-muted px-2 py-0.5 rounded-full text-xs md:text-sm font-semibold text-foreground">
+      <Card className="hover:shadow-md hover:border-primary/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer h-full">
+        <CardContent className="flex flex-col items-center py-7 px-5 gap-3">
+          <div className={`${bgColor} rounded-2xl p-4`}>{icon}</div>
+          <div className="text-center space-y-1.5">
+            <h3 className="text-lg font-semibold">{title}</h3>
+            <p className="text-muted-foreground text-sm text-center leading-snug">{description}</p>
+          </div>
+          <Badge variant="secondary" className="text-sm font-semibold px-3">
             {count} activos
-          </span>
+          </Badge>
         </CardContent>
       </Card>
     </Link>

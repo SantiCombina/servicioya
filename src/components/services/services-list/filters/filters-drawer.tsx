@@ -76,12 +76,14 @@ export function FiltersDrawer({
         <Button variant="outline" className="flex items-center gap-2 relative font-normal">
           <Filter className="w-4 h-4" />
           Filtros
-          {hasActiveFilters && <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-600 rounded-full" />}
+          {hasActiveFilters && <div className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full" />}
         </Button>
       </DrawerTrigger>
       <DrawerContent className="max-h-[85vh]">
-        <DrawerTitle className="sr-only">Filtros de búsqueda</DrawerTitle>
-        <div className="px-4 py-6 overflow-y-auto space-y-6">
+        <div className="flex items-center justify-between px-4 pt-5 pb-2 border-b">
+          <DrawerTitle className="text-lg font-semibold">Filtros</DrawerTitle>
+        </div>
+        <div className="px-4 py-5 overflow-y-auto space-y-5">
           <div className="space-y-3">
             <VerifiedFilter showVerifiedOnly={showVerifiedOnly} onVerifiedChange={setShowVerifiedOnly} />
           </div>
@@ -115,7 +117,7 @@ export function FiltersDrawer({
         <div className="border-t p-4">
           <div className="flex gap-3">
             {hasActiveFilters && (
-              <Button variant="ghost" onClick={clearAllFilters} className="flex-1 text-blue-600 hover:text-blue-700">
+              <Button variant="outline" onClick={clearAllFilters} className="flex-1">
                 Limpiar filtros
               </Button>
             )}

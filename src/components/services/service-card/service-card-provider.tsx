@@ -1,6 +1,5 @@
 import { useRouter } from 'next/navigation';
 
-import { CardDescription } from '@/components/ui/card';
 import { User } from '@/payload-types';
 
 interface ServiceCardProviderProps {
@@ -17,11 +16,11 @@ export function ServiceCardProvider({ provider }: ServiceCardProviderProps) {
   };
 
   return (
-    <CardDescription>
+    <p className="text-xs text-muted-foreground">
       por{' '}
-      <span className="hover:text-blue-600 transition-colors cursor-pointer" onClick={handleProviderClick}>
+      <span className="hover:text-primary transition-colors cursor-pointer" onClick={handleProviderClick}>
         {provider.name || provider.email}
       </span>
-    </CardDescription>
+    </p>
   );
 }

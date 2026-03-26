@@ -18,7 +18,7 @@ interface Props {
 export function ProviderSidebar({ service, currentUser, completedJobs, providerRating, providerReviewsCount }: Props) {
   return (
     <motion.div
-      className="flex flex-col gap-6"
+      className="flex flex-col gap-4 sticky top-24"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}

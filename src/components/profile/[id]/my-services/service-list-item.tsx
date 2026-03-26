@@ -40,9 +40,11 @@ export function ServiceListItem({
 
   const getStatusBadge = (isActive: boolean | null | undefined) => {
     if (isActive) {
-      return <Badge className="bg-green-100 text-green-600 border-green-200">Activo</Badge>;
+      return (
+        <Badge className="bg-green-500/15 text-green-700 dark:text-green-400 border border-green-500/30">Activo</Badge>
+      );
     } else {
-      return <Badge className="bg-gray-100 text-gray-600 border-gray-200">Inactivo</Badge>;
+      return <Badge variant="secondary">Inactivo</Badge>;
     }
   };
 
@@ -62,7 +64,7 @@ export function ServiceListItem({
 
     const emptyStars = 5 - Math.ceil(actualRating);
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<Star key={`empty-${i}`} className="w-4 h-4 text-gray-300" />);
+      stars.push(<Star key={`empty-${i}`} className="w-4 h-4 text-muted-foreground/30" />);
     }
 
     return stars;
@@ -71,7 +73,7 @@ export function ServiceListItem({
   return (
     <Card
       key={service.id}
-      className={`hover:shadow-lg transition-shadow border-border ${showAsDisabled ? 'opacity-60 bg-gray-50' : ''}`}
+      className={`hover:shadow-lg transition-shadow border-border ${showAsDisabled ? 'opacity-60' : ''}`}
     >
       <CardContent className="pt-6">
         <div className="flex flex-col md:flex-row md:items-stretch space-y-4 md:space-y-0 md:space-x-6">
@@ -100,7 +102,7 @@ export function ServiceListItem({
                   </div>
                   <p className="text-muted-foreground text-sm mb-2">{service.description}</p>
                   <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                    <span className="bg-blue-50 text-blue-600 px-2 py-1 rounded border border-blue-200">
+                    <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs font-medium">
                       {getCategoryName(service.category)}
                     </span>
                     <div className="flex items-center">
@@ -151,7 +153,7 @@ export function ServiceListItem({
             {/* Precio, Rating y Fecha */}
             <div className="flex items-center justify-between pt-3 border-t border-border">
               <div className="flex items-center space-x-4">
-                <div className="flex items-center text-lg font-semibold text-green-600">
+                <div className="flex items-center text-lg font-semibold text-emerald-600 dark:text-emerald-400">
                   <DollarSign className="w-4 h-4 mr-1" />
                   {service.priceFrom.toLocaleString()}
                 </div>

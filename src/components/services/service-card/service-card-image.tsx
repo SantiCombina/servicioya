@@ -27,15 +27,17 @@ export function ServiceCardImage({ service }: ServiceCardImageProps) {
   const imageUrl = getServiceImageUrl(service);
 
   return (
-    <div className="relative">
-      <Image src={imageUrl} alt={service.title} width={300} height={200} className="w-full h-48 object-cover" />
-      <div className="absolute top-2 left-2 flex gap-2">
-        <Badge className="bg-blue-600">{category.name}</Badge>
-        {service.verified && (
-          <Badge variant="secondary" className="bg-green-100 text-green-800">
-            Verificado
-          </Badge>
-        )}
+    <div className="relative overflow-hidden h-52">
+      <Image
+        src={imageUrl}
+        alt={service.title}
+        fill
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        className="object-cover group-hover:scale-105 transition-transform duration-500"
+      />
+      <div className="absolute top-2 left-2 flex gap-1.5">
+        <Badge className="bg-primary text-primary-foreground shadow-sm">{category.name}</Badge>
+        {service.verified && <Badge className="bg-emerald-500 text-white shadow-sm">Verificado</Badge>}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { Clock, MapPin, Star } from 'lucide-react';
+import { MapPin, Star } from 'lucide-react';
 
 import { Service, Location } from '@/payload-types';
 
@@ -16,24 +16,19 @@ export function ServiceCardStats({ service }: ServiceCardStatsProps) {
   const reviewsCount = getServiceReviewsCount(service);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 pb-2">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-1">
-          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-          <span>{service.rating ?? '-'}</span>
-          <span className="text-gray-500">({reviewsCount})</span>
+        <div className="flex items-center gap-1">
+          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+          <span className="text-sm font-medium">{service.rating ?? '-'}</span>
+          <span className="text-sm text-muted-foreground">({reviewsCount})</span>
         </div>
-        <span className="text-sm text-gray-500">{service.completedJobs ?? 0} trabajos</span>
+        <span className="text-xs text-muted-foreground">{service.completedJobs ?? 0} trabajos</span>
       </div>
 
-      <div className="flex items-center text-gray-500">
-        <MapPin className="w-4 h-4 mr-1" />
-        <span className="text-sm">{location.name}</span>
-      </div>
-
-      <div className="flex items-center text-gray-500">
-        <Clock className="w-4 h-4 mr-1" />
-        <span className="text-sm">{service.availability || 'Consultar horarios'}</span>
+      <div className="flex items-center text-muted-foreground gap-1">
+        <MapPin className="w-3.5 h-3.5 shrink-0" />
+        <span className="text-xs">{location.name}</span>
       </div>
     </div>
   );

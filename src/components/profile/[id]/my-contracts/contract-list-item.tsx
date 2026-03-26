@@ -65,14 +65,25 @@ export function ContractListItem({
     switch (status) {
       case 'pending':
         return (
-          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-200">
+          <Badge
+            variant="secondary"
+            className="bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30"
+          >
             Pendiente
           </Badge>
         );
       case 'accepted':
-        return <Badge className="bg-blue-100 text-blue-800 border-blue-200">Confirmado</Badge>;
+        return (
+          <Badge variant="secondary" className="bg-primary/10 text-primary border border-primary/30">
+            Confirmado
+          </Badge>
+        );
       case 'completed':
-        return <Badge className="bg-green-100 text-green-800 border-green-200">Completado</Badge>;
+        return (
+          <Badge className="bg-green-500/15 text-green-700 dark:text-green-400 border border-green-500/30">
+            Completado
+          </Badge>
+        );
       case 'cancelled':
         return <Badge variant="destructive">Cancelado</Badge>;
       default:
@@ -83,15 +94,15 @@ export function ContractListItem({
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'pending':
-        return <AlertCircle className="w-4 h-4 text-yellow-600" />;
+        return <AlertCircle className="w-4 h-4 text-amber-500" />;
       case 'accepted':
-        return <Clock className="w-4 h-4 text-blue-600" />;
+        return <Clock className="w-4 h-4 text-primary" />;
       case 'completed':
-        return <CheckCircle className="w-4 h-4 text-green-600" />;
+        return <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400" />;
       case 'cancelled':
-        return <XCircle className="w-4 h-4 text-red-600" />;
+        return <XCircle className="w-4 h-4 text-destructive" />;
       default:
-        return <AlertCircle className="w-4 h-4 text-gray-600" />;
+        return <AlertCircle className="w-4 h-4 text-muted-foreground" />;
     }
   };
 
@@ -111,7 +122,7 @@ export function ContractListItem({
 
     const emptyStars = 5 - Math.ceil(actualRating);
     for (let i = 0; i < emptyStars; i++) {
-      stars.push(<Star key={`empty-${i}`} className="w-4 h-4 text-gray-300" />);
+      stars.push(<Star key={`empty-${i}`} className="w-4 h-4 text-muted-foreground/30" />);
     }
 
     return stars;
@@ -191,12 +202,7 @@ export function ContractListItem({
               <div className="flex flex-col gap-2 ml-4">
                 {canEdit && contract.status === 'completed' && isClient && !contract.reviewed && (
                   <>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onRateContract(contract.id)}
-                      className="border-amber-300 text-amber-700 hover:bg-amber-50"
-                    >
+                    <Button variant="outline" size="sm" onClick={() => onRateContract(contract.id)}>
                       <Star className="w-4 h-4 mr-2 fill-amber-400 text-amber-400" />
                       Calificar servicio
                     </Button>
@@ -207,12 +213,7 @@ export function ContractListItem({
                 )}
 
                 {canEdit && contract.status === 'completed' && !isClient && !contract.providerRated && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onRateClient?.(contract.id)}
-                    className="border-amber-300 text-amber-700 hover:bg-amber-50"
-                  >
+                  <Button variant="outline" size="sm" onClick={() => onRateClient?.(contract.id)}>
                     <Star className="w-4 h-4 mr-2 fill-amber-400 text-amber-400" />
                     Calificar cliente
                   </Button>
@@ -223,7 +224,6 @@ export function ContractListItem({
                     onClick={() => onOpenDialog('complete', contract.id)}
                     disabled={loadingContractId === contract.id}
                     size="sm"
-                    className="bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
                   >
                     {loadingContractId === contract.id ? (
                       <>
@@ -245,7 +245,6 @@ export function ContractListItem({
                       onClick={() => onOpenDialog('accept', contract.id)}
                       disabled={loadingContractId === contract.id}
                       size="sm"
-                      className="bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
                     >
                       {loadingContractId === contract.id ? (
                         <>

@@ -42,7 +42,7 @@ function RatingStars({ value, onChange, label }: RatingStarsProps) {
           >
             <Star
               className={`w-8 h-8 ${
-                star <= (hoverValue || value) ? 'fill-yellow-400 text-yellow-400' : 'fill-none text-gray-300'
+                star <= (hoverValue || value) ? 'fill-amber-400 text-amber-400' : 'fill-none text-muted-foreground/40'
               }`}
             />
           </button>

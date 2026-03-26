@@ -1,26 +1,22 @@
 import { AlertTriangle } from 'lucide-react';
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
 interface OwnerInactiveBannerProps {
   className?: string;
 }
 
 export function OwnerInactiveBanner({ className }: OwnerInactiveBannerProps) {
   return (
-    <div
-      className={`bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 rounded-xl p-6 mb-6 shadow-sm ${className || ''}`}
+    <Alert
+      className={`border-amber-500/50 bg-amber-50 dark:bg-amber-950/20 text-amber-900 dark:text-amber-200 mb-4 ${className ?? ''}`}
     >
-      <div className="flex items-start space-x-4">
-        <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-          <AlertTriangle className="h-5 w-5 text-yellow-600" />
-        </div>
-        <div className="space-y-2">
-          <h3 className="text-yellow-900 font-semibold text-lg">Tu servicio está inactivo</h3>
-          <p className="text-yellow-800">Este servicio no aparece en las búsquedas públicas. Solo tú puedes verlo.</p>
-          <p className="text-yellow-700 text-sm">
-            Puedes activarlo desde la sección &ldquo;Mis Servicios&rdquo; en tu perfil.
-          </p>
-        </div>
-      </div>
-    </div>
+      <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+      <AlertTitle className="text-amber-800 dark:text-amber-200">Tu servicio está inactivo</AlertTitle>
+      <AlertDescription className="text-amber-700 dark:text-amber-300">
+        Este servicio no aparece en búsquedas públicas. Solo vos podés verlo. Podés activarlo desde &ldquo;Mis
+        Servicios&rdquo; en tu perfil.
+      </AlertDescription>
+    </Alert>
   );
 }

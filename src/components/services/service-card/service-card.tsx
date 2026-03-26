@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Service, User } from '@/payload-types';
 
 import { ServiceCardImage } from './service-card-image';
@@ -18,17 +18,19 @@ export function ServiceCard({ service }: ServiceCardProps) {
   const provider = service.provider as User;
 
   return (
-    <Link href={`/services/${service.id}`} className="block">
-      <Card className="overflow-hidden hover:shadow-xl transition-shadow cursor-pointer h-full">
+    <Link href={`/services/${service.id}`} className="block group h-full">
+      <Card className="overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer h-full flex flex-col">
         <ServiceCardImage service={service} />
-        <CardHeader>
-          <CardTitle>{service.title}</CardTitle>
-          <ServiceCardProvider provider={provider} />
-        </CardHeader>
-        <CardContent>
-          <ServiceCardStats service={service} />
-          <ServiceCardPricing service={service} />
-        </CardContent>
+        <div className="flex flex-col flex-1 p-4 gap-3">
+          <div className="flex-1">
+            <h4 className="text-sm font-semibold leading-snug line-clamp-2 text-foreground mb-1">{service.title}</h4>
+            <ServiceCardProvider provider={provider} />
+          </div>
+          <div>
+            <ServiceCardStats service={service} />
+            <ServiceCardPricing service={service} />
+          </div>
+        </div>
       </Card>
     </Link>
   );

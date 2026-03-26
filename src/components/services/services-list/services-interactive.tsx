@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState, useMemo, useCallback } from 'react';
 
 import { FiltersDrawer } from '@/components/services/services-list/filters/filters-drawer';
 import { FiltersSidebar } from '@/components/services/services-list/filters/filters-sidebar';
@@ -19,6 +20,7 @@ interface ServicesInteractiveProps {
 
 export function ServicesInteractive({ initialServices }: ServicesInteractiveProps) {
   const [services] = useState<Service[]>(initialServices);
+  const router = useRouter();
 
   const {
     searchTerm,
@@ -49,6 +51,14 @@ export function ServicesInteractive({ initialServices }: ServicesInteractiveProp
     return processServices(services, sortBy);
   }, [services, processServices, sortBy]);
 
+  const handleClearFilters = useCallback(() => {
+    setSelectedCategory([]);
+    setSelectedLocation([]);
+    setPriceRange([0, 100000]);
+    setShowVerifiedOnly(false);
+    router.replace('?');
+  }, [setSelectedCategory, setSelectedLocation, setPriceRange, setShowVerifiedOnly, router]);
+
   const filterProps = {
     selectedCategory,
     setSelectedCategory,
@@ -77,7 +87,11 @@ export function ServicesInteractive({ initialServices }: ServicesInteractiveProp
               </div>
             </ServicesHeader>
 
-            {processedServices.length > 0 ? <ServicesGrid services={processedServices} /> : <EmptyState />}
+            {processedServices.length > 0 ? (
+              <ServicesGrid services={processedServices} />
+            ) : (
+              <EmptyState onClear={handleClearFilters} />
+            )}
           </div>
         </div>
       </div>
