@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(head -30 \"c:\\\\Users\\\\santi\\\\Documents\\\\Workspace\\\\servicioya\\\\src\\\\app\\\\\\(frontend\\)\\\\services\\\\actions.ts\")",
+      "Bash(ls /c/Users/santi/Documents/Workspace/servicioya/src/app/\\\\\\(frontend\\\\\\)/login/)",
+      "Bash(ls /c/Users/santi/Documents/Workspace/servicioya/src/app/\\\\\\(frontend\\\\\\)/signup/)",
+      "Bash(find \"c:\\\\Users\\\\santi\\\\Documents\\\\Workspace\\\\servicioya\\\\src\\\\app\\\\\\(frontend\\)\" -name \"page.tsx\")",
+      "Bash(ls /c/Users/santi/Documents/Workspace/servicioya/src/components/ui/*.tsx)",
+      "Bash(xargs basename:*)",
+      "mcp__stitch__list_projects",
+      "Bash(xargs cat:*)",
+      "Bash(xargs ls:*)",
+      "Bash(cat /c/Users/santi/Documents/Workspace/servicioya/src/components/services/[id]/service-info/service-review-card.tsx)",
+      "Bash(cat /c/Users/santi/Documents/Workspace/servicioya/src/components/services/[id]/service-info/service-rating-tab.tsx)",
+      "mcp__stitch__create_project",
+      "mcp__stitch__generate_screen_from_text",
+      "mcp__stitch__list_screens",
+      "Bash(pnpm build:*)"
+    ]
+  }
+}
